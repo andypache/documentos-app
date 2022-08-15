@@ -16,15 +16,14 @@ class CartTable extends StatelessWidget {
             color: Colors.purpleAccent,
             icon: Icons.settings_applications_outlined,
             text: 'CONFIGURACIÓN',
-            description: 'Cambie su imagen y seleccione su firma electrónica',
+            description: 'Imagen y firma electrónica',
             route: "config",
           ),
           _SingleCart(
               color: Colors.green,
               icon: Icons.person_add_alt_1_outlined,
               text: 'CLIENTES',
-              description:
-                  'Verifique y gestione la información de sus clientes',
+              description: 'Gestione sus clientes',
               route: "client"),
         ]),
         TableRow(children: [
@@ -32,13 +31,13 @@ class CartTable extends StatelessWidget {
               color: Colors.orange,
               icon: Icons.point_of_sale_sharp,
               text: 'FACTURAS',
-              description: 'Genere sus facturas y conéctelas al SRI',
+              description: 'Genere sus facturas',
               route: "bill"),
           _SingleCart(
               color: Colors.amber,
-              icon: Icons.car_rental,
+              icon: Icons.shopping_cart_outlined,
               text: 'PRODUCTOS',
-              description: 'Cree y edite sus productos para la facturación',
+              description: 'Cree y edite sus productos',
               route: "item"),
         ]),
         TableRow(children: [
@@ -46,15 +45,13 @@ class CartTable extends StatelessWidget {
               color: AppTheme.blue,
               icon: Icons.file_copy_outlined,
               text: 'REPORTES',
-              description:
-                  'Consulte y genere reportes de sus facturas anteriores',
+              description: 'Consulte sus facturas',
               route: "report"),
           _SingleCart(
               color: AppTheme.pinkAccent,
               icon: Icons.send_and_archive,
               text: 'REVISIÓN',
-              description:
-                  'Verifique el estado de sus facturas enviadas hacia el SRI',
+              description: 'Verifique sus facturas en el SRI',
               route: "review"),
         ])
       ],
@@ -85,33 +82,40 @@ class _SingleCart extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () => Navigator.pushNamed(context, route),
-        child: _CartBackground(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              backgroundColor: color,
-              child: Icon(icon, size: 70, color: AppTheme.white),
-              radius: 50,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              text,
-              style: const TextStyle(color: Colors.blueAccent, fontSize: 26),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Container(
-                padding: const EdgeInsets.only(left: 50, right: 5),
-                child: Text(
-                  description,
-                  style: const TextStyle(color: AppTheme.white, fontSize: 16),
-                ))
-          ],
-        )));
+        child: Container(
+            padding: const EdgeInsets.only(top: 46),
+            child: _CartBackground(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  backgroundColor: color,
+                  child: Icon(icon, size: 30, color: AppTheme.white),
+                  radius: 30,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  text,
+                  style:
+                      const TextStyle(color: Colors.blueAccent, fontSize: 22),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Container(
+                    padding: const EdgeInsets.only(left: 6.0, right: 13.0),
+                    child: Text(
+                      description,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: AppTheme.white,
+                        fontSize: 15.0,
+                      ),
+                    ))
+              ],
+            ))));
   }
 }
 
@@ -125,14 +129,22 @@ class _CartBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.all(15),
+        margin: const EdgeInsets.only(right: 15, left: 15, top: 15, bottom: 0),
         child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                 child: Container(
-                    height: 230,
+                    height: 150,
                     decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.white.withOpacity(0.5),
+                            spreadRadius: 10,
+                            blurRadius: 10,
+                            offset: const Offset(6, 8),
+                          ),
+                        ],
                         color: AppTheme.targetGradient,
                         borderRadius: BorderRadius.circular(20)),
                     child: child))));
