@@ -13,14 +13,13 @@ class NotificationService {
         backgroundColor: AppTheme.transparent,
         elevation: 0,
         content: Container(
-          padding: const EdgeInsets.all(16),
-          height: 90,
-          decoration: const BoxDecoration(
-              color: AppTheme.red,
-              borderRadius: BorderRadius.all(Radius.circular(20))),
-          child: Text(message,
-              style: const TextStyle(color: AppTheme.white, fontSize: 20)),
-        ));
+            padding: const EdgeInsets.all(16),
+            height: 90,
+            decoration: const BoxDecoration(
+                color: AppTheme.red,
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            child: Text(message,
+                style: const TextStyle(color: AppTheme.white, fontSize: 20))));
 
     messengerKey.currentState!.showSnackBar(snackBar);
   }
@@ -32,14 +31,13 @@ class NotificationService {
         backgroundColor: AppTheme.transparent,
         elevation: 0,
         content: Container(
-          padding: const EdgeInsets.all(16),
-          height: 90,
-          decoration: const BoxDecoration(
-              color: AppTheme.primary,
-              borderRadius: BorderRadius.all(Radius.circular(20))),
-          child: Text(message,
-              style: const TextStyle(color: AppTheme.white, fontSize: 20)),
-        ));
+            padding: const EdgeInsets.all(16),
+            height: 90,
+            decoration: const BoxDecoration(
+                color: AppTheme.primary,
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            child: Text(message,
+                style: const TextStyle(color: AppTheme.white, fontSize: 20))));
 
     messengerKey.currentState!.showSnackBar(snackBar);
   }

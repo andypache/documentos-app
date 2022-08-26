@@ -13,7 +13,7 @@ class AuthService extends ChangeNotifier {
   final storage = const FlutterSecureStorage();
 
   //Function that call login service and save information
-  Future<ServiceResponse> login(String username, String password) async {
+  Future<ServiceResponseModel> login(String username, String password) async {
     const Base64Codec base64 = Base64Codec();
     var bytes = utf8.encode(clientName + ":" + clientSecret);
     var sendBase64 = base64.encode(bytes);
@@ -29,7 +29,7 @@ class AuthService extends ChangeNotifier {
       'password': password,
     };
 
-    ServiceResponse response = await postFormFetch(
+    ServiceResponseModel response = await postFormFetch(
         url: apiSecurityLogin, body: request, header: header);
     if (response.statusHttp == 200) {
       await storage.write(
@@ -40,7 +40,7 @@ class AuthService extends ChangeNotifier {
       Map<String, dynamic> payload =
           Jwt.parseJwt(response.body['access_token']);
 
-      Preferences.userSession = UserSession.fromJson(payload['user']);
+      Preferences.userSession = UserSessionModel.fromJson(payload['user']);
     }
     return response;
   }

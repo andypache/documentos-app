@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hdocumentos/src/provider/provider.dart';
 import 'package:hdocumentos/src/router/app_routes.dart';
 import 'package:hdocumentos/src/service/service.dart';
 
@@ -14,7 +13,6 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => AuthService()),
-      ChangeNotifierProvider(create: (_) => BillProvider(bills: []))
     ],
     child: const MyApp(),
   ));

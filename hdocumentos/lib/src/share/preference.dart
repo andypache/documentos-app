@@ -7,14 +7,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Preferences {
   static late SharedPreferences _preferences;
   //Usersession properties
-  static UserSession _userSession = UserSession(
-      id: "",
+  static UserSessionModel _userSession = UserSessionModel(
+      id: 0,
       username: "",
       email: "",
       identification: "",
-      lastname: "",
-      surname: "",
-      name: "");
+      idCompany: 0,
+      surnames: "",
+      names: "");
 
   ///Init preferences
   static Future init() async {
@@ -22,38 +22,38 @@ class Preferences {
   }
 
   //propertiy for get user preference
-  static UserSession get userSession {
-    UserSession response = UserSession(
-        id: "",
+  static UserSessionModel get userSession {
+    UserSessionModel response = UserSessionModel(
+        id: 0,
         username: "",
         email: "",
         identification: "",
-        lastname: "",
-        surname: "",
-        name: "");
+        idCompany: 0,
+        surnames: "",
+        names: "");
     String? session = _preferences.getString('userSession');
 
     if (session != null) {
-      return UserSession.fromJsonObj(json.decode(session));
+      return UserSessionModel.fromJsonObj(json.decode(session));
     }
     return response;
   }
 
   //Put the user session
-  static set userSession(UserSession userSession) {
+  static set userSession(UserSessionModel userSession) {
     _userSession = userSession;
     _preferences.setString('userSession', json.encode(_userSession.toJson()));
   }
 
   //Remove user
   static removeUser() {
-    userSession = UserSession(
-        id: "",
+    userSession = UserSessionModel(
+        id: 0,
         username: "",
         email: "",
         identification: "",
-        lastname: "",
-        surname: "",
-        name: "");
+        idCompany: 0,
+        surnames: "",
+        names: "");
   }
 }

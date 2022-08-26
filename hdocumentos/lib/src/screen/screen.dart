@@ -1,13 +1,14 @@
 //Export all screen for application
-export 'package:hdocumentos/src/screen/common/login.dart';
-export 'package:hdocumentos/src/screen/common/home.dart';
-export 'package:hdocumentos/src/screen/common/alert.dart';
-export 'package:hdocumentos/src/screen/security/register_user.dart';
-export 'package:hdocumentos/src/screen/common/check_auth.dart';
-export 'package:hdocumentos/src/screen/config/configuration_user_bill.dart';
-export 'package:hdocumentos/src/screen/client/client_bill.dart';
-export 'package:hdocumentos/src/model/bill/bill.dart';
-export 'package:hdocumentos/src/screen/bill/management_bill.dart';
-export 'package:hdocumentos/src/screen/item/management_item.dart';
-export 'package:hdocumentos/src/screen/report/management_report.dart';
-export 'package:hdocumentos/src/screen/review/management_review.dart';
+export 'package:hdocumentos/src/screen/common/login_screen.dart';
+export 'package:hdocumentos/src/screen/common/home_screen.dart';
+export 'package:hdocumentos/src/screen/common/alert_screen.dart';
+export 'package:hdocumentos/src/screen/security/register_user_screen.dart';
+export 'package:hdocumentos/src/screen/common/check_auth_screen.dart';
+export 'package:hdocumentos/src/screen/config/configuration_screen.dart';
+export 'package:hdocumentos/src/screen/client/client_screen.dart';
+export 'package:hdocumentos/src/model/bill/bill_model.dart';
+export 'package:hdocumentos/src/screen/bill/bill_screen.dart';
+export 'package:hdocumentos/src/screen/item/item_screen.dart';
+export 'package:hdocumentos/src/screen/report/report_screen.dart';
+export 'package:hdocumentos/src/screen/review/review_screen.dart';
+export 'package:hdocumentos/src/screen/config/configuration_screen.dart';
