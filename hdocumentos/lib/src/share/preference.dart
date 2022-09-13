@@ -15,6 +15,7 @@ class Preferences {
       idCompany: 0,
       surnames: "",
       names: "");
+  static bool _keepSession = true;
 
   ///Init preferences
   static Future init() async {
@@ -43,6 +44,17 @@ class Preferences {
   static set userSession(UserSessionModel userSession) {
     _userSession = userSession;
     _preferences.setString('userSession', json.encode(_userSession.toJson()));
+  }
+
+  //Get Keep Session
+  // ignore: unnecessary_getters_setters
+  static bool get keepSession {
+    return _keepSession;
+  }
+
+  //Put Keep Session
+  static set keepSession(bool keepSession) {
+    _keepSession = keepSession;
   }
 
   //Remove user

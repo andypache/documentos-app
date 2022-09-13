@@ -26,7 +26,7 @@ class MaterialButtonWidget extends StatelessWidget {
     if (icon != null) {
       _rowIcon = Row(mainAxisSize: MainAxisSize.min, children: [
         Icon(icon, size: 24.0, color: AppTheme.white),
-        const SizedBox(width: 10),
+        const SizedBox(width: 5),
         Text(textButton ?? 'Submit',
             style: const TextStyle(color: AppTheme.white))
       ]);

@@ -13,6 +13,9 @@ class InputFieldWidget extends StatelessWidget {
   final bool obscureText;
   final bool? filled;
   final Color? fillColor;
+  final Color? textStyleColor;
+  final Color? floatingLabelStyleColor;
+  final Color? hintStyleColor;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
 
@@ -30,7 +33,10 @@ class InputFieldWidget extends StatelessWidget {
       this.validator,
       this.onChanged,
       this.filled,
-      this.fillColor})
+      this.fillColor,
+      this.textStyleColor,
+      this.floatingLabelStyleColor,
+      this.hintStyleColor})
       : super(key: key);
 
   //Create widget
@@ -45,6 +51,7 @@ class InputFieldWidget extends StatelessWidget {
         onChanged: onChanged,
         validator: validator,
         autovalidateMode: AutovalidateMode.onUserInteraction,
+        style: TextStyle(color: textStyleColor ?? AppTheme.white),
         decoration: _inputDecoration());
   }
 
@@ -53,6 +60,10 @@ class InputFieldWidget extends StatelessWidget {
     return InputDecoration(
         filled: filled ?? false,
         fillColor: fillColor ?? AppTheme.whiteGradient,
+        floatingLabelStyle: TextStyle(
+            color: floatingLabelStyleColor ?? AppTheme.white.withOpacity(0.8)),
+        hintStyle:
+            TextStyle(color: hintStyleColor ?? AppTheme.white.withOpacity(0.3)),
         hintText: hintText,
         labelText: labelText,
         helperText: helperText,

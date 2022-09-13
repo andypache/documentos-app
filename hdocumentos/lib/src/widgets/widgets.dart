@@ -16,3 +16,4 @@ export 'package:hdocumentos/src/widgets/common/loading_widget.dart';
 export 'package:hdocumentos/src/widgets/home/card_slider.dart';
 export 'package:hdocumentos/src/widgets/home/user_session_title.dart';
 export 'package:hdocumentos/src/widgets/common/billing_card.dart';
+export 'package:hdocumentos/src/widgets/common/input_checkbox_field_widget.dart';

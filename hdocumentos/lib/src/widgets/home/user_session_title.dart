@@ -35,7 +35,7 @@ class UserSessionTitle extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 0, top: 0),
                       child: Text(session.username,
                           style: const TextStyle(
-                              fontSize: 20, color: AppTheme.white))),
+                              fontSize: 16, color: AppTheme.white))),
                   Padding(
                       padding: const EdgeInsets.only(left: 0, top: 0),
                       child: Text(session.identification.toString(),

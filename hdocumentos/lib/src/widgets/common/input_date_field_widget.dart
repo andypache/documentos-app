@@ -63,6 +63,7 @@ class _InputDateFieldWidgetState extends State<InputDateFieldWidget> {
             _date.text = "";
           }
         },
+        style: const TextStyle(color: AppTheme.white),
         autofocus: false,
         validator: widget.validator,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -74,6 +75,8 @@ class _InputDateFieldWidgetState extends State<InputDateFieldWidget> {
     return InputDecoration(
         filled: widget.filled ?? false,
         fillColor: widget.fillColor ?? AppTheme.whiteGradient,
+        floatingLabelStyle: TextStyle(color: AppTheme.white.withOpacity(0.8)),
+        hintStyle: TextStyle(color: AppTheme.white.withOpacity(0.3)),
         hintText: widget.hintText,
         labelText: widget.labelText,
         helperText: widget.helperText,

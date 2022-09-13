@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hdocumentos/src/constant/constant.dart';
+import 'package:hdocumentos/src/constant/example_data.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
 
 ///Widgets for render home application

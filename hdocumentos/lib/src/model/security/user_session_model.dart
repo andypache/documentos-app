@@ -10,6 +10,7 @@ class UserSessionModel {
     required this.identification,
     required this.surnames,
     required this.names,
+    this.keepSession,
     this.createdAt,
     this.confirmedAt,
     this.lastLoginAt,
@@ -28,6 +29,7 @@ class UserSessionModel {
   String identification;
   String surnames;
   String names;
+  bool? keepSession;
   String? createdAt;
   String? confirmedAt;
   String? lastLoginAt;
@@ -61,6 +63,7 @@ class UserSessionModel {
         "idCompany": idCompany,
         "surnames": surnames,
         "names": names,
+        "keepSession": keepSession,
         "completeName": completeName,
       };
 

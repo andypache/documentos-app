@@ -40,8 +40,10 @@ dependencies:
   flutter_secure_storage: ^5.1.0
   jwt_decode: ^0.3.1
   image_picker: ^0.8.5+3
+  file_picker: ^3.0.4
   intl: ^0.17.0
   card_swiper : ^2.0.1
+  flutter_dotenv: ^5.0.2
   
 dev_dependencies:
   flutter_test:
@@ -67,6 +69,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+     - .env.development
+     - .env.production
      - assets/image/
   #   - images/a_dot_ham.jpeg
 

@@ -33,14 +33,21 @@ class DropdownButtonFieldWidget extends StatelessWidget {
   //Build
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField<dynamic>(
-        value: null,
-        items: items
-            .map((item) => DropdownMenuItem<dynamic>(
-                value: item.key, child: Text(item.value)))
-            .toList(),
-        onChanged: onChanged,
-        decoration: _inputDecoration());
+    return Theme(
+        data: Theme.of(context).copyWith(canvasColor: AppTheme.secondary),
+        child: DropdownButtonFormField<dynamic>(
+            value: null,
+            items: items
+                .map((item) => DropdownMenuItem<dynamic>(
+                    value: item.key,
+                    child: Text(item.value,
+                        style: const TextStyle(
+                            inherit: false,
+                            color: AppTheme.white,
+                            decorationColor: Colors.black))))
+                .toList(),
+            onChanged: onChanged,
+            decoration: _inputDecoration()));
   }
 
   //Create widget decoration for dropdown
@@ -48,6 +55,8 @@ class DropdownButtonFieldWidget extends StatelessWidget {
     return InputDecoration(
         filled: filled ?? false,
         fillColor: fillColor ?? AppTheme.whiteGradient,
+        floatingLabelStyle: TextStyle(color: AppTheme.white.withOpacity(0.8)),
+        hintStyle: TextStyle(color: AppTheme.white.withOpacity(0.3)),
         hintText: hintText,
         labelText: labelText,
         helperText: helperText,

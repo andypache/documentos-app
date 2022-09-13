@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/service/service.dart';
+import 'package:hdocumentos/src/share/preference.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:hdocumentos/src/provider/provider.dart';
@@ -69,6 +70,9 @@ class _LoginScreenForm extends StatelessWidget {
               prefixIcon: Icons.person_outline_outlined,
               labelText: 'Usuario',
               hintText: 'Usuario (requerido)',
+              textStyleColor: AppTheme.primary,
+              floatingLabelStyleColor: AppTheme.primary,
+              hintStyleColor: AppTheme.primary,
               onChanged: (value) => loginForm.username = value,
               validator: validatorUsername),
           const SizedBox(height: 30),
@@ -76,10 +80,16 @@ class _LoginScreenForm extends StatelessWidget {
               prefixIcon: Icons.lock_open_outlined,
               labelText: 'Password',
               hintText: 'Password (requerido)',
+              textStyleColor: AppTheme.primary,
+              floatingLabelStyleColor: AppTheme.primary,
+              hintStyleColor: AppTheme.primary,
               obscureText: true,
               onChanged: (value) => loginForm.password = value,
               validator: validatorPassword),
-          const SizedBox(height: 30),
+          InputCheckboxFieldWidget(
+            label: "Mantener sesión ?",
+            onChanged: (isChecked) => loginForm.keepSession = isChecked!,
+          ),
           MaterialButtonWidget(
               textButton: 'Ingresar',
               onPressed: loginForm.isLoading
@@ -113,6 +123,7 @@ class _LoginScreenForm extends StatelessWidget {
         await authService.login(loginForm.username, loginForm.password);
     loginForm.isLoading = false;
     if (response.statusHttp == 200) {
+      Preferences.keepSession = loginForm.keepSession;
       Navigator.pushReplacementNamed(context, 'home');
     } else {
       NotificationService.showSnackbarError(response.error ?? response.message);

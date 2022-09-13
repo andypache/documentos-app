@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
-import 'package:hdocumentos/src/widgets/widgets.dart';
 
 ///Widgets that put title and descriptión application into box
 ///corner left
@@ -11,19 +10,16 @@ class PageTitleWidget extends StatelessWidget {
   //Create title
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            UserSessionTitle(),
-            Text(
-              title,
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 220),
+          Text(title,
               style: const TextStyle(
-                  fontSize: 30,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.white),
-            ),
-          ],
-        ));
+                  color: AppTheme.white))
+        ]);
   }
 }
