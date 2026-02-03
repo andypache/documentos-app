@@ -19,6 +19,8 @@ class UserSessionModel {
     this.currentLoginIp,
     this.state,
     this.completeName,
+    this.companyName,
+    this.companyIdentification,
   });
 
   String userId;
@@ -38,6 +40,8 @@ class UserSessionModel {
   String? currentLoginIp;
   String? state;
   String? completeName;
+  String? companyName;
+  String? companyIdentification;
 
   //Load from json response
   factory UserSessionModel.fromJson(Map<String, dynamic> json) =>
@@ -66,6 +70,8 @@ class UserSessionModel {
         "names": names,
         "keepSession": keepSession,
         "completeName": completeName,
+        "companyName": companyName,
+        "companyIdentification": companyIdentification,
       };
 
   //Create object from object map

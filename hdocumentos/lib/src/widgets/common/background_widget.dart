@@ -25,19 +25,21 @@ class BrackgroundWidget extends StatelessWidget {
 class _Box extends StatelessWidget {
   const _Box({Key? key}) : super(key: key);
 
-  ///Positioned box
+  ///Positioned box that adapts to screen size
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Positioned(
-        top: -100,
-        left: -10,
+        top: -30,
+        left: -15,
         child: Transform.rotate(
-            angle: -pi / 14,
+            angle: -pi / 20,
             child: Container(
-                width: 600,
-                height: 180,
+                width: size.width * 0.75,
+                height: size.height * 0.08,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(80),
+                    borderRadius: BorderRadius.circular(30),
                     gradient: const LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
