@@ -27,6 +27,8 @@ class TotalsPanelWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.primary,
@@ -47,9 +49,9 @@ class TotalsPanelWidget extends StatelessWidget {
         children: [
           // Handle indicator
           Container(
-            margin: const EdgeInsets.only(top: 8),
-            width: 40,
-            height: 4,
+            margin: EdgeInsets.only(top: size.height * 0.004),
+            width: size.width * 0.08,
+            height: 2.5,
             decoration: BoxDecoration(
               color: Colors.white30,
               borderRadius: BorderRadius.circular(2),
@@ -58,50 +60,50 @@ class TotalsPanelWidget extends StatelessWidget {
 
           // Content
           Padding(
-            padding: const EdgeInsets.all(20),
+            padding: EdgeInsets.all(size.width * 0.025),
             child: Column(
               children: [
                 // Título
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: EdgeInsets.all(size.width * 0.015),
                       decoration: BoxDecoration(
                         color: AppTheme.primaryButton.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.calculate,
                         color: AppTheme.primaryButton,
-                        size: 24,
+                        size: size.width * 0.048,
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    const Text(
+                    SizedBox(width: size.width * 0.02),
+                    Text(
                       'Resumen de Factura',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 18,
+                        fontSize: size.width * 0.036,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const Spacer(),
                     if (isCalculating)
-                      const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
+                      SizedBox(
+                        width: size.width * 0.04,
+                        height: size.width * 0.04,
+                        child: const CircularProgressIndicator(
                           strokeWidth: 2,
                           color: AppTheme.primaryButton,
                         ),
                       ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: size.height * 0.006),
 
                 // Container con los totales
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(size.width * 0.02),
                   decoration: BoxDecoration(
                     color: AppTheme.secondary.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(12),
@@ -117,34 +119,38 @@ class TotalsPanelWidget extends StatelessWidget {
                         'Subtotal',
                         subtotal,
                         icon: Icons.shopping_cart_outlined,
+                        size: size,
                       ),
 
                       // Descuento del cliente
                       if (customerDiscount > 0) ...[
-                        const SizedBox(height: 8),
+                        SizedBox(height: size.height * 0.005),
                         _buildTotalRow(
                           customerDiscountLabel ?? 'Descuento Cliente',
                           -customerDiscount,
                           icon: Icons.local_offer,
                           color: Colors.orangeAccent,
                           isDiscount: true,
+                          size: size,
                         ),
                       ],
 
                       // Impuestos
                       if (totalTax > 0) ...[
-                        const SizedBox(height: 8),
+                        SizedBox(height: size.height * 0.005),
                         _buildTotalRow(
                           'Impuestos',
                           totalTax,
                           icon: Icons.receipt_long,
                           color: Colors.lightBlueAccent,
+                          size: size,
                         ),
                       ],
 
                       // Divider
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: size.height * 0.01),
                         child: Divider(
                           color: Colors.white30,
                           height: 1,
@@ -158,23 +164,23 @@ class TotalsPanelWidget extends StatelessWidget {
                           Row(
                             children: [
                               Container(
-                                padding: const EdgeInsets.all(6),
+                                padding: EdgeInsets.all(size.width * 0.012),
                                 decoration: BoxDecoration(
                                   color: Colors.greenAccent.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
-                                child: const Icon(
+                                child: Icon(
                                   Icons.attach_money,
                                   color: Colors.greenAccent,
-                                  size: 24,
+                                  size: size.width * 0.048,
                                 ),
                               ),
-                              const SizedBox(width: 12),
-                              const Text(
+                              SizedBox(width: size.width * 0.02),
+                              Text(
                                 'TOTAL',
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 20,
+                                  fontSize: size.width * 0.04,
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 1,
                                 ),
@@ -192,9 +198,9 @@ class TotalsPanelWidget extends StatelessWidget {
                             child: Text(
                               '\$${total.toStringAsFixed(2)}',
                               key: ValueKey(total),
-                              style: const TextStyle(
-                                color: Colors.greenAccent,
-                                fontSize: 28,
+                              style: TextStyle(
+                                color: AppTheme.primaryButton,
+                                fontSize: size.width * 0.055,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -205,18 +211,18 @@ class TotalsPanelWidget extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 16),
+                SizedBox(height: size.height * 0.006),
 
                 // Botón de guardar
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     onPressed: canSave ? onSave : null,
-                    icon: const Icon(Icons.save, size: 24),
-                    label: const Text(
+                    icon: Icon(Icons.save, size: size.width * 0.048),
+                    label: Text(
                       'Guardar Factura',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: size.width * 0.036,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -224,7 +230,8 @@ class TotalsPanelWidget extends StatelessWidget {
                       backgroundColor: canSave
                           ? AppTheme.primaryButton
                           : Colors.grey.shade700,
-                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      padding:
+                          EdgeInsets.symmetric(vertical: size.height * 0.01),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -235,21 +242,21 @@ class TotalsPanelWidget extends StatelessWidget {
 
                 // Mensaje de validación
                 if (!canSave) ...[
-                  const SizedBox(height: 8),
+                  SizedBox(height: size.height * 0.005),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
                         Icons.info_outline,
-                        size: 16,
+                        size: size.width * 0.036,
                         color: Colors.white.withOpacity(0.5),
                       ),
-                      const SizedBox(width: 6),
+                      SizedBox(width: size.width * 0.015),
                       Text(
                         'Completa todos los campos requeridos',
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.5),
-                          fontSize: 12,
+                          fontSize: size.width * 0.028,
                         ),
                       ),
                     ],
@@ -269,6 +276,7 @@ class TotalsPanelWidget extends StatelessWidget {
     IconData? icon,
     Color? color,
     bool isDiscount = false,
+    required Size size,
   }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -278,16 +286,16 @@ class TotalsPanelWidget extends StatelessWidget {
             if (icon != null) ...[
               Icon(
                 icon,
-                size: 18,
+                size: size.width * 0.042,
                 color: color ?? Colors.white.withOpacity(0.7),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: size.width * 0.02),
             ],
             Text(
               label,
               style: TextStyle(
                 color: color ?? Colors.white.withOpacity(0.8),
-                fontSize: 15,
+                fontSize: size.width * 0.034,
               ),
             ),
           ],
@@ -305,7 +313,7 @@ class TotalsPanelWidget extends StatelessWidget {
             key: ValueKey('$label-$value'),
             style: TextStyle(
               color: color ?? Colors.white,
-              fontSize: 15,
+              fontSize: size.width * 0.034,
               fontWeight: FontWeight.bold,
             ),
           ),
