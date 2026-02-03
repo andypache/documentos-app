@@ -14,7 +14,6 @@ class PageTitleWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 220),
           Text(title,
               style: const TextStyle(
                   fontSize: 20,

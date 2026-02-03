@@ -44,9 +44,9 @@ class UserSessionTitle extends StatelessWidget {
                 ]),
                 SizedBox(
                     width: size.width * 0.45,
-                    child: Column(
+                    child: const Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
-                        children: const [BillingCard()]))
+                        children: [BillingCard()]))
               ])
             ])));
   }

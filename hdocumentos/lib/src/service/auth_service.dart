@@ -15,13 +15,15 @@ class AuthService extends ChangeNotifier {
 
   //Function that call login service and save information
   Future<ServiceResponseModel> login(String username, String password) async {
+    ServiceResponseModel response = ServiceResponseModel.createEmpty();
+
     const Base64Codec base64 = Base64Codec();
     var bytes =
-        utf8.encode(Environment.clientName + ":" + Environment.clientSecret);
+        utf8.encode("${Environment.clientName}:${Environment.clientSecret}");
     var sendBase64 = base64.encode(bytes);
 
     Map<String, String> header = {
-      "Authorization": "Basic " + sendBase64,
+      "Authorization": "Basic $sendBase64",
       "Content-Type": "application/x-www-form-urlencoded",
     };
 
@@ -31,7 +33,7 @@ class AuthService extends ChangeNotifier {
       'password': password,
     };
 
-    ServiceResponseModel response = await postFormFetch(
+    response = await postFormFetch(
         url: apiSecurityLogin, body: request, header: header);
     await createSession(response);
     return response;
@@ -42,11 +44,11 @@ class AuthService extends ChangeNotifier {
       String username, String refreshToken) async {
     const Base64Codec base64 = Base64Codec();
     var bytes =
-        utf8.encode(Environment.clientName + ":" + Environment.clientSecret);
+        utf8.encode("${Environment.clientName}:${Environment.clientSecret}");
     var sendBase64 = base64.encode(bytes);
 
     Map<String, String> header = {
-      "Authorization": "Basic " + sendBase64,
+      "Authorization": "Basic $sendBase64",
       "Content-Type": "application/x-www-form-urlencoded",
     };
 
@@ -64,13 +66,14 @@ class AuthService extends ChangeNotifier {
   Future createSession(ServiceResponseModel response) async {
     if (response.statusHttp == 200) {
       await storage.write(
-          key: 'access_token', value: response.body['access_token']);
+          key: 'access_token',
+          value: response.body['response']['access_token']);
       await storage.write(
-          key: 'refresh_token', value: response.body['refresh_token']);
+          key: 'refresh_token',
+          value: response.body['response']['refresh_token']);
       Map<String, dynamic> payload =
-          Jwt.parseJwt(response.body['access_token']);
-
-      Preferences.userSession = UserSessionModel.fromJson(payload['user']);
+          Jwt.parseJwt(response.body['response']['access_token']);
+      Preferences.userSession = UserSessionModel.fromJson(payload);
     }
   }
 

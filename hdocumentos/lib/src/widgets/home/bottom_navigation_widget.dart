@@ -10,13 +10,13 @@ class BottomNavigationWidget extends StatelessWidget {
   ///Put buttom
   @override
   Widget build(BuildContext context) {
-    final _authService = Provider.of<AuthService>(context);
+    final authService = Provider.of<AuthService>(context);
     int currentIndex = 0;
     return BottomNavigationBar(
         onTap: (int index) async {
           currentIndex = index;
           if (currentIndex == 2) {
-            await _authService.logout();
+            await authService.logout();
             Navigator.pushReplacementNamed(context, 'login');
           }
         },

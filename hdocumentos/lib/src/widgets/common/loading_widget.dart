@@ -7,7 +7,7 @@ class LoadingWidget extends StatelessWidget {
   //Build and render circular progress indicator
   @override
   Widget build(BuildContext context) {
-    return Stack(children: const [
+    return const Stack(children: [
       Center(
         child: CircularProgressIndicator(),
       )

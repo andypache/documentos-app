@@ -2,7 +2,7 @@
 class UserSessionModel {
   //Constructor of required and not required field
   UserSessionModel({
-    required this.id,
+    required this.userId,
     required this.username,
     required this.email,
     this.active,
@@ -21,7 +21,7 @@ class UserSessionModel {
     this.completeName,
   });
 
-  int id;
+  String userId;
   String username;
   String email;
   String? active;
@@ -42,20 +42,21 @@ class UserSessionModel {
   //Load from json response
   factory UserSessionModel.fromJson(Map<String, dynamic> json) =>
       UserSessionModel(
-        id: json["id"],
+        userId: json["user_id"],
         username: json["username"],
         email: json["email"],
         active: json["active"],
-        identification: json["company"]["identification"],
-        idCompany: json["company"]["id"],
-        surnames: json["surnames"],
-        names: json["names"],
-        completeName: json["names"] + " " + json["surnames"],
+        identification:
+            json.containsKey("identification") ? json["identification"] : "",
+        idCompany: json.containsKey("company_id") ? json["company_id"] : 0,
+        surnames: json["last_name"],
+        names: json["first_name"],
+        completeName: json["first_name"] + " " + json["last_name"],
       );
 
   //Create object map with property from json
   Map<String, dynamic> toJson() => {
-        "id": id,
+        "user_id": userId,
         "username": username,
         "email": email,
         "active": active,
@@ -70,7 +71,7 @@ class UserSessionModel {
   //Create object from object map
   factory UserSessionModel.fromJsonObj(Map<String, dynamic> json) =>
       UserSessionModel(
-          id: json["id"],
+          userId: json["user_id"],
           username: json["username"],
           email: json["email"],
           identification: json["identification"],

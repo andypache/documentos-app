@@ -22,16 +22,16 @@ class MaterialButtonWidget extends StatelessWidget {
   //Create material button widget
   @override
   Widget build(BuildContext context) {
-    Row _rowIcon;
+    Row rowIcon;
     if (icon != null) {
-      _rowIcon = Row(mainAxisSize: MainAxisSize.min, children: [
+      rowIcon = Row(mainAxisSize: MainAxisSize.min, children: [
         Icon(icon, size: 24.0, color: AppTheme.white),
         const SizedBox(width: 5),
         Text(textButton ?? 'Submit',
             style: const TextStyle(color: AppTheme.white))
       ]);
     } else {
-      _rowIcon = Row(mainAxisSize: MainAxisSize.min, children: [
+      rowIcon = Row(mainAxisSize: MainAxisSize.min, children: [
         Text(textButton ?? 'Submit',
             style: const TextStyle(color: AppTheme.white))
       ]);
@@ -43,9 +43,9 @@ class MaterialButtonWidget extends StatelessWidget {
         disabledColor: AppTheme.grey,
         elevation: 0,
         color: type ?? AppTheme.primaryButton,
+        onPressed: onPressed,
         child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-            child: _rowIcon),
-        onPressed: onPressed);
+            child: rowIcon));
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hdocumentos/src/constant/constant.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:provider/provider.dart';
@@ -16,69 +15,54 @@ class ConfigurationScreen extends StatelessWidget {
   //Render principal widgets load background, session, title and body
   @override
   Widget build(BuildContext context) {
-    final configurationService = Provider.of<ConfigurationService>(context);
-
     //Create screen
-    return Scaffold(
-        body: Stack(children: [
-          const BrackgroundWidget(),
-          //Put user session title and cart bill menu
-          UserSessionTitle(),
-          //Put title screen
-          const PageTitleWidget(title: "Configuración"),
-          //Scroll view padding top and left create provider form
-          SingleChildScrollView(
-              child: Padding(
-                  padding: const EdgeInsets.only(top: 135, left: 20),
-                  child: _ConfigurationScreenBody(
-                      configurationService: configurationService)))
-        ]),
-        //Button close
-        floatingActionButton: FloatingActionButton(
-            elevation: 20,
-            child: const Icon(Icons.close, color: AppTheme.red),
-            onPressed: () => Navigator.pop(context)));
+    return ChangeNotifierProvider(
+        create: (contex) => ConfigurationService(contex),
+        lazy: false,
+        child: Scaffold(
+            body: Stack(children: [
+              const BrackgroundWidget(),
+              //Put user session title and cart bill menu
+              UserSessionTitle(),
+              //Put title screen
+              const PageTitleWidget(title: "Configuración"),
+              //Scroll view padding top and left create provider form
+              const SingleChildScrollView(
+                  child: Padding(
+                      padding: EdgeInsets.only(top: 135, left: 20),
+                      child: _ConfigurationScreenBody()))
+            ]),
+            //Button close
+            floatingActionButton: FloatingActionButton(
+                elevation: 20,
+                child: const Icon(Icons.close, color: AppTheme.red),
+                onPressed: () => Navigator.pop(context))));
   }
 }
 
 ///Body for configuration into sroll view
 class _ConfigurationScreenBody extends StatelessWidget {
-  const _ConfigurationScreenBody({Key? key, required this.configurationService})
-      : super(key: key);
-  final ConfigurationService configurationService;
+  const _ConfigurationScreenBody({Key? key}) : super(key: key);
 
   //Create body
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final configurationService = Provider.of<ConfigurationService>(context);
     //Create view after search config api
-    return FutureBuilder(
-        future: configurationService.loadConfiguration(context),
-        builder: (_, AsyncSnapshot<ConfigurationModel> snapshot) {
-          if (snapshot.hasData) {
-            //Body
-            return SizedBox(
-                width: size.width * 0.90,
-                child: Column(children: [
-                  //Create image component for update
-                  _ConfigurationScreenImage(
-                      configurationService: configurationService),
-                  const SizedBox(height: 30),
-                  //Management provider form for save config
-                  ChangeNotifierProvider(
-                      create: (_) => ConfigurationFormProvider(
-                          configurationService.configuration),
-                      child: const _ConfigurationScreenForm(),
-                      lazy: true)
-                ]));
-          } else if (snapshot.hasError) {
-            //Error for load config
-            return errorLoadContainer(snapshot.error);
-          }
-          //Loading component while load api
-          return SizedBox(
-              height: size.height * 0.50, child: const LoadingWidget());
-        });
+    return SizedBox(
+        width: size.width * 0.90,
+        child: Column(children: [
+          //Create image component for update
+          _ConfigurationScreenImage(configurationService: configurationService),
+          const SizedBox(height: 30),
+          //Management provider form for save config
+          ChangeNotifierProvider(
+              create: (_) =>
+                  ConfigurationFormProvider(configurationService.configuration),
+              lazy: true,
+              child: const _ConfigurationScreenForm())
+        ]));
   }
 }
 
@@ -94,6 +78,12 @@ class _ConfigurationScreenImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
+    if (configurationService.isLoading) {
+      return SizedBox(
+          width: size.width * 0.90,
+          height: size.height * 0.20,
+          child: const LoadingWidget());
+    }
     //Create header with image component
     return Column(children: [
       Stack(children: [
@@ -111,7 +101,8 @@ class _ConfigurationScreenImage extends StatelessWidget {
                   if (pickedFile == null) {
                     return;
                   }
-                  configurationService.updateSelectedImage(pickedFile.path);
+                  configurationService.updateSelectedImage(
+                      context, pickedFile.path);
                 },
                 icon: const Icon(Icons.search_outlined,
                     size: 40, color: Colors.white))),
@@ -127,7 +118,8 @@ class _ConfigurationScreenImage extends StatelessWidget {
                   if (pickedFile == null) {
                     return;
                   }
-                  configurationService.updateSelectedImage(pickedFile.path);
+                  configurationService.updateSelectedImage(
+                      context, pickedFile.path);
                 },
                 icon: const Icon(Icons.camera_alt_outlined,
                     size: 40, color: Colors.white)))

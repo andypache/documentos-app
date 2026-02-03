@@ -1,3 +1,13 @@
 {
+    "dart.flutterSdkPath": "/opt/programs/flutter/versions/3.16.7",
+    "dart.flutterSdkPaths": ["/opt/programs/flutter/versions"],
+    //Eliminar archivos .fvm de búsqueda
+    "search.exclude": {
+        "**/.fvm": true
+    },
+    // Eliminar de la observación de archivos
+    "files.watcherExclude": {
+        "**/.fvm": true
+    },
     "java.configuration.updateBuildConfiguration": "interactive"
 }

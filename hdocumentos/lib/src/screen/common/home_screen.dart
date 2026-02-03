@@ -9,9 +9,9 @@ class HomeScreen extends StatelessWidget {
   //Render principal widgets load background, body
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Stack(children: const [BrackgroundWidget(), _HomeScreenBody()]),
-        bottomNavigationBar: const BottomNavigationWidget());
+    return const Scaffold(
+        body: Stack(children: [BrackgroundWidget(), _HomeScreenBody()]),
+        bottomNavigationBar: BottomNavigationWidget());
   }
 }
 

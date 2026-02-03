@@ -32,12 +32,12 @@ class _LoginBackgroundWidgetBox extends StatelessWidget {
       decoration: _background(),
       child: Stack(
         children: [
-          Positioned(child: _Bubble(), top: 90, left: 30),
-          Positioned(child: _Bubble(), top: -40, left: -30),
-          Positioned(child: _Bubble(), top: -50, right: -20),
-          Positioned(child: _Bubble(), bottom: -50, left: 10),
+          Positioned(top: 90, left: 30, child: _Bubble()),
+          Positioned(top: -40, left: -30, child: _Bubble()),
+          Positioned(top: -50, right: -20, child: _Bubble()),
+          Positioned(bottom: -50, left: 10, child: _Bubble()),
           //Positioned(child: _Bubble(), bottom: 340, left: 440),
-          Positioned(child: _Bubble(), bottom: 120, right: 20),
+          Positioned(bottom: 120, right: 20, child: _Bubble()),
           const _HeaderIcon(),
         ],
       ),

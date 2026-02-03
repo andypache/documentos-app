@@ -11,4 +11,3 @@ export 'package:hdocumentos/src/screen/bill/bill_screen.dart';
 export 'package:hdocumentos/src/screen/item/item_screen.dart';
 export 'package:hdocumentos/src/screen/report/report_screen.dart';
 export 'package:hdocumentos/src/screen/review/review_screen.dart';
-export 'package:hdocumentos/src/screen/config/configuration_screen.dart';

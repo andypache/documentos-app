@@ -1,17 +1,15 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/constant.dart';
 import 'package:hdocumentos/src/service/service.dart';
 import 'package:hdocumentos/src/share/preference.dart';
-import 'package:http/http.dart' as http;
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hdocumentos/src/model/model.dart';
 
 const storage = FlutterSecureStorage();
 AuthService authService = AuthService();
-const String _generalError =
-    'No se puede comunicar con el servicio, por favor intente mas tarde';
 const int _generalErrorStatus = 509;
 
 //Create client for call service body data
@@ -98,11 +96,10 @@ getResponse(dynamic response) {
 
 //Get general response to call error message
 _getGeneralErrorResponse() {
-  NotificationService.showSnackbarError(_generalError);
   return ServiceResponseModel(
       statusHttp: _generalErrorStatus,
       status: '-1',
-      message: _generalError,
+      message: generalError,
       body: null);
 }
 
@@ -126,8 +123,6 @@ _refreshlLoginApp(BuildContext context, ServiceResponseModel result, String url,
 
 //Logout app by unauthorized
 _logoutApp(BuildContext context) async {
-  NotificationService.showSnackbarError('Por favor inicie sesión nuevamente');
-  sleep(const Duration(seconds: 3));
   await authService.logout();
   Navigator.pushReplacementNamed(context, 'login');
 }

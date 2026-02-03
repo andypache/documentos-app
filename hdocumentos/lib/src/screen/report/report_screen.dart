@@ -8,7 +8,7 @@ class ReportScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(children: const [BrackgroundWidget(), _ReportScreenBody()]),
+        body: const Stack(children: [BrackgroundWidget(), _ReportScreenBody()]),
         floatingActionButton: FloatingActionButton(
             elevation: 20,
             child: const Icon(Icons.close),
@@ -23,8 +23,8 @@ class _ReportScreenBody extends StatelessWidget {
   ///Put title and form into principal widgets
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        child: Column(children: const [
+    return const SingleChildScrollView(
+        child: Column(children: [
       PageTitleWidget(title: 'Reportes'),
       SizedBox(height: 60),
       _ReportScreenForm()
@@ -39,8 +39,8 @@ class _ReportScreenForm extends StatelessWidget {
   //Create form
   @override
   Widget build(BuildContext context) {
-    return Form(
-        child: Column(children: const [
+    return const Form(
+        child: Column(children: [
       InputFieldWidget(
           prefixIcon: Icons.person_outline_outlined,
           labelText: 'Nombre',

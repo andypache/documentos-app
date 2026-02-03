@@ -90,8 +90,8 @@ class _SingleCart extends StatelessWidget {
               children: [
                 CircleAvatar(
                   backgroundColor: color,
-                  child: Icon(icon, size: 25, color: AppTheme.white),
                   radius: 25,
+                  child: Icon(icon, size: 25, color: AppTheme.white),
                 ),
                 const SizedBox(
                   height: 5,

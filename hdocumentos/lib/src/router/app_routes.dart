@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/screen/screen.dart';
-import 'package:hdocumentos/src/service/service.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
-import 'package:provider/provider.dart';
 
 //Class that containt all router with render widwegs into app
 class AppRoutes {
@@ -82,9 +79,7 @@ class AppRoutes {
     MenuOptionModel(
         route: 'config',
         text: 'configuración',
-        screen: ChangeNotifierProvider(
-            create: (_) => ConfigurationService(),
-            child: const ConfigurationScreen()),
+        screen: const ConfigurationScreen(),
         icon: Icons.home),
     MenuOptionModel(
         route: 'client',

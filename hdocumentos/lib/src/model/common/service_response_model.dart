@@ -8,6 +8,11 @@ class ServiceResponseModel {
   dynamic errorDescription;
 
   //Constructor of class
+  factory ServiceResponseModel.createEmpty() {
+    return ServiceResponseModel(
+        statusHttp: 0, status: "", body: "", message: "");
+  }
+
   ServiceResponseModel(
       {required this.statusHttp,
       required this.status,

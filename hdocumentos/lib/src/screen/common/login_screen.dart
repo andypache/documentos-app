@@ -31,7 +31,8 @@ class LoginScreen extends StatelessWidget {
                 color: AppTheme.primary, size: 80)),
         const SizedBox(height: 10),
         //Title for container
-        Text('Iniciar sesión', style: Theme.of(context).textTheme.headline5),
+        Text('Iniciar sesión',
+            style: Theme.of(context).textTheme.headlineSmall),
         const SizedBox(height: 30),
         //Load form and provider login
         ChangeNotifierProvider(
@@ -119,14 +120,21 @@ class _LoginScreenForm extends StatelessWidget {
     if (!loginForm.isValidForm()) return;
     //Create login
     loginForm.isLoading = true;
-    ServiceResponseModel response =
-        await authService.login(loginForm.username, loginForm.password);
-    loginForm.isLoading = false;
-    if (response.statusHttp == 200) {
-      Preferences.keepSession = loginForm.keepSession;
-      Navigator.pushReplacementNamed(context, 'home');
-    } else {
-      NotificationService.showSnackbarError(response.error ?? response.message);
+    try {
+      ServiceResponseModel response =
+          await authService.login(loginForm.username, loginForm.password);
+      loginForm.isLoading = false;
+      if (response.statusHttp == 200) {
+        Preferences.keepSession = loginForm.keepSession;
+        Navigator.pushReplacementNamed(context, 'home');
+      } else {
+        NotificationService.showSnackbarError(
+            response.error ?? response.message);
+      }
+    } catch (error) {
+      loginForm.isLoading = false;
+      NotificationService.showSnackbarError(
+          "No se puede crear las sesión, por favor intente mas tarde");
     }
   }
 }

@@ -8,7 +8,7 @@ class ReviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(children: const [BrackgroundWidget(), _ReviewScreenBody()]),
+        body: const Stack(children: [BrackgroundWidget(), _ReviewScreenBody()]),
         floatingActionButton: FloatingActionButton(
             elevation: 20,
             child: const Icon(Icons.close),
@@ -23,8 +23,8 @@ class _ReviewScreenBody extends StatelessWidget {
   ///Put title and form into principal widgets
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        child: Column(children: const [
+    return const SingleChildScrollView(
+        child: Column(children: [
       PageTitleWidget(title: 'Revisión documentos'),
       SizedBox(height: 60),
       _ReviewScreenForm()
@@ -39,8 +39,8 @@ class _ReviewScreenForm extends StatelessWidget {
   //Create form
   @override
   Widget build(BuildContext context) {
-    return Form(
-        child: Column(children: const [
+    return const Form(
+        child: Column(children: [
       InputFieldWidget(
           prefixIcon: Icons.person_outline_outlined,
           labelText: 'Nombre',

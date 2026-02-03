@@ -100,6 +100,8 @@ class _BillPoster extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                       child: Container(
                         decoration: boxDecoration,
+                        width: 100,
+                        height: 170,
                         child: Column(children: [
                           Padding(
                               padding: const EdgeInsets.only(top: 10),
@@ -145,8 +147,6 @@ class _BillPoster extends StatelessWidget {
                                         fontWeight: FontWeight.bold))
                               ])
                         ]),
-                        width: 100,
-                        height: 170,
                       )))),
           const SizedBox(height: 5),
           Column(children: [

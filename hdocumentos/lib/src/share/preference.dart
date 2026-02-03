@@ -8,7 +8,7 @@ class Preferences {
   static late SharedPreferences _preferences;
   //Usersession properties
   static UserSessionModel _userSession = UserSessionModel(
-      id: 0,
+      userId: "0",
       username: "",
       email: "",
       identification: "",
@@ -25,7 +25,7 @@ class Preferences {
   //propertiy for get user preference
   static UserSessionModel get userSession {
     UserSessionModel response = UserSessionModel(
-        id: 0,
+        userId: "0",
         username: "",
         email: "",
         identification: "",
@@ -60,7 +60,7 @@ class Preferences {
   //Remove user
   static removeUser() {
     userSession = UserSessionModel(
-        id: 0,
+        userId: "0",
         username: "",
         email: "",
         identification: "",
