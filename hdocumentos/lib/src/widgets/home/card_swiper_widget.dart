@@ -21,14 +21,21 @@ class CardSwiperWidget extends StatelessWidget {
       return const LoadingWidget();
     }
 
+    // Calcular dimensiones responsivas
+    final cardWidth = size.width * 0.65;
+    final cardHeight = size.height * 0.28;
+    final iconSize = size.width * 0.15;
+    final titleFontSize = size.width * 0.055;
+    final descriptionFontSize = size.width * 0.035;
+
     return SizedBox(
         width: double.infinity,
-        height: size.height * 0.35,
+        height: cardHeight,
         child: Swiper(
             itemCount: homeMenus.length,
             layout: SwiperLayout.STACK,
-            itemWidth: size.width * 0.6,
-            itemHeight: size.height * 0.4,
+            itemWidth: cardWidth,
+            itemHeight: cardHeight,
             itemBuilder: (_, int index) {
               final menu = homeMenus[index];
               menu.id = 'swiper-${menu.id}';
@@ -39,27 +46,42 @@ class CardSwiperWidget extends StatelessWidget {
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(20),
                           child: _CartBackground(
-                              child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                Icon(menu.icon, size: 75, color: menu.color),
+                              child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: size.width * 0.04,
+                              vertical: size.height * 0.015,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(menu.icon,
+                                    size: iconSize, color: menu.color),
+                                SizedBox(height: size.height * 0.012),
                                 Text(
                                   menu.text,
                                   style: TextStyle(
                                       color: menu.color,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 25),
+                                      fontSize: titleFontSize),
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                const SizedBox(
-                                  height: 7,
-                                ),
-                                Text(menu.description ?? "",
+                                SizedBox(height: size.height * 0.008),
+                                Flexible(
+                                  child: Text(
+                                    menu.description ?? "",
                                     overflow: TextOverflow.ellipsis,
-                                    maxLines: 3,
+                                    maxLines: 2,
                                     textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                        color: AppTheme.white, fontSize: 15.0))
-                              ])))));
+                                    style: TextStyle(
+                                        color: AppTheme.white,
+                                        fontSize: descriptionFontSize),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )))));
             }));
   }
 }
@@ -73,30 +95,35 @@ class _CartBackground extends StatelessWidget {
   //Create content card
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Container(
         decoration: BoxDecoration(
             color: AppTheme.targetGradient,
             borderRadius: const BorderRadius.all(Radius.circular(25)),
             boxShadow: [
               BoxShadow(
-                  color: Colors.black.withOpacity(1),
-                  offset: const Offset(15, 15),
-                  blurRadius: 5)
+                  color: Colors.black.withOpacity(0.6),
+                  offset: Offset(size.width * 0.02, size.width * 0.02),
+                  blurRadius: 8)
             ]),
-        margin: const EdgeInsets.only(right: 8, left: 8, top: 15, bottom: 0),
+        margin: EdgeInsets.symmetric(
+          horizontal: size.width * 0.02,
+          vertical: size.height * 0.01,
+        ),
         child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                 child: Container(
-                    height: 100,
                     decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                              color: Colors.white.withOpacity(0.5),
-                              spreadRadius: 10,
-                              blurRadius: 10,
-                              offset: const Offset(6, 8))
+                              color: Colors.white.withOpacity(0.3),
+                              spreadRadius: 5,
+                              blurRadius: 8,
+                              offset: Offset(
+                                  size.width * 0.012, size.height * 0.008))
                         ],
                         color: AppTheme.targetGradient,
                         borderRadius: BorderRadius.circular(20)),
