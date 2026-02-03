@@ -41,19 +41,23 @@ class _CardSliderState extends State<CardSlider> {
   //Render widgets
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final containerHeight = size.height * 0.28;
+    final titleFontSize = size.width * 0.045;
+
     return SizedBox(
         width: double.infinity,
-        height: 240,
+        height: containerHeight,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           if (widget.title != null)
             Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
                 child: Text(widget.title!,
-                    style: const TextStyle(
-                        fontSize: 20,
+                    style: TextStyle(
+                        fontSize: titleFontSize,
                         color: AppTheme.white,
                         fontWeight: FontWeight.bold))),
-          const SizedBox(height: 5),
+          SizedBox(height: size.height * 0.006),
           Expanded(
               child: ListView.builder(
                   controller: scrollController,
@@ -85,11 +89,22 @@ class _BillPoster extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bill.resume = resume;
+    final size = MediaQuery.of(context).size;
+
+    // Calcular dimensiones responsivas
+    final cardWidth = size.width * 0.25;
+    final cardHeight = size.height * 0.22;
+    final dateFontSize = size.width * 0.028;
+    final itemFontSize = size.width * 0.026;
+    final totalLabelFontSize = size.width * 0.026;
+    final totalValueFontSize = size.width * 0.028;
+    final clientFontSize = size.width * 0.025;
+    final horizontalMargin = size.width * 0.02;
 
     return Container(
-        width: 100,
-        height: 170,
-        margin: const EdgeInsets.symmetric(horizontal: 10),
+        width: cardWidth,
+        height: cardHeight,
+        margin: EdgeInsets.symmetric(horizontal: horizontalMargin),
         child: Column(children: [
           GestureDetector(
               onTap: () =>
@@ -100,62 +115,83 @@ class _BillPoster extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                       child: Container(
                         decoration: boxDecoration,
-                        width: 100,
-                        height: 170,
-                        child: Column(children: [
-                          Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: Text(
-                                  DateFormat('dd/MM/yyyy HH:mm')
-                                      .format(bill.date),
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      color: Colors.limeAccent,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold))),
-                          SizedBox(
-                              height: 90,
-                              child: Padding(
-                                  padding: const EdgeInsets.only(top: 10),
+                        width: cardWidth,
+                        height: cardHeight * 0.82,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: size.width * 0.01,
+                            vertical: size.height * 0.008,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // Fecha
+                              Text(
+                                DateFormat('dd/MM/yyyy\nHH:mm')
+                                    .format(bill.date),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.limeAccent,
+                                    fontSize: dateFontSize,
+                                    fontWeight: FontWeight.bold,
+                                    height: 1.2),
+                              ),
+                              // Items
+                              Flexible(
+                                child: SingleChildScrollView(
                                   child: Column(
-                                      children: bill.items
-                                          .map((item) => Text("- ${item.name}",
+                                    children: bill.items
+                                        .map((item) => Text(
+                                              "- ${item.name}",
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.left,
-                                              style: const TextStyle(
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
                                                   color: Colors.white70,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold)))
-                                          .take(5)
-                                          .toList()))),
-                          Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                const Text("TOTAL",
-                                    style: TextStyle(
-                                        color: Colors.redAccent,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold)),
-                                Text("\$ ${bill.total}",
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        color: Colors.redAccent,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold))
-                              ])
-                        ]),
+                                                  fontSize: itemFontSize,
+                                                  fontWeight: FontWeight.bold),
+                                            ))
+                                        .take(4)
+                                        .toList(),
+                                  ),
+                                ),
+                              ),
+                              // Total
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text("TOTAL",
+                                      style: TextStyle(
+                                          color: Colors.redAccent,
+                                          fontSize: totalLabelFontSize,
+                                          fontWeight: FontWeight.bold)),
+                                  Text("\$ ${bill.total}",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          color: Colors.redAccent,
+                                          fontSize: totalValueFontSize,
+                                          fontWeight: FontWeight.bold))
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                       )))),
-          const SizedBox(height: 5),
-          Column(children: [
-            Text("${bill.client.completeName}",
-                maxLines: 4,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12, color: AppTheme.white))
-          ])
+          SizedBox(height: size.height * 0.005),
+          Flexible(
+            child: Text(
+              bill.client.completeName ?? "",
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: clientFontSize,
+                color: AppTheme.white,
+                height: 1.1,
+              ),
+            ),
+          ),
         ]));
   }
 }
