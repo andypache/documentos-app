@@ -224,12 +224,20 @@ class _BillScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Column(
       children: [
+        // Widget de información del usuario
+        UserSessionTitle(),
         // Header con título y botón de cerrar
         Container(
-          padding:
-              const EdgeInsets.only(top: 40, left: 20, right: 20, bottom: 0),
+          padding: EdgeInsets.only(
+            top: 0,
+            left: size.width * 0.05,
+            right: size.width * 0.05,
+            bottom: 0,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -237,7 +245,8 @@ class _BillScreenBody extends StatelessWidget {
                 child: PageTitleWidget(title: 'Facturar'),
               ),
               IconButton(
-                icon: const Icon(Icons.close, color: Colors.white, size: 30),
+                icon: Icon(Icons.close,
+                    color: Colors.white, size: size.width * 0.07),
                 onPressed: () => _confirmExit(context),
                 tooltip: 'Cerrar',
               ),
@@ -249,7 +258,7 @@ class _BillScreenBody extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const SizedBox(height: 30),
+                SizedBox(height: size.height * 0.01),
                 Consumer<BillFormProvider>(
                   builder: (context, provider, _) {
                     return Column(
@@ -263,7 +272,7 @@ class _BillScreenBody extends StatelessWidget {
                           onAssignConsumerFinal: () =>
                               provider.assignConsumerFinal(),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: size.height * 0.02),
 
                         // Lista de productos
                         ProductListWidget(
@@ -279,7 +288,7 @@ class _BillScreenBody extends StatelessWidget {
                           },
                           onAddProduct: () => _showProductSearch(context),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: size.height * 0.02),
 
                         // Método de pago
                         PaymentMethodWidget(
@@ -292,7 +301,7 @@ class _BillScreenBody extends StatelessWidget {
                         ),
 
                         // Espacio para el panel de totales
-                        const SizedBox(height: 300),
+                        SizedBox(height: size.height * 0.35),
                       ],
                     );
                   },

@@ -52,12 +52,20 @@ class _ClientScreenBody extends StatefulWidget {
 class _ClientScreenBodyState extends State<_ClientScreenBody> {
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Column(
       children: [
+        // Widget de información del usuario
+        UserSessionTitle(),
         // Header con título y botón de cerrar
         Container(
-          padding:
-              const EdgeInsets.only(top: 40, left: 20, right: 20, bottom: 0),
+          padding: EdgeInsets.only(
+            top: 0,
+            left: size.width * 0.05,
+            right: size.width * 0.05,
+            bottom: 0,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -65,7 +73,8 @@ class _ClientScreenBodyState extends State<_ClientScreenBody> {
                 child: PageTitleWidget(title: 'Clientes'),
               ),
               IconButton(
-                icon: const Icon(Icons.close, color: Colors.white, size: 30),
+                icon: Icon(Icons.close,
+                    color: Colors.white, size: size.width * 0.07),
                 onPressed: () => Navigator.pop(context),
                 tooltip: 'Cerrar',
               ),
@@ -73,15 +82,15 @@ class _ClientScreenBodyState extends State<_ClientScreenBody> {
           ),
         ),
         // Resto del contenido
-        const Expanded(
+        Expanded(
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: 45),
-                _SearchSection(),
-                SizedBox(height: 20),
-                _CustomerListSection(),
-                SizedBox(height: 80), // Espacio para el FAB
+                SizedBox(height: size.height * 0.02),
+                const _SearchSection(),
+                SizedBox(height: size.height * 0.025),
+                const _CustomerListSection(),
+                SizedBox(height: size.height * 0.1), // Espacio para el FAB
               ],
             ),
           ),
@@ -252,8 +261,12 @@ class _SearchSectionState extends State<_SearchSection> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final horizontalPadding = size.width * 0.05;
+    final fontSize = size.width * 0.035;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
       child: Column(
         children: [
           // Campo de búsqueda
@@ -265,16 +278,18 @@ class _SearchSectionState extends State<_SearchSection> {
             ),
             child: TextField(
               controller: _searchController,
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.white, fontSize: fontSize),
               decoration: InputDecoration(
                 hintText: 'Buscar por nombre, clave o código de barras',
-                hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
-                prefixIcon:
-                    const Icon(Icons.search, color: AppTheme.primaryButton),
+                hintStyle: TextStyle(
+                    color: Colors.white.withOpacity(0.5), fontSize: fontSize),
+                prefixIcon: Icon(Icons.search,
+                    color: AppTheme.primaryButton, size: size.width * 0.06),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.clear,
-                            color: AppTheme.primaryButton),
+                        icon: Icon(Icons.clear,
+                            color: AppTheme.primaryButton,
+                            size: size.width * 0.06),
                         onPressed: () {
                           _searchController.clear();
                           _clearSearch();
@@ -283,9 +298,9 @@ class _SearchSectionState extends State<_SearchSection> {
                       )
                     : null,
                 border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 15,
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: size.width * 0.05,
+                  vertical: size.height * 0.018,
                 ),
               ),
               onChanged: (value) {
@@ -298,7 +313,7 @@ class _SearchSectionState extends State<_SearchSection> {
               },
             ),
           ),
-          const SizedBox(height: 15),
+          SizedBox(height: size.height * 0.018),
           // Botones de acción
           Row(
             children: [
@@ -309,26 +324,29 @@ class _SearchSectionState extends State<_SearchSection> {
                       _searchCustomers();
                     }
                   },
-                  icon: const Icon(Icons.search),
-                  label: const Text('Buscar'),
+                  icon: Icon(Icons.search, size: size.width * 0.045),
+                  label: Text('Buscar', style: TextStyle(fontSize: fontSize)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryButton,
-                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    padding:
+                        EdgeInsets.symmetric(vertical: size.height * 0.018),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: size.width * 0.025),
               Expanded(
                 child: ElevatedButton.icon(
                   onPressed: _loadAllCustomers,
-                  icon: const Icon(Icons.list),
-                  label: const Text('Ver Últimos'),
+                  icon: Icon(Icons.list, size: size.width * 0.045),
+                  label:
+                      Text('Ver Últimos', style: TextStyle(fontSize: fontSize)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.secondaryButton,
-                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    padding:
+                        EdgeInsets.symmetric(vertical: size.height * 0.018),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -379,6 +397,8 @@ class _CustomerListContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     // Estado inicial
     if (!hasSearched) {
       return const _EmptyStateWidget(
@@ -391,9 +411,9 @@ class _CustomerListContent extends StatelessWidget {
 
     // Cargando
     if (isLoading) {
-      return const Padding(
-        padding: EdgeInsets.all(50),
-        child: Center(
+      return Padding(
+        padding: EdgeInsets.all(size.height * 0.06),
+        child: const Center(
           child: CircularProgressIndicator(color: AppTheme.primaryButton),
         ),
       );
@@ -412,18 +432,18 @@ class _CustomerListContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 10),
+        SizedBox(height: size.height * 0.012),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0),
+          padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
           child: Text(
             '${customers.length} cliente(s) encontrado(s)',
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white70,
-              fontSize: 14,
+              fontSize: size.width * 0.032,
             ),
           ),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: size.height * 0.012),
         ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -550,27 +570,31 @@ class _EmptyStateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Padding(
-      padding: const EdgeInsets.all(40),
+      padding: EdgeInsets.all(size.height * 0.05),
       child: Column(
         children: [
-          Icon(icon, size: 80, color: AppTheme.primaryButton.withOpacity(0.5)),
-          const SizedBox(height: 20),
+          Icon(icon,
+              size: size.width * 0.18,
+              color: AppTheme.primaryButton.withOpacity(0.5)),
+          SizedBox(height: size.height * 0.025),
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 20,
+              fontSize: size.width * 0.048,
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: size.height * 0.012),
           Text(
             message,
             style: TextStyle(
               color: Colors.white.withOpacity(0.7),
-              fontSize: 14,
+              fontSize: size.width * 0.035,
             ),
             textAlign: TextAlign.center,
           ),
@@ -589,18 +613,19 @@ class _CustomerDetailSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     final String displayName = customer['businessName'] ??
         '${customer['firstName'] ?? ''} ${customer['lastName'] ?? ''}'.trim();
 
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(size.width * 0.05),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
             child: Container(
-              width: 40,
+              width: size.width * 0.1,
               height: 4,
               decoration: BoxDecoration(
                 color: Colors.white30,
@@ -608,16 +633,16 @@ class _CustomerDetailSheet extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: size.height * 0.025),
           Text(
             displayName,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 22,
+              fontSize: size.width * 0.052,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 15),
+          SizedBox(height: size.height * 0.018),
           _DetailRow(
             icon: Icons.badge,
             label: 'Tipo de identificación',
@@ -649,7 +674,7 @@ class _CustomerDetailSheet extends StatelessWidget {
               label: 'Dirección',
               value: customer['address'],
             ),
-          const SizedBox(height: 20),
+          SizedBox(height: size.height * 0.025),
         ],
       ),
     );
@@ -671,12 +696,14 @@ class _DetailRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
       child: Row(
         children: [
-          Icon(icon, color: AppTheme.primaryButton, size: 20),
-          const SizedBox(width: 10),
+          Icon(icon, color: AppTheme.primaryButton, size: size.width * 0.048),
+          SizedBox(width: size.width * 0.025),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -685,15 +712,15 @@ class _DetailRow extends StatelessWidget {
                   label,
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.7),
-                    fontSize: 12,
+                    fontSize: size.width * 0.03,
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   value,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: size.width * 0.038,
                   ),
                 ),
               ],
