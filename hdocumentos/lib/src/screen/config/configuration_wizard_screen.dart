@@ -12,8 +12,8 @@ import 'package:hdocumentos/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 /// Pantalla wizard para crear y editar la compañia
-class ConfigurationScreen extends StatelessWidget {
-  const ConfigurationScreen({Key? key}) : super(key: key);
+class ConfigurationWizardScreen extends StatelessWidget {
+  const ConfigurationWizardScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
