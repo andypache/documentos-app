@@ -79,7 +79,7 @@ class AppRoutes {
     MenuOptionModel(
         route: 'config',
         text: 'configuración',
-        screen: const ConfigurationScreen(),
+        screen: const ConfigurationWizardScreen(),
         icon: Icons.home),
     MenuOptionModel(
         route: 'client',

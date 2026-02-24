@@ -3,11 +3,6 @@ import 'package:hdocumentos/src/model/config/company_model.dart';
 import 'package:hdocumentos/src/provider/form/company_form_provider.dart';
 import 'package:hdocumentos/src/share/preference.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
-import 'package:hdocumentos/src/widgets/config/company_wizard_step1_widget.dart';
-import 'package:hdocumentos/src/widgets/config/company_wizard_step2_widget.dart';
-import 'package:hdocumentos/src/widgets/config/company_wizard_step3_widget.dart';
-import 'package:hdocumentos/src/widgets/config/company_wizard_step4_widget.dart';
-import 'package:hdocumentos/src/widgets/config/company_wizard_step5_widget.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
