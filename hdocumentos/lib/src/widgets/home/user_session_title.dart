@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/share/preference.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
+import 'package:hdocumentos/src/widgets/common/language_selector_widget.dart';
 
 ///Widgets that put user session into top screen
 class UserSessionTitle extends StatelessWidget {
@@ -87,7 +88,8 @@ class UserSessionTitle extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 9, color: Colors.white.withOpacity(0.6)))
                   ]))
-              // Billing card
+              // Selector de idioma
+              , const LanguageSelectorWidget(),
             ])));
   }
 }

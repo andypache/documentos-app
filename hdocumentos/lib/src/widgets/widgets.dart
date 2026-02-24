@@ -19,6 +19,7 @@ export 'package:hdocumentos/src/widgets/common/input_checkbox_field_widget.dart'
 export 'package:hdocumentos/src/widgets/common/input_number_field_widget.dart';
 export 'package:hdocumentos/src/widgets/common/input_switch_field_widget.dart';
 export 'package:hdocumentos/src/widgets/common/image_picker_field_widget.dart';
+export 'package:hdocumentos/src/widgets/common/language_selector_widget.dart';
 export 'package:hdocumentos/src/widgets/item/tax_selection_dialog_widget.dart';
 
 // Bill widgets

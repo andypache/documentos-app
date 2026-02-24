@@ -68,4 +68,13 @@ class Preferences {
         surnames: "",
         names: "");
   }
+
+  /// Idioma de la aplicación (es / en)
+  static String get language {
+    return _preferences.getString('language') ?? 'es';
+  }
+
+  static set language(String lang) {
+    _preferences.setString('language', lang);
+  }
 }
