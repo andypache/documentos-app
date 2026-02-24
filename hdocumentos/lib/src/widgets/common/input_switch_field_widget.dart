@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 
 ///Widget para campos switch
-class InputSwitchFieldWidget extends StatelessWidget {
+class InputSwitchFieldWidget extends StatefulWidget {
   final String label;
   final bool value;
   final void Function(bool) onChanged;
@@ -17,9 +17,30 @@ class InputSwitchFieldWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<InputSwitchFieldWidget> createState() => _InputSwitchFieldWidgetState();
+}
+
+class _InputSwitchFieldWidgetState extends State<InputSwitchFieldWidget> {
+  late bool _value;
+
+  @override
+  void initState() {
+    super.initState();
+    _value = widget.value;
+  }
+
+  @override
+  void didUpdateWidget(InputSwitchFieldWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value) {
+      _value = widget.value;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -28,18 +49,18 @@ class InputSwitchFieldWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  label,
+                  widget.label,
                   style: const TextStyle(
                     color: AppTheme.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                if (helperText != null)
+                if (widget.helperText != null)
                   Padding(
-                    padding: const EdgeInsets.only(top: 4),
+                    padding: const EdgeInsets.only(top: 2),
                     child: Text(
-                      helperText!,
+                      widget.helperText!,
                       style: TextStyle(
                         color: AppTheme.white.withOpacity(0.6),
                         fontSize: 12,
@@ -50,8 +71,11 @@ class InputSwitchFieldWidget extends StatelessWidget {
             ),
           ),
           Switch(
-            value: value,
-            onChanged: onChanged,
+            value: _value,
+            onChanged: (v) {
+              setState(() => _value = v);
+              widget.onChanged(v);
+            },
             activeColor: AppTheme.primaryButton,
           ),
         ],

@@ -14,6 +14,7 @@ class DropdownButtonFieldWidget extends StatelessWidget {
   final IconData? suffixIcon;
   final bool? filled;
   final Color? fillColor;
+  final dynamic initialValue;
 
   //Constructor class
   const DropdownButtonFieldWidget(
@@ -27,7 +28,8 @@ class DropdownButtonFieldWidget extends StatelessWidget {
       this.prefixIcon,
       this.suffixIcon,
       this.filled,
-      this.fillColor})
+      this.fillColor,
+      this.initialValue})
       : super(key: key);
 
   //Build
@@ -36,7 +38,7 @@ class DropdownButtonFieldWidget extends StatelessWidget {
     return Theme(
         data: Theme.of(context).copyWith(canvasColor: AppTheme.secondary),
         child: DropdownButtonFormField<dynamic>(
-            value: null,
+            value: initialValue,
             items: items
                 .map((item) => DropdownMenuItem<dynamic>(
                     value: item.key,

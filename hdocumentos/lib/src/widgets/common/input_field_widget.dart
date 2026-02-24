@@ -18,6 +18,7 @@ class InputFieldWidget extends StatelessWidget {
   final Color? hintStyleColor;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
+  final String? initialValue;
 
   //Constructor class
   const InputFieldWidget(
@@ -36,7 +37,8 @@ class InputFieldWidget extends StatelessWidget {
       this.fillColor,
       this.textStyleColor,
       this.floatingLabelStyleColor,
-      this.hintStyleColor})
+      this.hintStyleColor,
+      this.initialValue})
       : super(key: key);
 
   //Create widget
@@ -44,7 +46,7 @@ class InputFieldWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
         autofocus: false,
-        initialValue: '',
+        initialValue: initialValue ?? '',
         textCapitalization: TextCapitalization.words,
         keyboardType: keyboardType,
         obscureText: obscureText,

@@ -1,245 +1,410 @@
 import 'package:flutter/material.dart';
-import 'package:hdocumentos/src/model/model.dart';
+import 'package:hdocumentos/src/model/config/company_model.dart';
+import 'package:hdocumentos/src/provider/form/company_form_provider.dart';
+import 'package:hdocumentos/src/share/preference.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
-import 'package:provider/provider.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:hdocumentos/src/widgets/config/company_wizard_step1_widget.dart';
+import 'package:hdocumentos/src/widgets/config/company_wizard_step2_widget.dart';
+import 'package:hdocumentos/src/widgets/config/company_wizard_step3_widget.dart';
+import 'package:hdocumentos/src/widgets/config/company_wizard_step4_widget.dart';
+import 'package:hdocumentos/src/widgets/config/company_wizard_step5_widget.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
-import 'package:hdocumentos/src/service/service.dart';
-import 'package:hdocumentos/src/provider/provider.dart';
+import 'package:provider/provider.dart';
 
-///Widgets for render configuration application
+/// Pantalla wizard para crear y editar la compañia
 class ConfigurationScreen extends StatelessWidget {
   const ConfigurationScreen({Key? key}) : super(key: key);
 
-  //Render principal widgets load background, session, title and body
   @override
   Widget build(BuildContext context) {
-    //Create screen
+    final userSession = Preferences.userSession;
+    final hasCompany = userSession.hasCompany;
+    final company = hasCompany
+        ? CompanyModel.fromSession(userSession.toJson())
+        : CompanyModel.empty();
+
     return ChangeNotifierProvider(
-        create: (contex) => ConfigurationService(contex),
-        lazy: false,
-        child: Scaffold(
-            body: Stack(children: [
-              const BrackgroundWidget(),
-              //Put user session title and cart bill menu
-              UserSessionTitle(),
-              //Put title screen
-              const PageTitleWidget(title: "Configuración"),
-              //Scroll view padding top and left create provider form
-              const SingleChildScrollView(
-                  child: Padding(
-                      padding: EdgeInsets.only(top: 135, left: 20),
-                      child: _ConfigurationScreenBody()))
-            ]),
-            //Button close
-            floatingActionButton: FloatingActionButton(
-                elevation: 20,
-                child: const Icon(Icons.close, color: AppTheme.red),
-                onPressed: () => Navigator.pop(context))));
+      create: (_) => CompanyFormProvider(company),
+      child: _ConfigurationWizardBody(isEditing: hasCompany),
+    );
   }
 }
 
-///Body for configuration into sroll view
-class _ConfigurationScreenBody extends StatelessWidget {
-  const _ConfigurationScreenBody({Key? key}) : super(key: key);
-
-  //Create body
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final configurationService = Provider.of<ConfigurationService>(context);
-    //Create view after search config api
-    return SizedBox(
-        width: size.width * 0.90,
-        child: Column(children: [
-          //Create image component for update
-          _ConfigurationScreenImage(configurationService: configurationService),
-          const SizedBox(height: 30),
-          //Management provider form for save config
-          ChangeNotifierProvider(
-              create: (_) =>
-                  ConfigurationFormProvider(configurationService.configuration),
-              lazy: true,
-              child: const _ConfigurationScreenForm())
-        ]));
-  }
-}
-
-///Widget for load image to send bill
-class _ConfigurationScreenImage extends StatelessWidget {
-  const _ConfigurationScreenImage(
-      {Key? key, required this.configurationService})
+class _ConfigurationWizardBody extends StatelessWidget {
+  final bool isEditing;
+  const _ConfigurationWizardBody({Key? key, required this.isEditing})
       : super(key: key);
-  final ConfigurationService configurationService;
 
-  //Return image component load gallery or camera
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    if (configurationService.isLoading) {
-      return SizedBox(
-          width: size.width * 0.90,
-          height: size.height * 0.20,
-          child: const LoadingWidget());
-    }
-    //Create header with image component
-    return Column(children: [
-      Stack(children: [
-        //load image config
-        CardImageWidget(url: configurationService.configuration.pathImage),
-        //button for select gallery file
-        Positioned(
-            top: 5,
-            left: 20,
-            child: IconButton(
-                onPressed: () async {
-                  final picker = ImagePicker();
-                  final PickedFile? pickedFile = await picker.getImage(
-                      source: ImageSource.gallery, imageQuality: 100);
-                  if (pickedFile == null) {
-                    return;
-                  }
-                  configurationService.updateSelectedImage(
-                      context, pickedFile.path);
-                },
-                icon: const Icon(Icons.search_outlined,
-                    size: 40, color: Colors.white))),
-        //button for camera file
-        Positioned(
-            top: 5,
-            right: 20,
-            child: IconButton(
-                onPressed: () async {
-                  final picker = ImagePicker();
-                  final PickedFile? pickedFile = await picker.getImage(
-                      source: ImageSource.camera, imageQuality: 100);
-                  if (pickedFile == null) {
-                    return;
-                  }
-                  configurationService.updateSelectedImage(
-                      context, pickedFile.path);
-                },
-                icon: const Icon(Icons.camera_alt_outlined,
-                    size: 40, color: Colors.white)))
-      ]),
-      //footer for name image
-      Container(
-          width: size.width * 0.90,
-          height: size.height * 0.03,
-          decoration: _buildBoxDecoration(),
-          child: const Padding(
-              padding: EdgeInsets.only(top: 5),
-              child: Text("Imagen",
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.white,
-                    decoration: TextDecoration.underline,
-                    decorationColor: Colors.redAccent,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.bold,
+    return Scaffold(
+      body: Stack(
+        children: [
+          const BrackgroundWidget(),
+          SafeArea(
+            child: Column(
+              children: [
+                UserSessionTitle(),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.05,
+                    vertical: size.height * 0.01,
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center)))
-    ]);
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              isEditing ? 'Editar Compañia' : 'Nueva Compañia',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: size.width * 0.052,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            Text(
+                              isEditing
+                                  ? 'Actualiza la información de tu empresa'
+                                  : 'Configura tu empresa paso a paso',
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.6),
+                                fontSize: size.width * 0.032,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: Icon(
+                          Icons.close_rounded,
+                          color: Colors.white.withOpacity(0.8),
+                          size: size.width * 0.07,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const _CompanyStepperIndicator(),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: size.width * 0.05,
+                      vertical: size.height * 0.015,
+                    ),
+                    child: const _CompanyWizardContent(),
+                  ),
+                ),
+                const _CompanyNavigationButtons(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
-
-  //Background card image
-  BoxDecoration _buildBoxDecoration() => BoxDecoration(
-          color: AppTheme.grey.withOpacity(1),
-          borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(45),
-              bottomRight: Radius.circular(45)),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.white.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 5))
-          ]);
 }
 
-///Widgets configuration form
-class _ConfigurationScreenForm extends StatelessWidget {
-  const _ConfigurationScreenForm({Key? key}) : super(key: key);
+class _CompanyStepperIndicator extends StatelessWidget {
+  const _CompanyStepperIndicator({Key? key}) : super(key: key);
 
-  //build form with provider
+  static const List<Map<String, dynamic>> _steps = [
+    {'icon': Icons.business, 'label': 'Empresa'},
+    {'icon': Icons.image_outlined, 'label': 'Logo'},
+    {'icon': Icons.security_outlined, 'label': 'Cert.'},
+    {'icon': Icons.mail_outline, 'label': 'Correo'},
+    {'icon': Icons.point_of_sale_outlined, 'label': 'Emisión'},
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final configurationForm = Provider.of<ConfigurationFormProvider>(context);
-    final configuration = configurationForm.configuration;
+    final size = MediaQuery.of(context).size;
+    final provider = Provider.of<CompanyFormProvider>(context);
+    final current = provider.currentStep;
 
-    List<KeyValueModel> itemsEnviroment = <KeyValueModel>[];
-    itemsEnviroment.addAll([
-      KeyValueModel(key: '1', value: 'Pruebas'),
-      KeyValueModel(key: '2', value: 'Producción')
-    ]);
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: size.width * 0.04,
+        vertical: size.height * 0.01,
+      ),
+      child: Row(
+        children: List.generate(_steps.length * 2 - 1, (i) {
+          if (i.isOdd) {
+            final stepIndex = i ~/ 2;
+            return Expanded(
+              child: Container(
+                height: 2,
+                margin: EdgeInsets.only(bottom: size.height * 0.03),
+                decoration: BoxDecoration(
+                  color: stepIndex < current
+                      ? AppTheme.primaryButton
+                      : Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(1),
+                ),
+              ),
+            );
+          }
+          final stepIndex = i ~/ 2;
+          final isActive = stepIndex == current;
+          final isCompleted = stepIndex < current;
+          final step = _steps[stepIndex];
 
-    //Create form
-    return Form(
-        key: configurationForm.formKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: Column(children: [
-          //Button to load file certificate
-          MaterialButtonWidget(
-              type: AppTheme.secondaryButton,
-              icon: Icons.upload,
-              textButton: 'Firma electrónica',
-              minWidth: double.infinity,
-              onPressed: () async {
-                FilePickerResult? pickedFile =
-                    await FilePicker.platform.pickFiles(
-                  type: FileType.custom,
-                  allowedExtensions: ['cert', 'p12'],
-                );
-                if (pickedFile == null) {
-                  return;
-                }
-                configurationForm
-                    .updateCertificate(pickedFile.files.single.path!);
-              }),
-          const SizedBox(height: 20),
-          InputFieldWidget(
-              prefixIcon: Icons.lock_open_outlined,
-              labelText: 'Password certificado',
-              hintText: 'Password certificado (requerido)',
-              obscureText: true,
-              filled: true,
-              fillColor: AppTheme.whiteGradient,
-              onChanged: (value) => configuration.passwordCertificate = value),
-          const SizedBox(height: 20),
-          InputDateFieldWidget(
-              labelText: 'Fecha caducidad certificado',
-              hintText: 'Fecha caducidad certificado (requerido)',
-              filled: true,
-              fillColor: AppTheme.whiteGradient,
-              /*onChanged: (value) => configuration
-                  .certificateExpirationDate = value as DateTime?*/
-              onChanged: (value) {}),
-          const SizedBox(height: 20),
-          InputFieldWidget(
-              prefixIcon: Icons.email_outlined,
-              labelText: 'Email de envío',
-              hintText: 'Email (requerido)',
-              keyboardType: TextInputType.emailAddress,
-              filled: true,
-              fillColor: AppTheme.whiteGradient,
-              onChanged: (value) => configuration.email = value),
-          const SizedBox(height: 20),
-          DropdownButtonFieldWidget(
-              prefixIcon: Icons.send_to_mobile_sharp,
-              labelText: 'Ambiente',
-              hintText: 'Ambiente (requerido)',
-              items: itemsEnviroment,
-              filled: true,
-              fillColor: AppTheme.whiteGradient,
-              onChanged: (value) {}),
-          const SizedBox(height: 20),
-          //Button to save
-          MaterialButtonWidget(
-              textButton: 'Guardar', icon: Icons.save, onPressed: () => {}),
-          const SizedBox(height: 20)
-        ]));
+          return Expanded(
+            child: Column(
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 250),
+                  width: size.width * 0.1,
+                  height: size.width * 0.1,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isActive || isCompleted
+                        ? AppTheme.primaryButton
+                        : Colors.white.withOpacity(0.12),
+                    border: Border.all(
+                      color: isActive || isCompleted
+                          ? AppTheme.primaryButton
+                          : Colors.white.withOpacity(0.3),
+                      width: 1.5,
+                    ),
+                    boxShadow: isActive
+                        ? [
+                            BoxShadow(
+                              color: AppTheme.primaryButton.withOpacity(0.4),
+                              blurRadius: 8,
+                              spreadRadius: 1,
+                            )
+                          ]
+                        : [],
+                  ),
+                  child: Center(
+                    child: isCompleted
+                        ? Icon(Icons.check_rounded,
+                            color: Colors.white, size: size.width * 0.04)
+                        : Icon(step['icon'] as IconData,
+                            color: isActive
+                                ? Colors.white
+                                : Colors.white.withOpacity(0.4),
+                            size: size.width * 0.04),
+                  ),
+                ),
+                SizedBox(height: size.height * 0.005),
+                Text(
+                  step['label'] as String,
+                  style: TextStyle(
+                    color: isActive || isCompleted
+                        ? Colors.white
+                        : Colors.white.withOpacity(0.4),
+                    fontSize: size.width * 0.025,
+                    fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          );
+        }),
+      ),
+    );
+  }
+}
+
+class _CompanyWizardContent extends StatelessWidget {
+  const _CompanyWizardContent({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = Provider.of<CompanyFormProvider>(context);
+    switch (provider.currentStep) {
+      case 0:
+        return const CompanyWizardStep1Widget();
+      case 1:
+        return const CompanyWizardStep2Widget();
+      case 2:
+        return const CompanyWizardStep3Widget();
+      case 3:
+        return const CompanyWizardStep4Widget();
+      case 4:
+        return const CompanyWizardStep5Widget();
+      default:
+        return const CompanyWizardStep1Widget();
+    }
+  }
+}
+
+class _CompanyNavigationButtons extends StatelessWidget {
+  const _CompanyNavigationButtons({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final provider = Provider.of<CompanyFormProvider>(context);
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: size.width * 0.05,
+        vertical: size.height * 0.015,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.2),
+        border: Border(
+          top: BorderSide(color: Colors.white.withOpacity(0.1), width: 1),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Anterior / Cancelar
+          ElevatedButton.icon(
+            onPressed: provider.isLoading
+                ? null
+                : () {
+                    if (provider.currentStep > 0) {
+                      provider.previousStep();
+                    } else {
+                      Navigator.pop(context);
+                    }
+                  },
+            icon: Icon(
+              provider.currentStep > 0
+                  ? Icons.arrow_back_rounded
+                  : Icons.close_rounded,
+              size: size.width * 0.045,
+            ),
+            label: Text(
+              provider.currentStep > 0 ? 'Anterior' : 'Cancelar',
+              style: TextStyle(fontSize: size.width * 0.034),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor:
+                  provider.currentStep > 0 ? AppTheme.grey : Colors.red,
+              padding: EdgeInsets.symmetric(
+                horizontal: size.width * 0.05,
+                vertical: size.height * 0.012,
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+          ),
+
+          // Indicador
+          Text(
+            '${provider.currentStep + 1} de 5',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.5),
+              fontSize: size.width * 0.032,
+            ),
+          ),
+
+          // Siguiente / Guardar
+          provider.currentStep < 4
+              ? ElevatedButton.icon(
+                  onPressed: provider.isLoading
+                      ? null
+                      : () {
+                          if (!provider.nextStep()) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content:
+                                  const Text('Completa los campos requeridos'),
+                              backgroundColor: Colors.red.shade700,
+                              behavior: SnackBarBehavior.floating,
+                            ));
+                          }
+                        },
+                  icon: Icon(Icons.arrow_forward_rounded,
+                      size: size.width * 0.045),
+                  label: Text('Siguiente',
+                      style: TextStyle(
+                          fontSize: size.width * 0.034,
+                          fontWeight: FontWeight.bold)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.primaryButton,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: size.width * 0.05,
+                      vertical: size.height * 0.012,
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                )
+              : ElevatedButton.icon(
+                  onPressed: provider.isLoading
+                      ? null
+                      : () => _handleSave(context, provider),
+                  icon: provider.isLoading
+                      ? SizedBox(
+                          width: size.width * 0.045,
+                          height: size.width * 0.045,
+                          child: const CircularProgressIndicator(
+                              strokeWidth: 2, color: Colors.white),
+                        )
+                      : Icon(Icons.save_rounded, size: size.width * 0.045),
+                  label: Text(
+                    provider.isLoading ? 'Guardando...' : 'Guardar',
+                    style: TextStyle(
+                        fontSize: size.width * 0.034,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green.shade600,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: size.width * 0.05,
+                      vertical: size.height * 0.012,
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _handleSave(
+      BuildContext context, CompanyFormProvider provider) async {
+    if (!provider.isValidCurrentStep()) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: const Text('Completa los campos requeridos'),
+        backgroundColor: Colors.red.shade700,
+        behavior: SnackBarBehavior.floating,
+      ));
+      return;
+    }
+
+    provider.isLoading = true;
+
+    try {
+      final company = provider.buildCompanyModel();
+
+      // TODO: Enviar al backend via service
+      await Future.delayed(const Duration(seconds: 1));
+
+      provider.isLoading = false;
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            'Compañia "${company.businessName ?? ''}" guardada exitosamente',
+          ),
+          backgroundColor: Colors.green.shade600,
+          behavior: SnackBarBehavior.floating,
+        ));
+        Navigator.pop(context, company);
+      }
+    } catch (e) {
+      provider.isLoading = false;
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Error al guardar: $e'),
+          backgroundColor: Colors.red.shade700,
+          behavior: SnackBarBehavior.floating,
+        ));
+      }
+    }
   }
 }

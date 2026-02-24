@@ -15,7 +15,6 @@ export 'package:hdocumentos/src/widgets/home/card_swiper_widget.dart';
 export 'package:hdocumentos/src/widgets/common/loading_widget.dart';
 export 'package:hdocumentos/src/widgets/home/card_slider.dart';
 export 'package:hdocumentos/src/widgets/home/user_session_title.dart';
-export 'package:hdocumentos/src/widgets/common/billing_card.dart';
 export 'package:hdocumentos/src/widgets/common/input_checkbox_field_widget.dart';
 export 'package:hdocumentos/src/widgets/common/input_number_field_widget.dart';
 export 'package:hdocumentos/src/widgets/common/input_switch_field_widget.dart';
@@ -29,4 +28,12 @@ export 'package:hdocumentos/src/widgets/bill/product_list_widget.dart';
 export 'package:hdocumentos/src/widgets/bill/product_search_dialog.dart';
 export 'package:hdocumentos/src/widgets/bill/product_edit_dialog.dart';
 export 'package:hdocumentos/src/widgets/bill/payment_method_widget.dart';
+
+// Config wizard widgets
+export 'package:hdocumentos/src/widgets/config/company_wizard_shared.dart';
+export 'package:hdocumentos/src/widgets/config/company_wizard_step1_widget.dart';
+export 'package:hdocumentos/src/widgets/config/company_wizard_step2_widget.dart';
+export 'package:hdocumentos/src/widgets/config/company_wizard_step3_widget.dart';
+export 'package:hdocumentos/src/widgets/config/company_wizard_step4_widget.dart';
+export 'package:hdocumentos/src/widgets/config/company_wizard_step5_widget.dart';
 export 'package:hdocumentos/src/widgets/bill/totals_panel_widget.dart';
