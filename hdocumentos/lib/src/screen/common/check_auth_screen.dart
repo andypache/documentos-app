@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hdocumentos/src/screen/screen.dart';
 import 'package:hdocumentos/src/service/service.dart';
 import 'package:provider/provider.dart';
 
@@ -21,19 +20,11 @@ class CheckOutScreen extends StatelessWidget {
                   if (!snapshot.hasData) return const Text('');
                   if (snapshot.data == "") {
                     Future.microtask(() {
-                      Navigator.pushReplacement(
-                          context,
-                          PageRouteBuilder(
-                              pageBuilder: (_, __, ___) => const LoginScreen(),
-                              transitionDuration: Duration.zero));
+                      Navigator.pushReplacementNamed(context, 'login');
                     });
                   } else {
                     Future.microtask(() {
-                      Navigator.pushReplacement(
-                          context,
-                          PageRouteBuilder(
-                              pageBuilder: (_, __, ___) => const HomeScreen(),
-                              transitionDuration: Duration.zero));
+                      Navigator.pushReplacementNamed(context, 'home');
                     });
                   }
                   return Container();

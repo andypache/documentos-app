@@ -1,0 +1,96 @@
+{
+  "@@locale": "es",
+
+  "configEditTitle": "Editar Compañía",
+  "@configEditTitle": { "description": "Título pantalla editar compañía" },
+
+  "configNewTitle": "Nueva Compañía",
+  "@configNewTitle": { "description": "Título pantalla nueva compañía" },
+
+  "configEditSubtitle": "Actualiza la información de tu empresa",
+  "@configEditSubtitle": { "description": "Subtítulo editar compañía" },
+
+  "configNewSubtitle": "Configura tu empresa paso a paso",
+  "@configNewSubtitle": { "description": "Subtítulo nueva compañía" },
+
+  "stepCompany": "Empresa",
+  "@stepCompany": { "description": "Etiqueta paso 1 del wizard" },
+
+  "stepLogo": "Logo",
+  "@stepLogo": { "description": "Etiqueta paso 2 del wizard" },
+
+  "stepCert": "Cert.",
+  "@stepCert": { "description": "Etiqueta paso 3 del wizard" },
+
+  "stepMail": "Correo",
+  "@stepMail": { "description": "Etiqueta paso 4 del wizard" },
+
+  "stepEmission": "Emisión",
+  "@stepEmission": { "description": "Etiqueta paso 5 del wizard" },
+
+  "btnPrevious": "Anterior",
+  "@btnPrevious": { "description": "Botón ir al paso anterior" },
+
+  "btnCancel": "Cancelar",
+  "@btnCancel": { "description": "Botón cancelar" },
+
+  "btnNext": "Siguiente",
+  "@btnNext": { "description": "Botón ir al siguiente paso" },
+
+  "btnSave": "Guardar",
+  "@btnSave": { "description": "Botón guardar" },
+
+  "btnSaving": "Guardando...",
+  "@btnSaving": { "description": "Texto mientras se guarda" },
+
+  "stepCounter": "{current} de {total}",
+  "@stepCounter": {
+    "description": "Indicador de paso actual",
+    "placeholders": {
+      "current": { "type": "int" },
+      "total":   { "type": "int" }
+    }
+  },
+
+  "msgRequiredFields": "Completa los campos requeridos",
+  "@msgRequiredFields": { "description": "Mensaje de validación campos requeridos" },
+
+  "companySavedSuccess": "Compañía \"{name}\" guardada exitosamente",
+  "@companySavedSuccess": {
+    "description": "Mensaje de éxito al guardar compañía",
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "saveError": "Error al guardar: {error}",
+  "@saveError": {
+    "description": "Mensaje de error al guardar",
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+
+  "companyDetails": "Datos de la empresa",
+  "enteredSoFar": "Ingresado hasta ahora",
+  
+  "requiredSelect": "Seleccione el tipo (requerido)",
+  "requiredField": "Campo requerido",
+
+  "companyInformation": "Datos de la Empresa",
+  "identificationType": "Tipo de identificación",
+  "identificationNumber": "Número de identificación",
+  "identificationNumberHint": "RUC / Cédula (requerido)",
+  "companyName": "Razón social",
+  "companyNameHint": "Nombre de la empresa (requerido)",
+  "address": "Dirección",
+  "addressHint": "Dirección de la empresa (requerido)",
+  "telephone": "Teléfono",
+  "telephoneHint": "Teléfono (opcional)",
+  "email": "Correo electrónico",
+  "emailHint": "Email corporativo (requerido)",
+  "activeCompany": "Empresa activa",
+
+  "initApplicationError": "No se pudieron cargar los catálogos del sistema",
+  "invalidDataFormatForCatalogs": "Error en el formato de los catálogos del sistema"
+}

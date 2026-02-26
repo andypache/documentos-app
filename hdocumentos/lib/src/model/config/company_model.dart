@@ -45,6 +45,9 @@ class CompanyModel {
   String? description;
   bool? isActive;
 
+  // Grupos de impuesto habilitados (IVA, ICE, IRBPNR, ISD)
+  List<String> taxGroupCodes;
+
   CompanyModel({
     this.identificationTypeId,
     this.identificationTypeName,
@@ -76,6 +79,7 @@ class CompanyModel {
     this.currentSequential,
     this.description,
     this.isActive,
+    this.taxGroupCodes = const [],
   });
 
   /// Compañia vacía para creación
@@ -83,6 +87,7 @@ class CompanyModel {
         state: CompanyState.A,
         currentSequential: 1,
         isActive: true,
+        taxGroupCodes: [],
       );
 
   /// Carga desde la sesión del usuario (sin claves ni archivos)
@@ -142,6 +147,9 @@ class CompanyModel {
         currentSequential: json['current_sequential'] ?? 1,
         description: json['description'],
         isActive: json['is_active'] ?? true,
+        taxGroupCodes: (json['tax_group_codes'] as List<dynamic>? ?? [])
+            .map((e) => e.toString())
+            .toList(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -170,5 +178,6 @@ class CompanyModel {
         'current_sequential': currentSequential,
         'description': description,
         'is_active': isActive,
+        'tax_group_codes': taxGroupCodes,
       };
 }

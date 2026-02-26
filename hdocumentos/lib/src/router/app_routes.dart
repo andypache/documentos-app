@@ -115,12 +115,18 @@ class AppRoutes {
 
   ///Function for create routes for menus
   static Map<String, Widget Function(BuildContext)> getAppRoutes() {
-    Map<String, Widget Function(BuildContext)> appRoutes = {};
-    appRoutes
-        .addAll({'check': (BuildContext context) => const CheckOutScreen()});
-    for (final option in menuOptions) {
-      appRoutes.addAll({option.route: (BuildContext context) => option.screen});
-    }
-    return appRoutes;
+    return {
+      'check': (_) => const CheckOutScreen(),
+      'alert': (_) => const AlertScreen(),
+      'home': (_) => const HomeScreen(),
+      'register': (_) => const RegisterUserScreen(),
+      'config': (_) => const ConfigurationWizardScreen(),
+      'client': (_) => const ClientScreen(),
+      'bill': (_) => const BillScreen(),
+      'item': (_) => const ItemScreen(),
+      'report': (_) => const ReportScreen(),
+      'review': (_) => const ReviewScreen(),
+      'login': (_) => const LoginScreen(),
+    };
   }
 }

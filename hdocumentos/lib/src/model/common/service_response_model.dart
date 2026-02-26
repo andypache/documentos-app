@@ -1,3 +1,5 @@
+import 'package:hdocumentos/src/model/model.dart';
+
 ///Represents reponse of service
 class ServiceResponseModel {
   int statusHttp;
@@ -10,7 +12,7 @@ class ServiceResponseModel {
   //Constructor of class
   factory ServiceResponseModel.createEmpty() {
     return ServiceResponseModel(
-        statusHttp: 0, status: "", body: "", message: "");
+        statusHttp: 0, status: "", body: null, message: "");
   }
 
   ServiceResponseModel(
@@ -43,6 +45,14 @@ class ServiceResponseModel {
           message: '',
           error: 'Error de comunicación, por favor intente mas tarde.',
           body: null);
+    }
+  }
+
+  ResponseModel createDataResponse() {
+    if (body != null) {
+      return ResponseModel.fromJson(body);
+    } else {
+      return ResponseModel.createEmpty();
     }
   }
 }

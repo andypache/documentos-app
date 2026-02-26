@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/constant/enviroment.dart';
+import 'package:hdocumentos/src/provider/app_init_provider.dart';
 import 'package:hdocumentos/src/provider/locale_provider.dart';
 import 'package:hdocumentos/src/router/app_routes.dart';
 import 'package:hdocumentos/src/service/service.dart';
-
 import 'package:hdocumentos/src/share/preference.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +22,7 @@ void main() async {
     providers: [
       ChangeNotifierProvider(create: (_) => AuthService()),
       ChangeNotifierProvider(create: (_) => LocaleProvider()),
+      ChangeNotifierProvider(create: (_) => AppInitProvider()),
     ],
     child: const MyApp(),
   ));
@@ -41,12 +42,8 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'H-DOCUMENTOS',
             locale: localeProvider.locale,
-            localizationsDelegates: const [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: const [Locale('es'), Locale('en')],
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
             initialRoute: AppRoutes.initialRoute,
             routes: AppRoutes.getAppRoutes(),
             theme: AppTheme.lightTheme,

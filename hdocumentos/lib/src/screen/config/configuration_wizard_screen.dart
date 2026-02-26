@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/config/company_model.dart';
 import 'package:hdocumentos/src/provider/form/company_form_provider.dart';
 import 'package:hdocumentos/src/share/preference.dart';
@@ -19,7 +20,7 @@ class ConfigurationWizardScreen extends StatelessWidget {
         : CompanyModel.empty();
 
     return ChangeNotifierProvider(
-      create: (_) => CompanyFormProvider(company),
+      create: (_) => CompanyFormProvider(company, isEditing: hasCompany),
       child: _ConfigurationWizardBody(isEditing: hasCompany),
     );
   }
@@ -33,6 +34,7 @@ class _ConfigurationWizardBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       body: Stack(
@@ -54,7 +56,9 @@ class _ConfigurationWizardBody extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              isEditing ? 'Editar Compañia' : 'Nueva Compañia',
+                              isEditing
+                                  ? l10n.configEditTitle
+                                  : l10n.configNewTitle,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: size.width * 0.052,
@@ -64,8 +68,8 @@ class _ConfigurationWizardBody extends StatelessWidget {
                             ),
                             Text(
                               isEditing
-                                  ? 'Actualiza la información de tu empresa'
-                                  : 'Configura tu empresa paso a paso',
+                                  ? l10n.configEditSubtitle
+                                  : l10n.configNewSubtitle,
                               style: TextStyle(
                                 color: Colors.white.withOpacity(0.6),
                                 fontSize: size.width * 0.032,
@@ -95,7 +99,7 @@ class _ConfigurationWizardBody extends StatelessWidget {
                     child: const _CompanyWizardContent(),
                   ),
                 ),
-                const _CompanyNavigationButtons(),
+                _CompanyNavigationButtons(isEditing: isEditing),
               ],
             ),
           ),
@@ -108,12 +112,13 @@ class _ConfigurationWizardBody extends StatelessWidget {
 class _CompanyStepperIndicator extends StatelessWidget {
   const _CompanyStepperIndicator({Key? key}) : super(key: key);
 
-  static const List<Map<String, dynamic>> _steps = [
-    {'icon': Icons.business, 'label': 'Empresa'},
-    {'icon': Icons.image_outlined, 'label': 'Logo'},
-    {'icon': Icons.security_outlined, 'label': 'Cert.'},
-    {'icon': Icons.mail_outline, 'label': 'Correo'},
-    {'icon': Icons.point_of_sale_outlined, 'label': 'Emisión'},
+  static const List<IconData> _stepIcons = [
+    Icons.business,
+    Icons.image_outlined,
+    Icons.security_outlined,
+    Icons.mail_outline,
+    Icons.point_of_sale_outlined,
+    Icons.receipt_long_outlined,
   ];
 
   @override
@@ -121,6 +126,15 @@ class _CompanyStepperIndicator extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final provider = Provider.of<CompanyFormProvider>(context);
     final current = provider.currentStep;
+    final l10n = AppLocalizations.of(context);
+    final stepLabels = [
+      l10n.stepCompany,
+      l10n.stepLogo,
+      l10n.stepCert,
+      l10n.stepMail,
+      l10n.stepEmission,
+      'Impuestos',
+    ];
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -128,7 +142,7 @@ class _CompanyStepperIndicator extends StatelessWidget {
         vertical: size.height * 0.01,
       ),
       child: Row(
-        children: List.generate(_steps.length * 2 - 1, (i) {
+        children: List.generate(_stepIcons.length * 2 - 1, (i) {
           if (i.isOdd) {
             final stepIndex = i ~/ 2;
             return Expanded(
@@ -147,15 +161,14 @@ class _CompanyStepperIndicator extends StatelessWidget {
           final stepIndex = i ~/ 2;
           final isActive = stepIndex == current;
           final isCompleted = stepIndex < current;
-          final step = _steps[stepIndex];
 
           return Expanded(
             child: Column(
               children: [
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 250),
-                  width: size.width * 0.1,
-                  height: size.width * 0.1,
+                  width: size.width * 0.065,
+                  height: size.width * 0.065,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: isActive || isCompleted
@@ -181,7 +194,7 @@ class _CompanyStepperIndicator extends StatelessWidget {
                     child: isCompleted
                         ? Icon(Icons.check_rounded,
                             color: Colors.white, size: size.width * 0.04)
-                        : Icon(step['icon'] as IconData,
+                        : Icon(_stepIcons[stepIndex],
                             color: isActive
                                 ? Colors.white
                                 : Colors.white.withOpacity(0.4),
@@ -190,12 +203,12 @@ class _CompanyStepperIndicator extends StatelessWidget {
                 ),
                 SizedBox(height: size.height * 0.005),
                 Text(
-                  step['label'] as String,
+                  stepLabels[stepIndex],
                   style: TextStyle(
                     color: isActive || isCompleted
                         ? Colors.white
                         : Colors.white.withOpacity(0.4),
-                    fontSize: size.width * 0.025,
+                    fontSize: size.width * 0.021,
                     fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
                   ),
                   textAlign: TextAlign.center,
@@ -226,6 +239,8 @@ class _CompanyWizardContent extends StatelessWidget {
         return const CompanyWizardStep4Widget();
       case 4:
         return const CompanyWizardStep5Widget();
+      case 5:
+        return const CompanyWizardStep6Widget();
       default:
         return const CompanyWizardStep1Widget();
     }
@@ -233,12 +248,16 @@ class _CompanyWizardContent extends StatelessWidget {
 }
 
 class _CompanyNavigationButtons extends StatelessWidget {
-  const _CompanyNavigationButtons({Key? key}) : super(key: key);
+  final bool isEditing;
+  const _CompanyNavigationButtons({Key? key, required this.isEditing})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final provider = Provider.of<CompanyFormProvider>(context);
+    final l10n = AppLocalizations.of(context);
+    final bool busy = provider.isLoading || provider.isSavingStep;
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -251,110 +270,152 @@ class _CompanyNavigationButtons extends StatelessWidget {
           top: BorderSide(color: Colors.white.withOpacity(0.1), width: 1),
         ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          // Anterior / Cancelar
-          ElevatedButton.icon(
-            onPressed: provider.isLoading
-                ? null
-                : () {
-                    if (provider.currentStep > 0) {
-                      provider.previousStep();
-                    } else {
-                      Navigator.pop(context);
-                    }
-                  },
-            icon: Icon(
-              provider.currentStep > 0
-                  ? Icons.arrow_back_rounded
-                  : Icons.close_rounded,
-              size: size.width * 0.045,
-            ),
-            label: Text(
-              provider.currentStep > 0 ? 'Anterior' : 'Cancelar',
-              style: TextStyle(fontSize: size.width * 0.034),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  provider.currentStep > 0 ? AppTheme.grey : Colors.red,
-              padding: EdgeInsets.symmetric(
-                horizontal: size.width * 0.05,
-                vertical: size.height * 0.012,
-              ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-          ),
-
-          // Indicador
-          Text(
-            '${provider.currentStep + 1} de 5',
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.5),
-              fontSize: size.width * 0.032,
-            ),
-          ),
-
-          // Siguiente / Guardar
-          provider.currentStep < 4
-              ? ElevatedButton.icon(
-                  onPressed: provider.isLoading
-                      ? null
-                      : () {
-                          if (!provider.nextStep()) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content:
-                                  const Text('Completa los campos requeridos'),
-                              backgroundColor: Colors.red.shade700,
-                              behavior: SnackBarBehavior.floating,
-                            ));
-                          }
-                        },
-                  icon: Icon(Icons.arrow_forward_rounded,
-                      size: size.width * 0.045),
-                  label: Text('Siguiente',
-                      style: TextStyle(
-                          fontSize: size.width * 0.034,
-                          fontWeight: FontWeight.bold)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primaryButton,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: size.width * 0.05,
-                      vertical: size.height * 0.012,
-                    ),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
-                )
-              : ElevatedButton.icon(
-                  onPressed: provider.isLoading
-                      ? null
-                      : () => _handleSave(context, provider),
-                  icon: provider.isLoading
-                      ? SizedBox(
-                          width: size.width * 0.045,
-                          height: size.width * 0.045,
-                          child: const CircularProgressIndicator(
-                              strokeWidth: 2, color: Colors.white),
-                        )
-                      : Icon(Icons.save_rounded, size: size.width * 0.045),
-                  label: Text(
-                    provider.isLoading ? 'Guardando...' : 'Guardar',
-                    style: TextStyle(
-                        fontSize: size.width * 0.034,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green.shade600,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: size.width * 0.05,
-                      vertical: size.height * 0.012,
-                    ),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
+          // ── Fila principal: Anterior/Cancelar · Contador · Siguiente/Guardar todo ──
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Anterior / Cancelar
+              ElevatedButton.icon(
+                onPressed: busy
+                    ? null
+                    : () {
+                        if (provider.currentStep > 0) {
+                          provider.previousStep();
+                        } else {
+                          Navigator.pop(context);
+                        }
+                      },
+                icon: Icon(
+                  provider.currentStep > 0
+                      ? Icons.arrow_back_rounded
+                      : Icons.close_rounded,
+                  size: size.width * 0.045,
                 ),
+                label: Text(
+                  provider.currentStep > 0 ? l10n.btnPrevious : l10n.btnCancel,
+                  style: TextStyle(fontSize: size.width * 0.034),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      provider.currentStep > 0 ? AppTheme.grey : Colors.red,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.05,
+                    vertical: size.height * 0.012,
+                  ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
+
+              // Indicador de paso
+              Text(
+                l10n.stepCounter(provider.currentStep + 1, 6),
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.5),
+                  fontSize: size.width * 0.032,
+                ),
+              ),
+
+              // Siguiente (todos los modos) / Guardar todo (solo nuevo, paso final)
+              provider.currentStep < 5
+                  ? ElevatedButton.icon(
+                      onPressed: busy
+                          ? null
+                          : () {
+                              if (!provider.nextStep()) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text(l10n.msgRequiredFields),
+                                  backgroundColor: Colors.red.shade700,
+                                  behavior: SnackBarBehavior.floating,
+                                ));
+                              }
+                            },
+                      icon: Icon(Icons.arrow_forward_rounded,
+                          size: size.width * 0.045),
+                      label: Text(l10n.btnNext,
+                          style: TextStyle(
+                              fontSize: size.width * 0.034,
+                              fontWeight: FontWeight.bold)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primaryButton,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: size.width * 0.05,
+                          vertical: size.height * 0.012,
+                        ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                    )
+                  // Paso final: solo mostrar "Guardar todo" cuando es NUEVO
+                  : !isEditing
+                      ? ElevatedButton.icon(
+                          onPressed: busy
+                              ? null
+                              : () => _handleSave(context, provider),
+                          icon: busy
+                              ? SizedBox(
+                                  width: size.width * 0.045,
+                                  height: size.width * 0.045,
+                                  child: const CircularProgressIndicator(
+                                      strokeWidth: 2, color: Colors.white),
+                                )
+                              : Icon(Icons.save_rounded,
+                                  size: size.width * 0.045),
+                          label: Text(
+                            busy ? l10n.btnSaving : l10n.btnSave,
+                            style: TextStyle(
+                                fontSize: size.width * 0.034,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green.shade600,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: size.width * 0.05,
+                              vertical: size.height * 0.012,
+                            ),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                        )
+                      // Paso final en edición: placeholder invisible para mantener layout
+                      : SizedBox(width: size.width * 0.28),
+            ],
+          ),
+
+          // ── Botón guardar paso (solo edición) ──────────────────────────────
+          if (isEditing) ...[
+            SizedBox(height: size.height * 0.01),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: busy ? null : () => provider.saveStep(context),
+                icon: provider.isSavingStep
+                    ? SizedBox(
+                        width: size.width * 0.042,
+                        height: size.width * 0.042,
+                        child: const CircularProgressIndicator(
+                            strokeWidth: 2, color: Colors.white),
+                      )
+                    : Icon(Icons.save_outlined, size: size.width * 0.042),
+                label: Text(
+                  provider.isSavingStep ? l10n.btnSaving : 'Guardar este paso',
+                  style: TextStyle(
+                      fontSize: size.width * 0.034,
+                      fontWeight: FontWeight.bold),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal.shade600,
+                  padding: EdgeInsets.symmetric(vertical: size.height * 0.013),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -362,9 +423,10 @@ class _CompanyNavigationButtons extends StatelessWidget {
 
   Future<void> _handleSave(
       BuildContext context, CompanyFormProvider provider) async {
+    final l10n = AppLocalizations.of(context);
     if (!provider.isValidCurrentStep()) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text('Completa los campos requeridos'),
+        content: Text(l10n.msgRequiredFields),
         backgroundColor: Colors.red.shade700,
         behavior: SnackBarBehavior.floating,
       ));
@@ -383,9 +445,7 @@ class _CompanyNavigationButtons extends StatelessWidget {
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-            'Compañia "${company.businessName ?? ''}" guardada exitosamente',
-          ),
+          content: Text(l10n.companySavedSuccess(company.businessName ?? '')),
           backgroundColor: Colors.green.shade600,
           behavior: SnackBarBehavior.floating,
         ));
@@ -395,7 +455,7 @@ class _CompanyNavigationButtons extends StatelessWidget {
       provider.isLoading = false;
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Error al guardar: $e'),
+          content: Text(l10n.saveError(e.toString())),
           backgroundColor: Colors.red.shade700,
           behavior: SnackBarBehavior.floating,
         ));

@@ -1,6 +1,7 @@
 ///Export all models for the app
 export 'package:hdocumentos/src/model/common/menu_option_model.dart';
 export 'package:hdocumentos/src/model/common/service_response_model.dart';
+export 'package:hdocumentos/src/model/common/response_model.dart';
 export 'package:hdocumentos/src/model/security/user_session_model.dart';
 export 'package:hdocumentos/src/model/config/configuration_model.dart';
 export 'package:hdocumentos/src/model/config/company_model.dart';
@@ -18,3 +19,4 @@ export 'package:hdocumentos/src/model/payment_method_model.dart';
 export 'package:hdocumentos/src/model/bill_item_model.dart';
 export 'package:hdocumentos/src/model/bill_calculation_request_model.dart';
 export 'package:hdocumentos/src/model/bill_calculation_response_model.dart';
+export 'package:hdocumentos/src/model/common/catalog_model.dart';

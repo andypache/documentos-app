@@ -14,6 +14,17 @@ String apiDataCompany = "${apiCompany}company/by-email";
 String apiPrintingLogoRegisterCompany =
     "${apiCompany}company/printing-logo/register";
 
+// Endpoints de actualización por paso del wizard
+String apiCompanyBasic = "${apiCompany}company/update/basic";
+String apiCompanyLogo = "${apiCompany}company/update/logo";
+String apiCompanyCertificate = "${apiCompany}company/update/certificate";
+String apiCompanyMail = "${apiCompany}company/update/mail";
+String apiCompanyEmission = "${apiCompany}company/update/emission";
+String apiCompanyTaxGroups = "${apiCompany}company/update/tax-groups";
+
+//URL for common
+String apiDataCatalog = "${apiCompany}common/catalogs";
+
 //Return Column error
 Widget errorLoadContainer(error) {
   return Column(

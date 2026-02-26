@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 
 /// Header de sección usado en cada paso del wizard
@@ -48,6 +49,8 @@ class CompanyWizardStepSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     if (items.isEmpty) return const SizedBox.shrink();
     return Container(
       width: double.infinity,
@@ -61,7 +64,7 @@ class CompanyWizardStepSummary extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Ingresado hasta ahora:',
+            l10n.enteredSoFar,
             style: TextStyle(
               color: Colors.white.withOpacity(0.5),
               fontSize: size.width * 0.028,

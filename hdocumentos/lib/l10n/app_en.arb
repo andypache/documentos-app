@@ -1,0 +1,96 @@
+{
+  "@@locale": "en",
+
+  "configEditTitle": "Edit Company",
+  "@configEditTitle": { "description": "Title for edit company screen" },
+
+  "configNewTitle": "New Company",
+  "@configNewTitle": { "description": "Title for new company screen" },
+
+  "configEditSubtitle": "Update your company information",
+  "@configEditSubtitle": { "description": "Subtitle edit company" },
+
+  "configNewSubtitle": "Set up your company step by step",
+  "@configNewSubtitle": { "description": "Subtitle new company" },
+
+  "stepCompany": "Company",
+  "@stepCompany": { "description": "Step 1 label" },
+
+  "stepLogo": "Logo",
+  "@stepLogo": { "description": "Step 2 label" },
+
+  "stepCert": "Cert.",
+  "@stepCert": { "description": "Step 3 label" },
+
+  "stepMail": "Mail",
+  "@stepMail": { "description": "Step 4 label" },
+
+  "stepEmission": "Emission",
+  "@stepEmission": { "description": "Step 5 label" },
+
+  "btnPrevious": "Previous",
+  "@btnPrevious": { "description": "Button go to previous step" },
+
+  "btnCancel": "Cancel",
+  "@btnCancel": { "description": "Button cancel" },
+
+  "btnNext": "Next",
+  "@btnNext": { "description": "Button go to next step" },
+
+  "btnSave": "Save",
+  "@btnSave": { "description": "Button save" },
+
+  "btnSaving": "Saving...",
+  "@btnSaving": { "description": "Text while saving" },
+
+  "stepCounter": "{current} of {total}",
+  "@stepCounter": {
+    "description": "Current step indicator",
+    "placeholders": {
+      "current": { "type": "int" },
+      "total":   { "type": "int" }
+    }
+  },
+
+  "msgRequiredFields": "Please complete the required fields",
+  "@msgRequiredFields": { "description": "Validation message for required fields" },
+
+  "companySavedSuccess": "Company \"{name}\" saved successfully",
+  "@companySavedSuccess": {
+    "description": "Success message when company is saved",
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "saveError": "Error saving: {error}",
+  "@saveError": {
+    "description": "Error message when saving fails",
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+
+  "companyDetails": "Company details",
+  "enteredSoFar": "Entered so far",
+  
+  "requiredSelect": "Select Type (Required)",
+  "requiredField": "Required Field",
+
+  "companyInformation": "Company Information",
+  "identificationType": "Type of Identification",
+  "identificationNumber": "Identification Number",
+  "identificationNumberHint": "Tax ID Number (Required)",
+  "companyName": "Company Name",
+  "companyNameHint": "Company Name (Required)",
+  "address": "Address",
+  "addressHint": "Company Address (Required)",
+  "telephone": "Telephone",
+  "telephoneHint": "Telephone (Optional)",
+  "email": "Email Address",
+  "emailHint": "Corporate Email (Required)",
+  "activeCompany": "Active Company",
+
+  "initApplicationError": "The system catalogs could not be loaded",
+  "invalidDataFormatForCatalogs": "Error in the format of the system catalogs"
+}

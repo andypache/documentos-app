@@ -35,6 +35,7 @@ class AuthService extends ChangeNotifier {
 
     response = await postFormFetch(
         url: apiSecurityLogin, body: request, header: header);
+
     await createSession(response);
     return response;
   }
@@ -65,14 +66,12 @@ class AuthService extends ChangeNotifier {
   //Create session into security storage
   Future createSession(ServiceResponseModel response) async {
     if (response.statusHttp == 200) {
-      await storage.write(
-          key: 'access_token',
-          value: response.body['response']['access_token']);
-      await storage.write(
-          key: 'refresh_token',
-          value: response.body['response']['refresh_token']);
-      Map<String, dynamic> payload =
-          Jwt.parseJwt(response.body['response']['access_token']);
+      ResponseModel responseModel = response.createDataResponse();
+      String accessToken = responseModel.response['access_token'];
+      String refreshToken = responseModel.response['refresh_token'];
+      await storage.write(key: 'access_token', value: accessToken);
+      await storage.write(key: 'refresh_token', value: refreshToken);
+      Map<String, dynamic> payload = Jwt.parseJwt(accessToken);
       Preferences.userSession = UserSessionModel.fromJson(payload);
     }
   }
@@ -81,6 +80,7 @@ class AuthService extends ChangeNotifier {
   Future logout() async {
     await storage.delete(key: 'access_token');
     await storage.delete(key: 'refresh_token');
+    await storage.delete(key: 'catalogs');
     Preferences.removeUser();
   }
 

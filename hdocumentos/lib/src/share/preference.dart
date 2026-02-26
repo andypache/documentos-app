@@ -5,8 +5,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 ///Class to save preferences systems
 class Preferences {
+  ///Init preferences
   static late SharedPreferences _preferences;
-  //Usersession properties
+  static Future init() async {
+    _preferences = await SharedPreferences.getInstance();
+  }
+
   static UserSessionModel _userSession = UserSessionModel(
       userId: "0",
       username: "",
@@ -16,11 +20,6 @@ class Preferences {
       surnames: "",
       names: "");
   static bool _keepSession = true;
-
-  ///Init preferences
-  static Future init() async {
-    _preferences = await SharedPreferences.getInstance();
-  }
 
   //propertiy for get user preference
   static UserSessionModel get userSession {
@@ -57,6 +56,15 @@ class Preferences {
     _keepSession = keepSession;
   }
 
+  /// Idioma de la aplicación (es / en)
+  static String get language {
+    return _preferences.getString('language') ?? 'es';
+  }
+
+  static set language(String lang) {
+    _preferences.setString('language', lang);
+  }
+
   //Remove user
   static removeUser() {
     userSession = UserSessionModel(
@@ -67,14 +75,5 @@ class Preferences {
         idCompany: 0,
         surnames: "",
         names: "");
-  }
-
-  /// Idioma de la aplicación (es / en)
-  static String get language {
-    return _preferences.getString('language') ?? 'es';
-  }
-
-  static set language(String lang) {
-    _preferences.setString('language', lang);
   }
 }
