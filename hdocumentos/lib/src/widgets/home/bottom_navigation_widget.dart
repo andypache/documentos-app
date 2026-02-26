@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:hdocumentos/src/provider/app_init_provider.dart';
 import 'package:hdocumentos/src/service/service.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 
@@ -17,7 +18,10 @@ class BottomNavigationWidget extends StatelessWidget {
           currentIndex = index;
           if (currentIndex == 2) {
             await authService.logout();
-            Navigator.pushReplacementNamed(context, 'login');
+            if (context.mounted) {
+              context.read<AppInitProvider>().reset();
+              Navigator.pushReplacementNamed(context, 'login');
+            }
           }
         },
         type: BottomNavigationBarType.fixed,

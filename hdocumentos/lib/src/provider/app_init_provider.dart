@@ -54,6 +54,15 @@ class AppInitProvider extends ChangeNotifier {
     await init(context);
   }
 
+  /// Limpia el estado de la sesión. Llamar en logout para que la próxima
+  /// sesión recargue los catálogos desde cero.
+  void reset() {
+    _status = AppInitStatus.idle;
+    _catalogs = null;
+    _errorMessage = '';
+    notifyListeners();
+  }
+
   // ─── Carga de datos ─────────────────────────────────────────────────────────
 
   Future<void> _loadCatalogs(BuildContext context) async {

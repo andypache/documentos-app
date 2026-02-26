@@ -48,6 +48,11 @@ class CompanyWizardStep6Widget extends StatelessWidget {
 
     final taxGroups = (catalogs?.systemParameters.isNotEmpty ?? false)
         ? catalogs!.systemParameters
+            .where((e) =>
+                (e.value?['string_parameter'] as String?)
+                    ?.contains('TAX-GROUP-') ==
+                true)
+            .toList()
         : _defaultTaxGroups;
 
     return Form(

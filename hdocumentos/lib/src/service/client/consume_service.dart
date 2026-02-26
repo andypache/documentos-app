@@ -7,6 +7,8 @@ import 'package:hdocumentos/src/service/service.dart';
 import 'package:hdocumentos/src/share/preference.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hdocumentos/src/model/model.dart';
+import 'package:hdocumentos/src/provider/app_init_provider.dart';
+import 'package:provider/provider.dart';
 
 // ─── Instancias globales ──────────────────────────────────────────────────────
 const _storage = FlutterSecureStorage();
@@ -216,6 +218,7 @@ class _TokenRefreshHandler {
   static Future<void> _logout(BuildContext context) async {
     await authService.logout();
     if (context.mounted) {
+      context.read<AppInitProvider>().reset();
       Navigator.pushReplacementNamed(context, 'login');
     }
   }

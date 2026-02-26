@@ -80,7 +80,7 @@ class AuthService extends ChangeNotifier {
   Future logout() async {
     await storage.delete(key: 'access_token');
     await storage.delete(key: 'refresh_token');
-    await storage.delete(key: 'catalogs');
+    await CompanyService.clearCache();
     Preferences.removeUser();
   }
 

@@ -114,6 +114,7 @@ class _ErrorOverlay extends StatelessWidget {
                   onPressed: () async {
                     await context.read<AuthService>().logout();
                     if (context.mounted) {
+                      context.read<AppInitProvider>().reset();
                       Navigator.pushReplacementNamed(context, 'login');
                     }
                   },

@@ -3,6 +3,7 @@ import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/common/key_value_model.dart';
 import 'package:hdocumentos/src/model/config/company_model.dart';
 import 'package:hdocumentos/src/provider/form/company_form_provider.dart';
+import 'package:hdocumentos/src/provider/provider.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
@@ -15,15 +16,17 @@ class CompanyWizardStep1Widget extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final provider = Provider.of<CompanyFormProvider>(context);
+    final catalogs = context.watch<AppInitProvider>().catalogs;
     final l10n = AppLocalizations.of(context);
+
     final company = provider.company;
 
-    // Tipos de identificación de ejemplo (en producción vendría del backend)
-    final List<KeyValueModel> idTypes = [
-      KeyValueModel(key: '1', value: 'RUC'),
-      KeyValueModel(key: '2', value: 'Cédula'),
-      KeyValueModel(key: '3', value: 'Pasaporte'),
-    ];
+    final List<KeyValueModel> idTypes =
+        (catalogs?.identificationTypes.isNotEmpty ?? false)
+            ? catalogs!.identificationTypes
+                .map((e) => KeyValueModel(key: e.code, value: e.description))
+                .toList()
+            : [];
 
     return Form(
       key: provider.formKeyStep1,

@@ -8,7 +8,7 @@ import 'package:hdocumentos/src/constant/constant.dart';
 
 class CompanyService extends ChangeNotifier {
   static const _cacheKey = 'catalogs';
-  final _storage = const FlutterSecureStorage();
+  static const _storage = FlutterSecureStorage();
 
   /// Retorna los catálogos del sistema.
   /// Primero intenta desde caché local; si no existe, los obtiene del API
@@ -58,7 +58,6 @@ class CompanyService extends ChangeNotifier {
     try {
       final responseModel = response.createDataResponse();
       final data = responseModel.response;
-      print(data.runtimeType);
 
       if (data is! Map<String, dynamic> || data.isEmpty) {
         NotificationService.showSnackbarError(
@@ -75,7 +74,7 @@ class CompanyService extends ChangeNotifier {
   }
 
   /// Invalida el caché para forzar recarga desde API en la próxima llamada.
-  Future<void> clearCache() async {
+  static Future<void> clearCache() async {
     await _storage.delete(key: _cacheKey);
   }
 }
