@@ -120,4 +120,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invalidDataFormatForCatalogs => 'Error in the format of the system catalogs';
+
+  @override
+  String get validatorRequired => 'Required field';
+
+  @override
+  String get validatorEmail => 'Enter a valid email address';
+
+  @override
+  String get validatorNumeric => 'Only numbers are allowed';
+
+  @override
+  String get validatorAlphanumeric => 'Only letters and numbers are allowed';
+
+  @override
+  String get validatorPhone => 'Enter a valid phone number';
+
+  @override
+  String get validatorUrl => 'Enter a valid URL (http:// or https://)';
+
+  @override
+  String get validatorPort => 'Enter a valid port (1 - 65535)';
+
+  @override
+  String get validatorNoSpaces => 'Cannot start or end with spaces';
+
+  @override
+  String validatorMinLength(int min) {
+    return 'Minimum $min characters';
+  }
+
+  @override
+  String validatorMaxLength(int max) {
+    return 'Maximum $max characters';
+  }
+
+  @override
+  String validatorExactLength(int length) {
+    return 'Must be exactly $length characters';
+  }
 }

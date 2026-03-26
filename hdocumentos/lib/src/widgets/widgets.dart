@@ -39,3 +39,4 @@ export 'package:hdocumentos/src/widgets/config/company_wizard_step4_widget.dart'
 export 'package:hdocumentos/src/widgets/config/company_wizard_step5_widget.dart';
 export 'package:hdocumentos/src/widgets/config/company_wizard_step6_widget.dart';
 export 'package:hdocumentos/src/widgets/bill/totals_panel_widget.dart';
+export 'package:hdocumentos/src/share/field_validators.dart';

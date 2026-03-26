@@ -92,5 +92,47 @@
   "activeCompany": "Empresa activa",
 
   "initApplicationError": "No se pudieron cargar los catálogos del sistema",
-  "invalidDataFormatForCatalogs": "Error en el formato de los catálogos del sistema"
+  "invalidDataFormatForCatalogs": "Error en el formato de los catálogos del sistema",
+
+  "validatorRequired": "Campo requerido",
+  "@validatorRequired": { "description": "Validación: campo obligatorio" },
+
+  "validatorEmail": "Ingresa un correo electrónico válido",
+  "@validatorEmail": { "description": "Validación: formato de email inválido" },
+
+  "validatorNumeric": "Solo se permiten números",
+  "@validatorNumeric": { "description": "Validación: solo dígitos" },
+
+  "validatorAlphanumeric": "Solo se permiten letras y números",
+  "@validatorAlphanumeric": { "description": "Validación: alfanumérico" },
+
+  "validatorPhone": "Ingresa un número de teléfono válido",
+  "@validatorPhone": { "description": "Validación: formato de teléfono" },
+
+  "validatorUrl": "Ingresa una URL válida (http:// o https://)",
+  "@validatorUrl": { "description": "Validación: formato de URL" },
+
+  "validatorPort": "Ingresa un puerto válido (1 - 65535)",
+  "@validatorPort": { "description": "Validación: rango de puerto de red" },
+
+  "validatorNoSpaces": "No puede iniciar ni terminar con espacios",
+  "@validatorNoSpaces": { "description": "Validación: espacios extremos" },
+
+  "validatorMinLength": "Mínimo {min} caracteres",
+  "@validatorMinLength": {
+    "description": "Validación: longitud mínima",
+    "placeholders": { "min": { "type": "int" } }
+  },
+
+  "validatorMaxLength": "Máximo {max} caracteres",
+  "@validatorMaxLength": {
+    "description": "Validación: longitud máxima",
+    "placeholders": { "max": { "type": "int" } }
+  },
+
+  "validatorExactLength": "Debe tener exactamente {length} caracteres",
+  "@validatorExactLength": {
+    "description": "Validación: longitud exacta",
+    "placeholders": { "length": { "type": "int" } }
+  }
 }

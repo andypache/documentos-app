@@ -314,6 +314,72 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Error en el formato de los catálogos del sistema'**
   String get invalidDataFormatForCatalogs;
+
+  /// Validación: campo obligatorio
+  ///
+  /// In es, this message translates to:
+  /// **'Campo requerido'**
+  String get validatorRequired;
+
+  /// Validación: formato de email inválido
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa un correo electrónico válido'**
+  String get validatorEmail;
+
+  /// Validación: solo dígitos
+  ///
+  /// In es, this message translates to:
+  /// **'Solo se permiten números'**
+  String get validatorNumeric;
+
+  /// Validación: alfanumérico
+  ///
+  /// In es, this message translates to:
+  /// **'Solo se permiten letras y números'**
+  String get validatorAlphanumeric;
+
+  /// Validación: formato de teléfono
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa un número de teléfono válido'**
+  String get validatorPhone;
+
+  /// Validación: formato de URL
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa una URL válida (http:// o https://)'**
+  String get validatorUrl;
+
+  /// Validación: rango de puerto de red
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa un puerto válido (1 - 65535)'**
+  String get validatorPort;
+
+  /// Validación: espacios extremos
+  ///
+  /// In es, this message translates to:
+  /// **'No puede iniciar ni terminar con espacios'**
+  String get validatorNoSpaces;
+
+  /// Validación: longitud mínima
+  ///
+  /// In es, this message translates to:
+  /// **'Mínimo {min} caracteres'**
+  String validatorMinLength(int min);
+
+  /// Validación: longitud máxima
+  ///
+  /// In es, this message translates to:
+  /// **'Máximo {max} caracteres'**
+  String validatorMaxLength(int max);
+
+  /// Validación: longitud exacta
+  ///
+  /// In es, this message translates to:
+  /// **'Debe tener exactamente {length} caracteres'**
+  String validatorExactLength(int length);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -92,5 +92,47 @@
   "activeCompany": "Active Company",
 
   "initApplicationError": "The system catalogs could not be loaded",
-  "invalidDataFormatForCatalogs": "Error in the format of the system catalogs"
+  "invalidDataFormatForCatalogs": "Error in the format of the system catalogs",
+
+  "validatorRequired": "Required field",
+  "@validatorRequired": { "description": "Validation: required field" },
+
+  "validatorEmail": "Enter a valid email address",
+  "@validatorEmail": { "description": "Validation: invalid email format" },
+
+  "validatorNumeric": "Only numbers are allowed",
+  "@validatorNumeric": { "description": "Validation: digits only" },
+
+  "validatorAlphanumeric": "Only letters and numbers are allowed",
+  "@validatorAlphanumeric": { "description": "Validation: alphanumeric" },
+
+  "validatorPhone": "Enter a valid phone number",
+  "@validatorPhone": { "description": "Validation: phone format" },
+
+  "validatorUrl": "Enter a valid URL (http:// or https://)",
+  "@validatorUrl": { "description": "Validation: URL format" },
+
+  "validatorPort": "Enter a valid port (1 - 65535)",
+  "@validatorPort": { "description": "Validation: network port range" },
+
+  "validatorNoSpaces": "Cannot start or end with spaces",
+  "@validatorNoSpaces": { "description": "Validation: leading/trailing spaces" },
+
+  "validatorMinLength": "Minimum {min} characters",
+  "@validatorMinLength": {
+    "description": "Validation: minimum length",
+    "placeholders": { "min": { "type": "int" } }
+  },
+
+  "validatorMaxLength": "Maximum {max} characters",
+  "@validatorMaxLength": {
+    "description": "Validation: maximum length",
+    "placeholders": { "max": { "type": "int" } }
+  },
+
+  "validatorExactLength": "Must be exactly {length} characters",
+  "@validatorExactLength": {
+    "description": "Validation: exact length",
+    "placeholders": { "length": { "type": "int" } }
+  }
 }

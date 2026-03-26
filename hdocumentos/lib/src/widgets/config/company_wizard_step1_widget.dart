@@ -86,8 +86,11 @@ class CompanyWizardStep1Widget extends StatelessWidget {
             initialValue: company.address,
             filled: true,
             fillColor: AppTheme.whiteGradient,
-            validator: (v) =>
-                (v == null || v.isEmpty) ? l10n.requiredField : null,
+            validator: FieldValidators.compose([
+              FieldValidators.required(l10n),
+              FieldValidators.maxLength(l10n, 200),
+              FieldValidators.alphanumeric(l10n),
+            ]),
             onChanged: (v) => company.address = v,
           ),
           SizedBox(height: size.height * 0.018),
