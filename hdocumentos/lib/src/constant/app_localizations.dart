@@ -746,6 +746,30 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Grupos de Impuesto'**
   String get step6Title;
+
+  /// Texto de carga genérico
+  ///
+  /// In es, this message translates to:
+  /// **'Cargando...'**
+  String get loading;
+
+  /// Botón para reintentar una operación
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get btnRetry;
+
+  /// Botón para cerrar sesión
+  ///
+  /// In es, this message translates to:
+  /// **'Salir'**
+  String get btnLogout;
+
+  /// Mensaje cuando un paso del wizard se guarda exitosamente
+  ///
+  /// In es, this message translates to:
+  /// **'Paso guardado correctamente'**
+  String get stepSavedSuccess;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -348,4 +348,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get step6Title => 'Tax Groups';
+
+  @override
+  String get loading => 'Loading...';
+
+  @override
+  String get btnRetry => 'Retry';
+
+  @override
+  String get btnLogout => 'Logout';
+
+  @override
+  String get stepSavedSuccess => 'Step saved successfully';
 }

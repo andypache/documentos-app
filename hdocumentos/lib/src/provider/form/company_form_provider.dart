@@ -137,7 +137,9 @@ class CompanyFormProvider extends ChangeNotifier {
       if (!context.mounted) return;
 
       if (response.statusHttp == 200 || response.statusHttp == 201) {
-        NotificationService.showSnackbarSuccess('Paso guardado correctamente');
+        final l10nMsg = NotificationService.l10n;
+        NotificationService.showSnackbarSuccess(
+            l10nMsg?.stepSavedSuccess ?? 'Paso guardado correctamente');
       } else {
         NotificationService.showSnackbarError(response.message);
       }

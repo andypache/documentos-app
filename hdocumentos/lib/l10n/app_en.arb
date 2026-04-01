@@ -326,5 +326,17 @@
   "@summaryCertNotLoaded": { "description": "Value certificate not loaded in summary" },
 
   "step6Title": "Tax Groups",
-  "@step6Title": { "description": "Section title step 6" }
+  "@step6Title": { "description": "Section title step 6" },
+
+  "loading": "Loading...",
+  "@loading": { "description": "Generic loading text" },
+
+  "btnRetry": "Retry",
+  "@btnRetry": { "description": "Button to retry an operation" },
+
+  "btnLogout": "Logout",
+  "@btnLogout": { "description": "Button to close session" },
+
+  "stepSavedSuccess": "Step saved successfully",
+  "@stepSavedSuccess": { "description": "Message when a wizard step is saved successfully" }
 }

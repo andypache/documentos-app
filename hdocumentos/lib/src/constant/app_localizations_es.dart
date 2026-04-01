@@ -348,4 +348,16 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get step6Title => 'Grupos de Impuesto';
+
+  @override
+  String get loading => 'Cargando...';
+
+  @override
+  String get btnRetry => 'Reintentar';
+
+  @override
+  String get btnLogout => 'Salir';
+
+  @override
+  String get stepSavedSuccess => 'Paso guardado correctamente';
 }

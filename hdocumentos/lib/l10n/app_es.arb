@@ -326,5 +326,17 @@
   "@summaryCertNotLoaded": { "description": "Valor certificado no cargado en resumen" },
 
   "step6Title": "Grupos de Impuesto",
-  "@step6Title": { "description": "Título sección paso 6" }
+  "@step6Title": { "description": "Título sección paso 6" },
+
+  "loading": "Cargando...",
+  "@loading": { "description": "Texto de carga genérico" },
+
+  "btnRetry": "Reintentar",
+  "@btnRetry": { "description": "Botón para reintentar una operación" },
+
+  "btnLogout": "Salir",
+  "@btnLogout": { "description": "Botón para cerrar sesión" },
+
+  "stepSavedSuccess": "Paso guardado correctamente",
+  "@stepSavedSuccess": { "description": "Mensaje cuando un paso del wizard se guarda exitosamente" }
 }

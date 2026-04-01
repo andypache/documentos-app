@@ -13,28 +13,28 @@ class AuthService extends ChangeNotifier {
   //Loas secure storage
   final storage = const FlutterSecureStorage();
 
+  /// Construye el header Basic Auth con las credenciales del cliente OAuth.
+  static Map<String, String> _buildAuthHeader() {
+    const base64 = Base64Codec();
+    final bytes =
+        utf8.encode('${Environment.clientName}:${Environment.clientSecret}');
+    final encoded = base64.encode(bytes);
+    return {
+      'Authorization': 'Basic $encoded',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+  }
+
   //Function that call login service and save information
   Future<ServiceResponseModel> login(String username, String password) async {
-    ServiceResponseModel response = ServiceResponseModel.createEmpty();
-
-    const Base64Codec base64 = Base64Codec();
-    var bytes =
-        utf8.encode("${Environment.clientName}:${Environment.clientSecret}");
-    var sendBase64 = base64.encode(bytes);
-
-    Map<String, String> header = {
-      "Authorization": "Basic $sendBase64",
-      "Content-Type": "application/x-www-form-urlencoded",
-    };
-
-    Map<String, dynamic> request = {
+    final request = {
       'grant_type': 'password',
       'username': username,
       'password': password,
     };
 
-    response = await postFormFetch(
-        url: apiSecurityLogin, body: request, header: header);
+    final response = await postFormFetch(
+        url: apiSecurityLogin, body: request, header: _buildAuthHeader());
 
     await createSession(response);
     return response;
@@ -43,24 +43,16 @@ class AuthService extends ChangeNotifier {
   //Function that call refresh access token for new login
   static Future<ServiceResponseModel> refreshLogin(
       String username, String refreshToken) async {
-    const Base64Codec base64 = Base64Codec();
-    var bytes =
-        utf8.encode("${Environment.clientName}:${Environment.clientSecret}");
-    var sendBase64 = base64.encode(bytes);
-
-    Map<String, String> header = {
-      "Authorization": "Basic $sendBase64",
-      "Content-Type": "application/x-www-form-urlencoded",
-    };
-
-    Map<String, dynamic> request = {
+    final request = {
       'grant_type': 'refresh_token',
       'refresh_token': refreshToken,
-      'username': username
+      'username': username,
     };
 
-    return await postFormFetch(
-        url: apiSecurityLoginRefresh, body: request, header: header);
+    return postFormFetch(
+        url: apiSecurityLoginRefresh,
+        body: request,
+        header: _buildAuthHeader());
   }
 
   //Create session into security storage

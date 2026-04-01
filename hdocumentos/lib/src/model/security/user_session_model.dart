@@ -83,6 +83,17 @@ class UserSessionModel {
   String? emissionDescription;
   bool? emissionIsActive;
 
+  /// Crea un [UserSessionModel] vacío (usuario no autenticado).
+  factory UserSessionModel.empty() => UserSessionModel(
+        userId: '0',
+        username: '',
+        email: '',
+        identification: '',
+        idCompany: 0,
+        surnames: '',
+        names: '',
+      );
+
   /// Retorna true si la compañia está configurada en la sesión
   bool get hasCompany =>
       companyName != null && companyName!.isNotEmpty && idCompany > 0;

@@ -59,59 +59,6 @@ class AppRoutes {
 
   //Initial route
   static const initialRoute = 'check';
-  //Put menus into this array for render app
-  static final menuOptions = <MenuOptionModel>[
-    MenuOptionModel(
-        route: 'alert',
-        text: 'Alertas - Alerts',
-        screen: const AlertScreen(),
-        icon: Icons.add_alert_outlined),
-    MenuOptionModel(
-        route: 'home',
-        text: 'Home',
-        screen: const HomeScreen(),
-        icon: Icons.home),
-    MenuOptionModel(
-        route: 'register',
-        text: 'Registro usuario',
-        screen: const RegisterUserScreen(),
-        icon: Icons.home),
-    MenuOptionModel(
-        route: 'config',
-        text: 'configuración',
-        screen: const ConfigurationWizardScreen(),
-        icon: Icons.home),
-    MenuOptionModel(
-        route: 'client',
-        text: 'Clientes',
-        screen: const ClientScreen(),
-        icon: Icons.home),
-    MenuOptionModel(
-        route: 'bill',
-        text: 'Facturas',
-        screen: const BillScreen(),
-        icon: Icons.home),
-    MenuOptionModel(
-        route: 'item',
-        text: 'Productos',
-        screen: const ItemScreen(),
-        icon: Icons.home),
-    MenuOptionModel(
-        route: 'report',
-        text: 'Reportes',
-        screen: const ReportScreen(),
-        icon: Icons.home),
-    MenuOptionModel(
-        route: 'review',
-        text: 'Revisión documentos',
-        screen: const ReviewScreen(),
-        icon: Icons.home),
-    MenuOptionModel(
-        route: 'login',
-        text: 'Login',
-        screen: const LoginScreen(),
-        icon: Icons.home)
-  ];
 
   ///Function for create routes for menus
   static Map<String, Widget Function(BuildContext)> getAppRoutes() {

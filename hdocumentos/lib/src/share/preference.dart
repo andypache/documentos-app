@@ -11,38 +11,20 @@ class Preferences {
     _preferences = await SharedPreferences.getInstance();
   }
 
-  static UserSessionModel _userSession = UserSessionModel(
-      userId: "0",
-      username: "",
-      email: "",
-      identification: "",
-      idCompany: 0,
-      surnames: "",
-      names: "");
   static bool _keepSession = true;
 
   //propertiy for get user preference
   static UserSessionModel get userSession {
-    UserSessionModel response = UserSessionModel(
-        userId: "0",
-        username: "",
-        email: "",
-        identification: "",
-        idCompany: 0,
-        surnames: "",
-        names: "");
-    String? session = _preferences.getString('userSession');
-
+    final session = _preferences.getString('userSession');
     if (session != null) {
       return UserSessionModel.fromJsonObj(json.decode(session));
     }
-    return response;
+    return UserSessionModel.empty();
   }
 
   //Put the user session
   static set userSession(UserSessionModel userSession) {
-    _userSession = userSession;
-    _preferences.setString('userSession', json.encode(_userSession.toJson()));
+    _preferences.setString('userSession', json.encode(userSession.toJson()));
   }
 
   //Get Keep Session
@@ -67,13 +49,6 @@ class Preferences {
 
   //Remove user
   static removeUser() {
-    userSession = UserSessionModel(
-        userId: "0",
-        username: "",
-        email: "",
-        identification: "",
-        idCompany: 0,
-        surnames: "",
-        names: "");
+    userSession = UserSessionModel.empty();
   }
 }

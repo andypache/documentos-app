@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/constant/example_data.dart';
 import 'package:hdocumentos/src/provider/app_init_provider.dart';
 import 'package:hdocumentos/src/service/service.dart';
@@ -55,15 +56,16 @@ class _LoadingOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    final l10n = AppLocalizations.of(context);
+    return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CircularProgressIndicator(color: Colors.white),
-          SizedBox(height: 16),
+          const CircularProgressIndicator(color: Colors.white),
+          const SizedBox(height: 16),
           Text(
-            'Cargando...',
-            style: TextStyle(color: Colors.white, fontSize: 14),
+            l10n.loading,
+            style: const TextStyle(color: Colors.white, fontSize: 14),
           ),
         ],
       ),
@@ -81,6 +83,7 @@ class _ErrorOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -102,7 +105,7 @@ class _ErrorOverlay extends StatelessWidget {
                 ElevatedButton.icon(
                   onPressed: onRetry,
                   icon: const Icon(Icons.refresh_rounded),
-                  label: const Text('Reintentar'),
+                  label: Text(l10n.btnRetry),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryButton,
                     shape: RoundedRectangleBorder(
@@ -119,7 +122,7 @@ class _ErrorOverlay extends StatelessWidget {
                     }
                   },
                   icon: const Icon(Icons.logout_rounded),
-                  label: const Text('Salir'),
+                  label: Text(l10n.btnLogout),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red.shade700,
                     shape: RoundedRectangleBorder(
