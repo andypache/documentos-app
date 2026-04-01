@@ -747,6 +747,96 @@ abstract class AppLocalizations {
   /// **'Grupos de Impuesto'**
   String get step6Title;
 
+  /// Título tarjeta guía de impuestos
+  ///
+  /// In es, this message translates to:
+  /// **'Guía rápida'**
+  String get step6TaxGuideTitle;
+
+  /// Cuerpo tarjeta guía de impuestos
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona los grupos de impuesto que aplican a los productos o servicios que vende tu empresa.'**
+  String get step6TaxGuideBody;
+
+  /// Botón para agregar nuevo punto de emisión
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar punto'**
+  String get emissionPointAddBtn;
+
+  /// Botón editar punto de emisión
+  ///
+  /// In es, this message translates to:
+  /// **'Editar'**
+  String get emissionPointEditBtn;
+
+  /// Botón eliminar punto de emisión
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar'**
+  String get emissionPointDeleteBtn;
+
+  /// Botón guardar punto de emisión en el form
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar punto'**
+  String get emissionPointSaveBtn;
+
+  /// Botón cancelar edición de punto de emisión
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get emissionPointCancelBtn;
+
+  /// Etiqueta para seleccionar el punto activo
+  ///
+  /// In es, this message translates to:
+  /// **'Punto activo de facturación'**
+  String get emissionPointSelectLabel;
+
+  /// Mensaje cuando la lista de puntos está vacía
+  ///
+  /// In es, this message translates to:
+  /// **'No hay puntos de emisión. Agrega al menos uno.'**
+  String get emissionPointEmptyMsg;
+
+  /// Título del formulario de nuevo punto de emisión
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo punto de emisión'**
+  String get emissionPointFormTitle;
+
+  /// Título del formulario de edición de punto de emisión
+  ///
+  /// In es, this message translates to:
+  /// **'Editar punto de emisión'**
+  String get emissionPointEditFormTitle;
+
+  /// Mensaje de confirmación para eliminar un punto de emisión
+  ///
+  /// In es, this message translates to:
+  /// **'¿Eliminar este punto de emisión?'**
+  String get emissionPointDeleteConfirm;
+
+  /// Chip de estado activo en la card del punto de emisión
+  ///
+  /// In es, this message translates to:
+  /// **'Activo'**
+  String get emissionPointActiveChip;
+
+  /// Chip de estado inactivo en la card del punto de emisión
+  ///
+  /// In es, this message translates to:
+  /// **'Inactivo'**
+  String get emissionPointInactiveChip;
+
+  /// Hint cuando el punto está seleccionado como activo
+  ///
+  /// In es, this message translates to:
+  /// **'Seleccionado para facturación'**
+  String get emissionPointSelectedHint;
+
   /// Texto de carga genérico
   ///
   /// In es, this message translates to:

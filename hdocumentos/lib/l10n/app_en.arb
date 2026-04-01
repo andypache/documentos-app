@@ -328,6 +328,51 @@
   "step6Title": "Tax Groups",
   "@step6Title": { "description": "Section title step 6" },
 
+  "step6TaxGuideTitle": "Quick guide",
+  "@step6TaxGuideTitle": { "description": "Tax guide card title" },
+
+  "step6TaxGuideBody": "Select the tax groups that apply to the products or services your company sells.",
+  "@step6TaxGuideBody": { "description": "Tax guide card body" },
+
+  "emissionPointAddBtn": "Add point",
+  "@emissionPointAddBtn": { "description": "Button to add a new emission point" },
+
+  "emissionPointEditBtn": "Edit",
+  "@emissionPointEditBtn": { "description": "Button to edit emission point" },
+
+  "emissionPointDeleteBtn": "Delete",
+  "@emissionPointDeleteBtn": { "description": "Button to delete emission point" },
+
+  "emissionPointSaveBtn": "Save point",
+  "@emissionPointSaveBtn": { "description": "Button to save emission point form" },
+
+  "emissionPointCancelBtn": "Cancel",
+  "@emissionPointCancelBtn": { "description": "Button to cancel emission point edit" },
+
+  "emissionPointSelectLabel": "Active billing point",
+  "@emissionPointSelectLabel": { "description": "Label to select active point" },
+
+  "emissionPointEmptyMsg": "No emission points. Add at least one.",
+  "@emissionPointEmptyMsg": { "description": "Message when emission points list is empty" },
+
+  "emissionPointFormTitle": "New emission point",
+  "@emissionPointFormTitle": { "description": "Title of new emission point form" },
+
+  "emissionPointEditFormTitle": "Edit emission point",
+  "@emissionPointEditFormTitle": { "description": "Title of edit emission point form" },
+
+  "emissionPointDeleteConfirm": "Delete this emission point?",
+  "@emissionPointDeleteConfirm": { "description": "Confirmation message to delete an emission point" },
+
+  "emissionPointActiveChip": "Active",
+  "@emissionPointActiveChip": { "description": "Active status chip in emission point card" },
+
+  "emissionPointInactiveChip": "Inactive",
+  "@emissionPointInactiveChip": { "description": "Inactive status chip in emission point card" },
+
+  "emissionPointSelectedHint": "Selected for billing",
+  "@emissionPointSelectedHint": { "description": "Hint when point is selected as active" },
+
   "loading": "Loading...",
   "@loading": { "description": "Generic loading text" },
 

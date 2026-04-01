@@ -350,6 +350,51 @@ class AppLocalizationsEs extends AppLocalizations {
   String get step6Title => 'Grupos de Impuesto';
 
   @override
+  String get step6TaxGuideTitle => 'Guía rápida';
+
+  @override
+  String get step6TaxGuideBody => 'Selecciona los grupos de impuesto que aplican a los productos o servicios que vende tu empresa.';
+
+  @override
+  String get emissionPointAddBtn => 'Agregar punto';
+
+  @override
+  String get emissionPointEditBtn => 'Editar';
+
+  @override
+  String get emissionPointDeleteBtn => 'Eliminar';
+
+  @override
+  String get emissionPointSaveBtn => 'Guardar punto';
+
+  @override
+  String get emissionPointCancelBtn => 'Cancelar';
+
+  @override
+  String get emissionPointSelectLabel => 'Punto activo de facturación';
+
+  @override
+  String get emissionPointEmptyMsg => 'No hay puntos de emisión. Agrega al menos uno.';
+
+  @override
+  String get emissionPointFormTitle => 'Nuevo punto de emisión';
+
+  @override
+  String get emissionPointEditFormTitle => 'Editar punto de emisión';
+
+  @override
+  String get emissionPointDeleteConfirm => '¿Eliminar este punto de emisión?';
+
+  @override
+  String get emissionPointActiveChip => 'Activo';
+
+  @override
+  String get emissionPointInactiveChip => 'Inactivo';
+
+  @override
+  String get emissionPointSelectedHint => 'Seleccionado para facturación';
+
+  @override
   String get loading => 'Cargando...';
 
   @override

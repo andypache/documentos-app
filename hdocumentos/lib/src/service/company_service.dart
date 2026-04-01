@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/service/service.dart';
 import 'package:hdocumentos/src/constant/constant.dart';
+import 'package:hdocumentos/src/share/preference.dart';
 
 class CompanyService extends ChangeNotifier {
   static const _cacheKey = 'catalogs';
@@ -83,8 +84,13 @@ class CompanyService extends ChangeNotifier {
   /// Obtiene la compañía por defecto desde el API.
   /// Retorna null si no existe (404) o si ocurre un error.
   Future<CompanyModel?> getCompany(BuildContext context) async {
-    final response =
-        await getFetch(context: context, url: apiCompanyDefault, params: {});
+    final username = Preferences.userSession.username;
+    if (username.isEmpty) return null;
+
+    final response = await getFetch(
+        context: context,
+        url: apiCompanyDefault,
+        params: {'username': username});
 
     if (response.statusHttp == 404) return null;
 

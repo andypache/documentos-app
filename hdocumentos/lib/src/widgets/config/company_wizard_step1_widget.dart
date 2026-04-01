@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/common/key_value_model.dart';
-import 'package:hdocumentos/src/model/config/company_model.dart';
 import 'package:hdocumentos/src/provider/form/company_form_provider.dart';
 import 'package:hdocumentos/src/provider/provider.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
@@ -124,9 +123,8 @@ class CompanyWizardStep1Widget extends StatelessWidget {
           SizedBox(height: size.height * 0.008),
           InputSwitchFieldWidget(
             label: l10n.activeCompany,
-            value: company.state == null || company.state == CompanyState.A,
-            onChanged: (v) =>
-                company.state = v ? CompanyState.A : CompanyState.I,
+            value: company.state == null || company.state == 'ACTIVE',
+            onChanged: (v) => company.state = v ? 'ACTIVE' : 'INACTIVE',
           ),
           SizedBox(height: size.height * 0.025),
           // Resumen del paso

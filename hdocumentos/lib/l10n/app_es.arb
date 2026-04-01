@@ -328,6 +328,51 @@
   "step6Title": "Grupos de Impuesto",
   "@step6Title": { "description": "Título sección paso 6" },
 
+  "step6TaxGuideTitle": "Guía rápida",
+  "@step6TaxGuideTitle": { "description": "Título tarjeta guía de impuestos" },
+
+  "step6TaxGuideBody": "Selecciona los grupos de impuesto que aplican a los productos o servicios que vende tu empresa.",
+  "@step6TaxGuideBody": { "description": "Cuerpo tarjeta guía de impuestos" },
+
+  "emissionPointAddBtn": "Agregar punto",
+  "@emissionPointAddBtn": { "description": "Botón para agregar nuevo punto de emisión" },
+
+  "emissionPointEditBtn": "Editar",
+  "@emissionPointEditBtn": { "description": "Botón editar punto de emisión" },
+
+  "emissionPointDeleteBtn": "Eliminar",
+  "@emissionPointDeleteBtn": { "description": "Botón eliminar punto de emisión" },
+
+  "emissionPointSaveBtn": "Guardar punto",
+  "@emissionPointSaveBtn": { "description": "Botón guardar punto de emisión en el form" },
+
+  "emissionPointCancelBtn": "Cancelar",
+  "@emissionPointCancelBtn": { "description": "Botón cancelar edición de punto de emisión" },
+
+  "emissionPointSelectLabel": "Punto activo de facturación",
+  "@emissionPointSelectLabel": { "description": "Etiqueta para seleccionar el punto activo" },
+
+  "emissionPointEmptyMsg": "No hay puntos de emisión. Agrega al menos uno.",
+  "@emissionPointEmptyMsg": { "description": "Mensaje cuando la lista de puntos está vacía" },
+
+  "emissionPointFormTitle": "Nuevo punto de emisión",
+  "@emissionPointFormTitle": { "description": "Título del formulario de nuevo punto de emisión" },
+
+  "emissionPointEditFormTitle": "Editar punto de emisión",
+  "@emissionPointEditFormTitle": { "description": "Título del formulario de edición de punto de emisión" },
+
+  "emissionPointDeleteConfirm": "¿Eliminar este punto de emisión?",
+  "@emissionPointDeleteConfirm": { "description": "Mensaje de confirmación para eliminar un punto de emisión" },
+
+  "emissionPointActiveChip": "Activo",
+  "@emissionPointActiveChip": { "description": "Chip de estado activo en la card del punto de emisión" },
+
+  "emissionPointInactiveChip": "Inactivo",
+  "@emissionPointInactiveChip": { "description": "Chip de estado inactivo en la card del punto de emisión" },
+
+  "emissionPointSelectedHint": "Seleccionado para facturación",
+  "@emissionPointSelectedHint": { "description": "Hint cuando el punto está seleccionado como activo" },
+
   "loading": "Cargando...",
   "@loading": { "description": "Texto de carga genérico" },
 

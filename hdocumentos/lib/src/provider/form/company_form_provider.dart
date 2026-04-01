@@ -5,6 +5,7 @@ import 'package:hdocumentos/src/model/config/company_model.dart';
 import 'package:hdocumentos/src/service/client/consume_service.dart';
 import 'package:hdocumentos/src/constant/constant.dart';
 import 'package:hdocumentos/src/service/notification_service.dart';
+import 'package:hdocumentos/src/share/preference.dart';
 
 // ─── Endpoints por paso ───────────────────────────────────────────────────────
 
@@ -182,12 +183,9 @@ class CompanyFormProvider extends ChangeNotifier {
         };
       case 4:
         return {
-          'document_type_id': company.documentTypeId,
-          'establishment_code': company.establishmentCode,
-          'emission_point_code': company.emissionPointCode,
-          'current_sequential': company.currentSequential,
-          'description': company.description,
-          'is_active': company.isActive,
+          'emission_points':
+              company.emissionPoints.map((p) => p.toJson()).toList(),
+          'selected_emission_point_id': selectedEmissionPointId,
         };
       case 5:
         return {'tax_group_codes': company.taxGroupCodes};
@@ -203,5 +201,100 @@ class CompanyFormProvider extends ChangeNotifier {
   void loadFromModel(CompanyModel model) {
     company = model;
     notifyListeners();
+  }
+
+  // ── Gestión de puntos de emisión ─────────────────────────────────────────
+
+  /// Índice del punto de emisión seleccionado como activo en el wizard.
+  /// Usa índice de lista para soportar puntos sin id (nuevos, no guardados aún).
+  int? selectedEmissionPointIndex;
+
+  /// ID del punto activo (null si el punto aún no fue guardado en el backend)
+  String? get selectedEmissionPointId {
+    final idx = selectedEmissionPointIndex;
+    if (idx == null || idx < 0 || idx >= company.emissionPoints.length) {
+      return null;
+    }
+    return company.emissionPoints[idx].id;
+  }
+
+  /// Devuelve la lista actual de puntos de emisión
+  List<CompanyEmissionPointModel> get emissionPoints => company.emissionPoints;
+
+  /// Agrega un nuevo punto o reemplaza uno existente (por id si lo tiene,
+  /// o por índice si aún no tiene id del backend)
+  void upsertEmissionPoint(CompanyEmissionPointModel point) {
+    final list = List<CompanyEmissionPointModel>.from(company.emissionPoints);
+    // Buscar por id solo si el punto tiene id
+    final idx =
+        point.id != null ? list.indexWhere((p) => p.id == point.id) : -1;
+    if (idx >= 0) {
+      list[idx] = point;
+    } else {
+      list.add(point);
+    }
+    company.emissionPoints = list;
+    notifyListeners();
+  }
+
+  /// Elimina un punto de emisión por índice de lista
+  void removeEmissionPoint(int index) {
+    final list = List<CompanyEmissionPointModel>.from(company.emissionPoints);
+    if (index < 0 || index >= list.length) return;
+    list.removeAt(index);
+    company.emissionPoints = list;
+    // Ajustar selección
+    if (selectedEmissionPointIndex == index) {
+      selectedEmissionPointIndex = list.isNotEmpty ? 0 : null;
+      if (selectedEmissionPointIndex != null) {
+        _syncSelectedPointFields(list[selectedEmissionPointIndex!]);
+      }
+    } else if (selectedEmissionPointIndex != null &&
+        selectedEmissionPointIndex! > index) {
+      selectedEmissionPointIndex = selectedEmissionPointIndex! - 1;
+    }
+    notifyListeners();
+  }
+
+  /// Marca un punto como el activo por su índice y lo persiste en Preferences
+  void selectActiveEmissionPoint(CompanyEmissionPointModel point) {
+    final idx = company.emissionPoints.indexOf(point);
+    selectedEmissionPointIndex = idx >= 0 ? idx : null;
+    _syncSelectedPointFields(point);
+    // Persistir en Preferences
+    Preferences.saveActiveEmissionPoint(
+      id: point.id,
+      documentTypeId: point.documentTypeId,
+      establishmentCode: point.establishmentCode,
+      emissionPointCode: point.emissionPointCode,
+      currentSequential: point.currentSequential,
+    );
+    notifyListeners();
+  }
+
+  /// Sincroniza los campos planos del company con el punto seleccionado
+  void _syncSelectedPointFields(CompanyEmissionPointModel point) {
+    company.documentTypeId = point.documentTypeId;
+    company.establishmentCode = point.establishmentCode;
+    company.emissionPointCode = point.emissionPointCode;
+    company.currentSequential = point.currentSequential;
+    company.description = point.description;
+    company.isActive = point.isActive;
+  }
+
+  /// Inicializa la selección con el primer punto activo existente (si hay)
+  void initEmissionPointSelection() {
+    final savedId = Preferences.activeEmissionPointId;
+    final points = company.emissionPoints;
+    if (points.isEmpty) return;
+    // Intentar restaurar por id guardado en prefs
+    int idx = savedId != null ? points.indexWhere((p) => p.id == savedId) : -1;
+    if (idx < 0) {
+      // Fallback: primer punto activo o el primero de la lista
+      idx = points.indexWhere((p) => p.isActive);
+      if (idx < 0) idx = 0;
+    }
+    selectedEmissionPointIndex = idx;
+    _syncSelectedPointFields(points[idx]);
   }
 }

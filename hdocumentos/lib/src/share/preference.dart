@@ -51,4 +51,92 @@ class Preferences {
   static removeUser() {
     userSession = UserSessionModel.empty();
   }
+
+  // ── Punto de emisión activo seleccionado en el wizard ─────────────────────
+
+  /// ID del punto de emisión activo (uuid del backend)
+  static String? get activeEmissionPointId =>
+      _preferences.getString('activeEmissionPointId');
+
+  static set activeEmissionPointId(String? id) {
+    if (id == null) {
+      _preferences.remove('activeEmissionPointId');
+    } else {
+      _preferences.setString('activeEmissionPointId', id);
+    }
+  }
+
+  /// Tipo de documento del punto de emisión activo
+  static String? get activeDocumentTypeId =>
+      _preferences.getString('activeDocumentTypeId');
+
+  static set activeDocumentTypeId(String? v) {
+    if (v == null) {
+      _preferences.remove('activeDocumentTypeId');
+    } else {
+      _preferences.setString('activeDocumentTypeId', v);
+    }
+  }
+
+  /// Código de establecimiento del punto activo
+  static String? get activeEstablishmentCode =>
+      _preferences.getString('activeEstablishmentCode');
+
+  static set activeEstablishmentCode(String? v) {
+    if (v == null) {
+      _preferences.remove('activeEstablishmentCode');
+    } else {
+      _preferences.setString('activeEstablishmentCode', v);
+    }
+  }
+
+  /// Código del punto de emisión activo
+  static String? get activeEmissionPointCode =>
+      _preferences.getString('activeEmissionPointCode');
+
+  static set activeEmissionPointCode(String? v) {
+    if (v == null) {
+      _preferences.remove('activeEmissionPointCode');
+    } else {
+      _preferences.setString('activeEmissionPointCode', v);
+    }
+  }
+
+  /// Secuencial actual del punto de emisión activo
+  static int? get activeCurrentSequential {
+    final v = _preferences.getInt('activeCurrentSequential');
+    return v;
+  }
+
+  static set activeCurrentSequential(int? v) {
+    if (v == null) {
+      _preferences.remove('activeCurrentSequential');
+    } else {
+      _preferences.setInt('activeCurrentSequential', v);
+    }
+  }
+
+  /// Guarda un punto de emisión completo como el activo
+  static void saveActiveEmissionPoint({
+    required String? id,
+    required String? documentTypeId,
+    required String? establishmentCode,
+    required String? emissionPointCode,
+    required int? currentSequential,
+  }) {
+    activeEmissionPointId = id;
+    activeDocumentTypeId = documentTypeId;
+    activeEstablishmentCode = establishmentCode;
+    activeEmissionPointCode = emissionPointCode;
+    activeCurrentSequential = currentSequential;
+  }
+
+  /// Elimina el punto de emisión activo guardado
+  static void clearActiveEmissionPoint() {
+    _preferences.remove('activeEmissionPointId');
+    _preferences.remove('activeDocumentTypeId');
+    _preferences.remove('activeEstablishmentCode');
+    _preferences.remove('activeEmissionPointCode');
+    _preferences.remove('activeCurrentSequential');
+  }
 }

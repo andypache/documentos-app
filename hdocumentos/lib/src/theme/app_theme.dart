@@ -37,6 +37,15 @@ class AppTheme {
   static const Color actionSave = Color(0xFF388E3C); // verde guardar
   static const Color actionSaveDark = Color(0xFF00695C); // teal guardar paso
   static const Color actionDanger = Color(0xFFC62828); // rojo peligro/logout
+  static const Color actionDelete = Color(0xFFE53935); // rojo eliminar
+
+  // Colores semánticos de texto
+  static const Color textPrimary =
+      Colors.white; // texto principal sobre fondos oscuros
+  static const Color textSecondary = Color(0xFFB0BEC5); // texto secundario/hint
+
+  // Fondo de tarjetas sobre gradiente oscuro
+  static const Color cardBackground = Color(0xFF1E3540); // card wizard/config
 
   // Colores de la pantalla de login
   static const Color loginCardBg =

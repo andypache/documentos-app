@@ -350,6 +350,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String get step6Title => 'Tax Groups';
 
   @override
+  String get step6TaxGuideTitle => 'Quick guide';
+
+  @override
+  String get step6TaxGuideBody => 'Select the tax groups that apply to the products or services your company sells.';
+
+  @override
+  String get emissionPointAddBtn => 'Add point';
+
+  @override
+  String get emissionPointEditBtn => 'Edit';
+
+  @override
+  String get emissionPointDeleteBtn => 'Delete';
+
+  @override
+  String get emissionPointSaveBtn => 'Save point';
+
+  @override
+  String get emissionPointCancelBtn => 'Cancel';
+
+  @override
+  String get emissionPointSelectLabel => 'Active billing point';
+
+  @override
+  String get emissionPointEmptyMsg => 'No emission points. Add at least one.';
+
+  @override
+  String get emissionPointFormTitle => 'New emission point';
+
+  @override
+  String get emissionPointEditFormTitle => 'Edit emission point';
+
+  @override
+  String get emissionPointDeleteConfirm => 'Delete this emission point?';
+
+  @override
+  String get emissionPointActiveChip => 'Active';
+
+  @override
+  String get emissionPointInactiveChip => 'Inactive';
+
+  @override
+  String get emissionPointSelectedHint => 'Selected for billing';
+
+  @override
   String get loading => 'Loading...';
 
   @override

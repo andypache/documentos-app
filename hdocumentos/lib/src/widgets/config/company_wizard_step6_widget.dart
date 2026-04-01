@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/common/catalog_model.dart';
 import 'package:hdocumentos/src/provider/app_init_provider.dart';
 import 'package:hdocumentos/src/provider/form/company_form_provider.dart';
@@ -44,6 +45,7 @@ class CompanyWizardStep6Widget extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final provider = Provider.of<CompanyFormProvider>(context);
+    final l10n = AppLocalizations.of(context);
     final catalogs = context.watch<AppInitProvider>().catalogs;
 
     final taxGroups = (catalogs?.systemParameters.isNotEmpty ?? false)
@@ -62,7 +64,7 @@ class CompanyWizardStep6Widget extends StatelessWidget {
         children: [
           CompanyWizardSectionHeader(
             icon: Icons.receipt_long_outlined,
-            title: 'Grupos de Impuesto',
+            title: l10n.step6Title,
             size: size,
           ),
           SizedBox(height: size.height * 0.015),
@@ -257,6 +259,7 @@ class _TaxGuideCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(size.width * 0.042),
@@ -274,7 +277,7 @@ class _TaxGuideCard extends StatelessWidget {
                   color: Colors.amber.shade300, size: size.width * 0.042),
               SizedBox(width: size.width * 0.02),
               Text(
-                'Guía rápida',
+                l10n.step6TaxGuideTitle,
                 style: TextStyle(
                   color: Colors.amber.shade300,
                   fontSize: size.width * 0.034,
@@ -285,7 +288,7 @@ class _TaxGuideCard extends StatelessWidget {
           ),
           SizedBox(height: size.height * 0.012),
           Text(
-            'Selecciona los grupos de impuesto que aplican a los productos o servicios que vende tu empresa.',
+            l10n.step6TaxGuideBody,
             style: TextStyle(
               color: Colors.white.withOpacity(0.6),
               fontSize: size.width * 0.029,
