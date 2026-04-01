@@ -28,6 +28,8 @@ class CompanyModel {
   String? certificateUser;
   String? certificatePassword;
   DateTime? certificateExpirationDate;
+  bool
+      hasCertificate; // true si el backend indica que ya tiene certificado cargado
 
   // Configuración de correo
   String? mailServer;
@@ -67,6 +69,7 @@ class CompanyModel {
     this.certificateUser,
     this.certificatePassword,
     this.certificateExpirationDate,
+    this.hasCertificate = false,
     this.mailServer,
     this.mailPort,
     this.mailAddress,
@@ -136,6 +139,7 @@ class CompanyModel {
         certificateExpirationDate: json['certificate_expiration_date'] != null
             ? DateTime.tryParse(json['certificate_expiration_date'])
             : null,
+        hasCertificate: json['has_certificate'] == true,
         mailServer: json['mail_server'],
         mailPort: json['mail_port'],
         mailAddress: json['mail_address'],

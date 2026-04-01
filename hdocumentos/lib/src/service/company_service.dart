@@ -77,4 +77,31 @@ class CompanyService extends ChangeNotifier {
   static Future<void> clearCache() async {
     await _storage.delete(key: _cacheKey);
   }
+
+  // ─── Compañía ─────────────────────────────────────────────────────────────
+
+  /// Obtiene la compañía por defecto desde el API.
+  /// Retorna null si no existe (404) o si ocurre un error.
+  Future<CompanyModel?> getCompany(BuildContext context) async {
+    final response =
+        await getFetch(context: context, url: apiCompanyDefault, params: {});
+
+    if (response.statusHttp == 404) return null;
+
+    if (response.statusHttp != 200) {
+      NotificationService.showSnackbarError(response.message);
+      return null;
+    }
+
+    try {
+      final data = response.createDataResponse().response;
+      if (data is! Map<String, dynamic>) return null;
+      return CompanyModel.fromJson(data);
+    } catch (_) {
+      NotificationService.showSnackbarError(
+          NotificationService.l10n?.invalidDataFormatForCatalogs ??
+              'Error al procesar los datos de la compañía');
+      return null;
+    }
+  }
 }

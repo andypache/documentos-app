@@ -11,6 +11,7 @@ String apiSecurityLoginRefresh = "${apiSecurity}oauth/refresh";
 String apiCompany =
     '${Environment.protocol}://${Environment.host}${Environment.portCompany}/${Environment.prefixCompany}${Environment.baseUrl}/company-service/';
 String apiDataCompany = "${apiCompany}company/by-email";
+String apiCompanyDefault = "${apiCompany}companies/default";
 String apiPrintingLogoRegisterCompany =
     "${apiCompany}company/printing-logo/register";
 

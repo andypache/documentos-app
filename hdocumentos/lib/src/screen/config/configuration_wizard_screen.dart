@@ -2,27 +2,125 @@ import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/config/company_model.dart';
 import 'package:hdocumentos/src/provider/form/company_form_provider.dart';
-import 'package:hdocumentos/src/share/preference.dart';
+import 'package:hdocumentos/src/service/company_service.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
-/// Pantalla wizard para crear y editar la compañia
-class ConfigurationWizardScreen extends StatelessWidget {
+// ─── Estado de carga ─────────────────────────────────────────────────────────
+
+enum _LoadStatus { loading, ready, error }
+
+/// Pantalla wizard para crear y editar la compañia.
+/// Carga los datos actuales desde el API antes de montar el wizard.
+class ConfigurationWizardScreen extends StatefulWidget {
   const ConfigurationWizardScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final userSession = Preferences.userSession;
-    final hasCompany = userSession.hasCompany;
-    final company = hasCompany
-        ? CompanyModel.fromSession(userSession.toJson())
-        : CompanyModel.empty();
+  State<ConfigurationWizardScreen> createState() =>
+      _ConfigurationWizardScreenState();
+}
 
-    return ChangeNotifierProvider(
-      create: (_) => CompanyFormProvider(company, isEditing: hasCompany),
-      child: _ConfigurationWizardBody(isEditing: hasCompany),
-    );
+class _ConfigurationWizardScreenState extends State<ConfigurationWizardScreen> {
+  final _service = CompanyService();
+
+  _LoadStatus _status = _LoadStatus.loading;
+  CompanyModel? _company;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _load());
+  }
+
+  Future<void> _load() async {
+    setState(() => _status = _LoadStatus.loading);
+    try {
+      final company = await _service.getCompany(context);
+      if (!mounted) return;
+      setState(() {
+        // Si el API devuelve datos úsalos; si no (empresa nueva) arranca vacío
+        _company = company ?? CompanyModel.empty();
+        _status = _LoadStatus.ready;
+      });
+    } catch (_) {
+      if (mounted) setState(() => _status = _LoadStatus.error);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    switch (_status) {
+      case _LoadStatus.loading:
+        return const Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Stack(
+            children: [
+              BrackgroundWidget(),
+              Center(
+                child: CircularProgressIndicator(color: Colors.white),
+              ),
+            ],
+          ),
+        );
+
+      case _LoadStatus.error:
+        return Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Stack(
+            children: [
+              const BrackgroundWidget(),
+              Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.cloud_off_rounded,
+                        color: Colors.white54, size: size.width * 0.15),
+                    SizedBox(height: size.height * 0.02),
+                    Text(
+                      'No se pudo cargar la información',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: size.width * 0.04,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: size.height * 0.015),
+                    ElevatedButton.icon(
+                      onPressed: _load,
+                      icon: const Icon(Icons.refresh_rounded),
+                      label: const Text('Reintentar'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primaryButton,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.01),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text('Cancelar',
+                          style: TextStyle(
+                              color: Colors.white54,
+                              fontSize: size.width * 0.034)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+
+      case _LoadStatus.ready:
+        final company = _company!;
+        final isEditing = company.businessName?.isNotEmpty == true;
+
+        return ChangeNotifierProvider(
+          create: (_) => CompanyFormProvider(company, isEditing: isEditing),
+          child: _ConfigurationWizardBody(isEditing: isEditing),
+        );
+    }
   }
 }
 
