@@ -169,6 +169,7 @@ class _TaxSelectionDialogWidgetState extends State<TaxSelectionDialogWidget> {
       ),
     ];
 
+    if (!mounted) return;
     setState(() => _isLoading = false);
   }
 

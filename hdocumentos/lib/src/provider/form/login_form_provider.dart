@@ -6,7 +6,14 @@ class LoginFormProvider extends ChangeNotifier {
 
   String username = "";
   String password = "";
-  bool keepSession = false;
+
+  bool _keepSession = false;
+  bool get keepSession => _keepSession;
+  set keepSession(bool value) {
+    _keepSession = value;
+    notifyListeners();
+  }
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 

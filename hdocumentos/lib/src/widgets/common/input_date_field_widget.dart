@@ -39,6 +39,12 @@ class _InputDateFieldWidgetState extends State<InputDateFieldWidget> {
   //Create widget
   final TextEditingController _date = TextEditingController();
 
+  @override
+  void dispose() {
+    _date.dispose();
+    super.dispose();
+  }
+
   //Build
   @override
   Widget build(BuildContext context) {
@@ -50,17 +56,19 @@ class _InputDateFieldWidgetState extends State<InputDateFieldWidget> {
           // Below line stops keyboard from appearing
           FocusScope.of(context).requestFocus(FocusNode());
           // Show Date Picker Here
-          DateTime? date = await showDatePicker(
+          final DateTime? date = await showDatePicker(
               context: context,
               initialDate: DateTime.now(),
               firstDate: DateTime(2000),
               lastDate: DateTime(2100));
+          if (!mounted) return;
           if (date != null) {
             setState(() {
               _date.text = DateFormat('dd/MM/yyyy').format(date);
             });
+            widget.onChanged?.call(_date.text);
           } else {
-            _date.text = "";
+            _date.text = '';
           }
         },
         style: const TextStyle(color: AppTheme.white),

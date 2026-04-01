@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 
-///Create general widget for check input all application
-class InputCheckboxFieldWidget extends StatefulWidget {
-  const InputCheckboxFieldWidget(
-      {Key? key, this.onChanged, required this.label})
-      : super(key: key);
-  final Function(bool?)? onChanged;
+/// Widget de checkbox controlado por el padre.
+/// El padre es responsable de mantener el estado [value] y reaccionar
+/// en [onChanged]. Sigue el mismo patrón que [Checkbox] nativo de Flutter.
+class InputCheckboxFieldWidget extends StatelessWidget {
+  const InputCheckboxFieldWidget({
+    Key? key,
+    required this.label,
+    required this.value,
+    this.onChanged,
+  }) : super(key: key);
+
   final String label;
 
-  //Create state for widget check input
-  @override
-  State<InputCheckboxFieldWidget> createState() =>
-      _InputCheckboxFieldWidgetState();
-}
+  /// Valor actual del checkbox (controlado por el padre).
+  final bool value;
 
-//State
-class _InputCheckboxFieldWidgetState extends State<InputCheckboxFieldWidget> {
-  bool isChecked = false;
+  /// Callback invocado cuando el usuario cambia el estado.
+  final ValueChanged<bool?>? onChanged;
 
-  //Create widget
   @override
   Widget build(BuildContext context) {
-    //Create color for input check
     Color getColor(Set<MaterialState> states) {
       const Set<MaterialState> interactiveStates = <MaterialState>{
         MaterialState.pressed,
@@ -35,29 +34,19 @@ class _InputCheckboxFieldWidgetState extends State<InputCheckboxFieldWidget> {
       return AppTheme.primary;
     }
 
-    //Create wrap for check
     return Wrap(
       direction: Axis.horizontal,
       crossAxisAlignment: WrapCrossAlignment.center,
       spacing: -3,
       children: [
         Checkbox(
-            checkColor: Colors.white,
-            fillColor: MaterialStateProperty.resolveWith(getColor),
-            value: isChecked,
-            onChanged: (v) => _onCheckedChanged()),
-        Text(widget.label)
+          checkColor: Colors.white,
+          fillColor: MaterialStateProperty.resolveWith(getColor),
+          value: value,
+          onChanged: onChanged,
+        ),
+        Text(label),
       ],
     );
-  }
-
-  //Check changed
-  _onCheckedChanged() {
-    setState(() {
-      isChecked = !isChecked;
-    });
-    if (widget.onChanged != null) {
-      widget.onChanged!.call(isChecked);
-    }
   }
 }

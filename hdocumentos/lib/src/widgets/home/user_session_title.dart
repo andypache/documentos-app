@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/share/preference.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/common/language_selector_widget.dart';
 
 ///Widgets that put user session into top screen
 class UserSessionTitle extends StatelessWidget {
-  final UserSessionModel session = Preferences.userSession;
-
   //Constructor
-  UserSessionTitle({Key? key}) : super(key: key);
+  const UserSessionTitle({Key? key}) : super(key: key);
 
   //Build widgets
   @override
   Widget build(BuildContext context) {
+    // Leer la sesión en build() para reflejar siempre el estado más reciente
+    final session = Preferences.userSession;
     final size = MediaQuery.of(context).size;
     final avatarSize = size.width * 0.08;
 
@@ -89,7 +88,8 @@ class UserSessionTitle extends StatelessWidget {
                             fontSize: 9, color: Colors.white.withOpacity(0.6)))
                   ]))
               // Selector de idioma
-              , const LanguageSelectorWidget(),
+              ,
+              const LanguageSelectorWidget(),
             ])));
   }
 }

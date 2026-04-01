@@ -14,7 +14,7 @@ class CardSlider extends StatefulWidget {
       : super(key: key);
 
   @override
-  _CardSliderState createState() => _CardSliderState();
+  State<CardSlider> createState() => _CardSliderState();
 }
 
 ///Create state widgets for slider
@@ -35,6 +35,7 @@ class _CardSliderState extends State<CardSlider> {
 
   @override
   void dispose() {
+    scrollController.dispose();
     super.dispose();
   }
 

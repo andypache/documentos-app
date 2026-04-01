@@ -87,6 +87,7 @@ class _CustomerWizardDiscountWidgetState
     );
 
     if (picked != null) {
+      if (!mounted) return;
       setState(() {
         if (isStartDate) {
           customerForm.startDate = picked;

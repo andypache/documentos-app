@@ -151,7 +151,7 @@ class TotalsPanelWidget extends StatelessWidget {
                       Padding(
                         padding:
                             EdgeInsets.symmetric(vertical: size.height * 0.01),
-                        child: Divider(
+                        child: const Divider(
                           color: Colors.white30,
                           height: 1,
                         ),

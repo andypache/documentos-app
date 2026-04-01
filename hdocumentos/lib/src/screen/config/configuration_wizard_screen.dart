@@ -147,7 +147,7 @@ class _ConfigurationWizardBody extends StatelessWidget {
           SafeArea(
             child: Column(
               children: [
-                UserSessionTitle(),
+                const UserSessionTitle(),
                 Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: size.width * 0.05,

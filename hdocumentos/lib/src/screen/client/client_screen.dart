@@ -57,7 +57,7 @@ class _ClientScreenBodyState extends State<_ClientScreenBody> {
     return Column(
       children: [
         // Widget de información del usuario
-        UserSessionTitle(),
+        const UserSessionTitle(),
         // Header con título y botón de cerrar
         Container(
           padding: EdgeInsets.only(

@@ -89,7 +89,9 @@ class _LoginScreenForm extends StatelessWidget {
               validator: validatorPassword),
           InputCheckboxFieldWidget(
             label: "Mantener sesión ?",
-            onChanged: (isChecked) => loginForm.keepSession = isChecked!,
+            value: loginForm.keepSession,
+            onChanged: (isChecked) =>
+                loginForm.keepSession = isChecked ?? false,
           ),
           MaterialButtonWidget(
               textButton: 'Ingresar',

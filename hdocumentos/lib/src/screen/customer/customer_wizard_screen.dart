@@ -189,7 +189,7 @@ class _WizardContent extends StatelessWidget {
       case 0:
         return const CustomerWizardStep1Widget();
       case 1:
-        return const CustomerWizardStep2Widget();
+        return const CustomerWizardStep3Widget();
       case 2:
         return const CustomerWizardDiscountWidget();
       default:

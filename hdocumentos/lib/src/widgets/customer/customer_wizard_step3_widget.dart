@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/provider/form/customer_form_provider.dart';
 import 'package:provider/provider.dart';
 
-///Step 2: Información de Contacto y Dirección
-class CustomerWizardStep2Widget extends StatefulWidget {
-  const CustomerWizardStep2Widget({Key? key}) : super(key: key);
+///Step 3: Información de Contacto y Dirección
+class CustomerWizardStep3Widget extends StatefulWidget {
+  const CustomerWizardStep3Widget({Key? key}) : super(key: key);
 
   @override
-  State<CustomerWizardStep2Widget> createState() =>
-      _CustomerWizardStep2WidgetState();
+  State<CustomerWizardStep3Widget> createState() =>
+      _CustomerWizardStep3WidgetState();
 }
 
-class _CustomerWizardStep2WidgetState extends State<CustomerWizardStep2Widget> {
+class _CustomerWizardStep3WidgetState extends State<CustomerWizardStep3Widget> {
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
   late TextEditingController _addressController;

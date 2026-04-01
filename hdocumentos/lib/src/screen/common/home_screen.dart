@@ -146,7 +146,7 @@ class _HomeScreenBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      UserSessionTitle(),
+      const UserSessionTitle(),
       //SingleChildScrollView(child: CartTableWidget())
       SingleChildScrollView(
           child: Column(children: [
