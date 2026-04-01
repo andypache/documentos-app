@@ -62,8 +62,9 @@ class CompanyWizardStep1Widget extends StatelessWidget {
             initialValue: company.identification,
             filled: true,
             fillColor: AppTheme.whiteGradient,
-            validator: (v) =>
-                (v == null || v.isEmpty) ? l10n.requiredField : null,
+            validator: FieldValidators.compose([
+              FieldValidators.required(l10n),
+            ]),
             onChanged: (v) => company.identification = v,
           ),
           SizedBox(height: size.height * 0.018),
@@ -74,8 +75,9 @@ class CompanyWizardStep1Widget extends StatelessWidget {
             initialValue: company.businessName,
             filled: true,
             fillColor: AppTheme.whiteGradient,
-            validator: (v) =>
-                (v == null || v.isEmpty) ? l10n.requiredField : null,
+            validator: FieldValidators.compose([
+              FieldValidators.required(l10n),
+            ]),
             onChanged: (v) => company.businessName = v,
           ),
           SizedBox(height: size.height * 0.018),
@@ -113,8 +115,10 @@ class CompanyWizardStep1Widget extends StatelessWidget {
             keyboardType: TextInputType.emailAddress,
             filled: true,
             fillColor: AppTheme.whiteGradient,
-            validator: (v) =>
-                (v == null || v.isEmpty) ? l10n.requiredField : null,
+            validator: FieldValidators.compose([
+              FieldValidators.required(l10n),
+              FieldValidators.email(l10n),
+            ]),
             onChanged: (v) => company.email = v,
           ),
           SizedBox(height: size.height * 0.008),

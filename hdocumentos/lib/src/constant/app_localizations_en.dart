@@ -159,4 +159,193 @@ class AppLocalizationsEn extends AppLocalizations {
   String validatorExactLength(int length) {
     return 'Must be exactly $length characters';
   }
+
+  @override
+  String get btnSaveStep => 'Save this step';
+
+  @override
+  String get stepTaxes => 'Taxes';
+
+  @override
+  String get step2Title => 'Logo & Web Settings';
+
+  @override
+  String get step2LogoLabel => 'Company logo';
+
+  @override
+  String get step2Website => 'Website';
+
+  @override
+  String get step2WebsiteHint => 'https://www.company.com (optional)';
+
+  @override
+  String get step2MaxDiscount => 'Maximum discount (%)';
+
+  @override
+  String get step2MaxDiscountHint => 'E.g.: 10.00 (optional)';
+
+  @override
+  String get step2ItemAddress => 'Item address';
+
+  @override
+  String get step2ItemAddressHint => 'Alternative address (optional)';
+
+  @override
+  String get step2LogoLoaded => 'Logo loaded';
+
+  @override
+  String step2MaxDiscountSummary(String value) {
+    return 'Max discount: $value%';
+  }
+
+  @override
+  String get step3Title => 'Electronic Certificate';
+
+  @override
+  String get step3CertButton => 'Upload electronic signature (.p12 / .cert)';
+
+  @override
+  String get step3CertLoaded => 'Certificate loaded ✓';
+
+  @override
+  String get step3CertRequired => 'Certificate is required';
+
+  @override
+  String get step3CertSummary => 'Certificate loaded';
+
+  @override
+  String get certificateUser => 'Certificate user';
+
+  @override
+  String get certificateUserHint => 'Holder\'s name (required)';
+
+  @override
+  String get certificatePassword => 'Certificate password';
+
+  @override
+  String get certificatePasswordHint => 'Password (required)';
+
+  @override
+  String get certificateExpiration => 'Expiration date';
+
+  @override
+  String get certificateExpirationHint => 'Expiry date (required)';
+
+  @override
+  String certificateExpiresSummary(String date) {
+    return 'Expires: $date';
+  }
+
+  @override
+  String get step4Title => 'Email Configuration';
+
+  @override
+  String get step4InfoNote => 'Optional fields. Used to send invoices by email.';
+
+  @override
+  String get mailServer => 'Mail server';
+
+  @override
+  String get mailServerHint => 'smtp.gmail.com (optional)';
+
+  @override
+  String get mailPort => 'Port';
+
+  @override
+  String get mailPortHint => '587 / 465 (optional)';
+
+  @override
+  String mailPortSummary(String port) {
+    return 'Port: $port';
+  }
+
+  @override
+  String get mailAddress => 'Sender email address';
+
+  @override
+  String get mailAddressHint => 'mail@company.com (optional)';
+
+  @override
+  String get mailUser => 'Mail user';
+
+  @override
+  String get mailUserHint => 'SMTP user (optional)';
+
+  @override
+  String get mailPassword => 'Mail password';
+
+  @override
+  String get mailPasswordHint => 'SMTP password (optional)';
+
+  @override
+  String get step5Title => 'Emission Point';
+
+  @override
+  String get docType => 'Document type';
+
+  @override
+  String get docTypeHint => 'Select type (required)';
+
+  @override
+  String get establishmentCode => 'Establishment code';
+
+  @override
+  String get establishmentCodeHint => 'E.g.: 001 (required)';
+
+  @override
+  String get emissionPointCode => 'Emission point code';
+
+  @override
+  String get emissionPointCodeHint => 'E.g.: 001 (required)';
+
+  @override
+  String get currentSequential => 'Current sequential';
+
+  @override
+  String get currentSequentialHint => 'Starting number (required)';
+
+  @override
+  String get emissionDescription => 'Description';
+
+  @override
+  String get emissionDescriptionHint => 'Emission point description (optional)';
+
+  @override
+  String get activeEmissionPoint => 'Active emission point';
+
+  @override
+  String get finalSummaryTitle => 'Complete summary';
+
+  @override
+  String get summaryCompanyName => 'Company name';
+
+  @override
+  String get summaryIdentification => 'Identification';
+
+  @override
+  String get summaryAddress => 'Address';
+
+  @override
+  String get summaryEmail => 'Email';
+
+  @override
+  String get summaryWebsite => 'Website';
+
+  @override
+  String get summaryEstablishment => 'Establishment';
+
+  @override
+  String get summaryEmissionPoint => 'Em. point';
+
+  @override
+  String get summaryCertificate => 'Certificate';
+
+  @override
+  String get summaryCertLoaded => 'Loaded ✓';
+
+  @override
+  String get summaryCertNotLoaded => 'Not loaded';
+
+  @override
+  String get step6Title => 'Tax Groups';
 }

@@ -134,5 +134,197 @@
   "@validatorExactLength": {
     "description": "Validation: exact length",
     "placeholders": { "length": { "type": "int" } }
-  }
+  },
+
+  "btnSaveStep": "Save this step",
+  "@btnSaveStep": { "description": "Button to save the current step in edit mode" },
+
+  "stepTaxes": "Taxes",
+  "@stepTaxes": { "description": "Step 6 label" },
+
+  "step2Title": "Logo & Web Settings",
+  "@step2Title": { "description": "Section title step 2" },
+
+  "step2LogoLabel": "Company logo",
+  "@step2LogoLabel": { "description": "Label for the logo picker" },
+
+  "step2Website": "Website",
+  "@step2Website": { "description": "Label for website field" },
+
+  "step2WebsiteHint": "https://www.company.com (optional)",
+  "@step2WebsiteHint": { "description": "Hint for website field" },
+
+  "step2MaxDiscount": "Maximum discount (%)",
+  "@step2MaxDiscount": { "description": "Label for max discount field" },
+
+  "step2MaxDiscountHint": "E.g.: 10.00 (optional)",
+  "@step2MaxDiscountHint": { "description": "Hint for max discount field" },
+
+  "step2ItemAddress": "Item address",
+  "@step2ItemAddress": { "description": "Label for item address field" },
+
+  "step2ItemAddressHint": "Alternative address (optional)",
+  "@step2ItemAddressHint": { "description": "Hint for item address field" },
+
+  "step2LogoLoaded": "Logo loaded",
+  "@step2LogoLoaded": { "description": "Text when logo is loaded in summary" },
+
+  "step2MaxDiscountSummary": "Max discount: {value}%",
+  "@step2MaxDiscountSummary": {
+    "description": "Summary text with max discount value",
+    "placeholders": { "value": { "type": "String" } }
+  },
+
+  "step3Title": "Electronic Certificate",
+  "@step3Title": { "description": "Section title step 3" },
+
+  "step3CertButton": "Upload electronic signature (.p12 / .cert)",
+  "@step3CertButton": { "description": "Button text when no certificate is loaded" },
+
+  "step3CertLoaded": "Certificate loaded ✓",
+  "@step3CertLoaded": { "description": "Button text when certificate is loaded" },
+
+  "step3CertRequired": "Certificate is required",
+  "@step3CertRequired": { "description": "Error message when no certificate is present" },
+
+  "step3CertSummary": "Certificate loaded",
+  "@step3CertSummary": { "description": "Summary text when certificate is loaded" },
+
+  "certificateUser": "Certificate user",
+  "@certificateUser": { "description": "Label for certificate user field" },
+
+  "certificateUserHint": "Holder's name (required)",
+  "@certificateUserHint": { "description": "Hint for certificate user field" },
+
+  "certificatePassword": "Certificate password",
+  "@certificatePassword": { "description": "Label for certificate password field" },
+
+  "certificatePasswordHint": "Password (required)",
+  "@certificatePasswordHint": { "description": "Hint for certificate password field" },
+
+  "certificateExpiration": "Expiration date",
+  "@certificateExpiration": { "description": "Label for certificate expiration date field" },
+
+  "certificateExpirationHint": "Expiry date (required)",
+  "@certificateExpirationHint": { "description": "Hint for certificate expiration date field" },
+
+  "certificateExpiresSummary": "Expires: {date}",
+  "@certificateExpiresSummary": {
+    "description": "Summary text for expiration date",
+    "placeholders": { "date": { "type": "String" } }
+  },
+
+  "step4Title": "Email Configuration",
+  "@step4Title": { "description": "Section title step 4" },
+
+  "step4InfoNote": "Optional fields. Used to send invoices by email.",
+  "@step4InfoNote": { "description": "Informational note for step 4" },
+
+  "mailServer": "Mail server",
+  "@mailServer": { "description": "Label for mail server field" },
+
+  "mailServerHint": "smtp.gmail.com (optional)",
+  "@mailServerHint": { "description": "Hint for mail server field" },
+
+  "mailPort": "Port",
+  "@mailPort": { "description": "Label for SMTP port field" },
+
+  "mailPortHint": "587 / 465 (optional)",
+  "@mailPortHint": { "description": "Hint for SMTP port field" },
+
+  "mailPortSummary": "Port: {port}",
+  "@mailPortSummary": {
+    "description": "Summary text for mail port",
+    "placeholders": { "port": { "type": "String" } }
+  },
+
+  "mailAddress": "Sender email address",
+  "@mailAddress": { "description": "Label for sender email address field" },
+
+  "mailAddressHint": "mail@company.com (optional)",
+  "@mailAddressHint": { "description": "Hint for sender email address field" },
+
+  "mailUser": "Mail user",
+  "@mailUser": { "description": "Label for SMTP user field" },
+
+  "mailUserHint": "SMTP user (optional)",
+  "@mailUserHint": { "description": "Hint for SMTP user field" },
+
+  "mailPassword": "Mail password",
+  "@mailPassword": { "description": "Label for SMTP password field" },
+
+  "mailPasswordHint": "SMTP password (optional)",
+  "@mailPasswordHint": { "description": "Hint for SMTP password field" },
+
+  "step5Title": "Emission Point",
+  "@step5Title": { "description": "Section title step 5" },
+
+  "docType": "Document type",
+  "@docType": { "description": "Label for document type field" },
+
+  "docTypeHint": "Select type (required)",
+  "@docTypeHint": { "description": "Hint for document type field" },
+
+  "establishmentCode": "Establishment code",
+  "@establishmentCode": { "description": "Label for establishment code field" },
+
+  "establishmentCodeHint": "E.g.: 001 (required)",
+  "@establishmentCodeHint": { "description": "Hint for establishment code field" },
+
+  "emissionPointCode": "Emission point code",
+  "@emissionPointCode": { "description": "Label for emission point code field" },
+
+  "emissionPointCodeHint": "E.g.: 001 (required)",
+  "@emissionPointCodeHint": { "description": "Hint for emission point code field" },
+
+  "currentSequential": "Current sequential",
+  "@currentSequential": { "description": "Label for current sequential field" },
+
+  "currentSequentialHint": "Starting number (required)",
+  "@currentSequentialHint": { "description": "Hint for current sequential field" },
+
+  "emissionDescription": "Description",
+  "@emissionDescription": { "description": "Label for emission point description field" },
+
+  "emissionDescriptionHint": "Emission point description (optional)",
+  "@emissionDescriptionHint": { "description": "Hint for emission point description field" },
+
+  "activeEmissionPoint": "Active emission point",
+  "@activeEmissionPoint": { "description": "Label for active emission point switch" },
+
+  "finalSummaryTitle": "Complete summary",
+  "@finalSummaryTitle": { "description": "Title of the final summary widget (step 5)" },
+
+  "summaryCompanyName": "Company name",
+  "@summaryCompanyName": { "description": "Label for company name in summary" },
+
+  "summaryIdentification": "Identification",
+  "@summaryIdentification": { "description": "Label for identification in summary" },
+
+  "summaryAddress": "Address",
+  "@summaryAddress": { "description": "Label for address in summary" },
+
+  "summaryEmail": "Email",
+  "@summaryEmail": { "description": "Label for email in summary" },
+
+  "summaryWebsite": "Website",
+  "@summaryWebsite": { "description": "Label for website in summary" },
+
+  "summaryEstablishment": "Establishment",
+  "@summaryEstablishment": { "description": "Label for establishment in summary" },
+
+  "summaryEmissionPoint": "Em. point",
+  "@summaryEmissionPoint": { "description": "Label for emission point in summary" },
+
+  "summaryCertificate": "Certificate",
+  "@summaryCertificate": { "description": "Label for certificate in summary" },
+
+  "summaryCertLoaded": "Loaded ✓",
+  "@summaryCertLoaded": { "description": "Value certificate loaded in summary" },
+
+  "summaryCertNotLoaded": "Not loaded",
+  "@summaryCertNotLoaded": { "description": "Value certificate not loaded in summary" },
+
+  "step6Title": "Tax Groups",
+  "@step6Title": { "description": "Section title step 6" }
 }

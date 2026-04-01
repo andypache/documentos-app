@@ -380,6 +380,372 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Debe tener exactamente {length} caracteres'**
   String validatorExactLength(int length);
+
+  /// Botón guardar el paso actual en modo edición
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar este paso'**
+  String get btnSaveStep;
+
+  /// Etiqueta paso 6 del wizard
+  ///
+  /// In es, this message translates to:
+  /// **'Impuestos'**
+  String get stepTaxes;
+
+  /// Título sección paso 2
+  ///
+  /// In es, this message translates to:
+  /// **'Logo y Configuración Web'**
+  String get step2Title;
+
+  /// Etiqueta para el selector de logo
+  ///
+  /// In es, this message translates to:
+  /// **'Logo de la empresa'**
+  String get step2LogoLabel;
+
+  /// Etiqueta campo sitio web
+  ///
+  /// In es, this message translates to:
+  /// **'Sitio web'**
+  String get step2Website;
+
+  /// Hint campo sitio web
+  ///
+  /// In es, this message translates to:
+  /// **'https://www.empresa.com (opcional)'**
+  String get step2WebsiteHint;
+
+  /// Etiqueta campo descuento máximo
+  ///
+  /// In es, this message translates to:
+  /// **'Descuento máximo (%)'**
+  String get step2MaxDiscount;
+
+  /// Hint campo descuento máximo
+  ///
+  /// In es, this message translates to:
+  /// **'Ej: 10.00 (opcional)'**
+  String get step2MaxDiscountHint;
+
+  /// Etiqueta campo dirección artículos
+  ///
+  /// In es, this message translates to:
+  /// **'Dirección de artículos'**
+  String get step2ItemAddress;
+
+  /// Hint campo dirección artículos
+  ///
+  /// In es, this message translates to:
+  /// **'Dirección alternativa (opcional)'**
+  String get step2ItemAddressHint;
+
+  /// Texto cuando hay logo cargado en resumen
+  ///
+  /// In es, this message translates to:
+  /// **'Logo cargado'**
+  String get step2LogoLoaded;
+
+  /// Texto en resumen con el descuento máximo
+  ///
+  /// In es, this message translates to:
+  /// **'Descuento máx: {value}%'**
+  String step2MaxDiscountSummary(String value);
+
+  /// Título sección paso 3
+  ///
+  /// In es, this message translates to:
+  /// **'Certificado Electrónico'**
+  String get step3Title;
+
+  /// Texto botón cuando no hay certificado cargado
+  ///
+  /// In es, this message translates to:
+  /// **'Cargar firma electrónica (.p12 / .cert)'**
+  String get step3CertButton;
+
+  /// Texto botón cuando hay certificado cargado
+  ///
+  /// In es, this message translates to:
+  /// **'Certificado cargado ✓'**
+  String get step3CertLoaded;
+
+  /// Mensaje de error cuando no hay certificado
+  ///
+  /// In es, this message translates to:
+  /// **'El certificado es requerido'**
+  String get step3CertRequired;
+
+  /// Texto en resumen cuando hay certificado
+  ///
+  /// In es, this message translates to:
+  /// **'Certificado cargado'**
+  String get step3CertSummary;
+
+  /// Etiqueta campo usuario del certificado
+  ///
+  /// In es, this message translates to:
+  /// **'Usuario del certificado'**
+  String get certificateUser;
+
+  /// Hint campo usuario del certificado
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre del titular (requerido)'**
+  String get certificateUserHint;
+
+  /// Etiqueta campo contraseña del certificado
+  ///
+  /// In es, this message translates to:
+  /// **'Contraseña del certificado'**
+  String get certificatePassword;
+
+  /// Hint campo contraseña del certificado
+  ///
+  /// In es, this message translates to:
+  /// **'Contraseña (requerido)'**
+  String get certificatePasswordHint;
+
+  /// Etiqueta campo fecha expiración del certificado
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha de expiración'**
+  String get certificateExpiration;
+
+  /// Hint campo fecha expiración del certificado
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha de caducidad (requerido)'**
+  String get certificateExpirationHint;
+
+  /// Texto resumen fecha de expiración
+  ///
+  /// In es, this message translates to:
+  /// **'Expira: {date}'**
+  String certificateExpiresSummary(String date);
+
+  /// Título sección paso 4
+  ///
+  /// In es, this message translates to:
+  /// **'Configuración de Correo'**
+  String get step4Title;
+
+  /// Nota informativa paso 4
+  ///
+  /// In es, this message translates to:
+  /// **'Campos opcionales. Se usan para el envío de facturas por correo.'**
+  String get step4InfoNote;
+
+  /// Etiqueta campo servidor de correo
+  ///
+  /// In es, this message translates to:
+  /// **'Servidor de correo'**
+  String get mailServer;
+
+  /// Hint campo servidor de correo
+  ///
+  /// In es, this message translates to:
+  /// **'smtp.gmail.com (opcional)'**
+  String get mailServerHint;
+
+  /// Etiqueta campo puerto SMTP
+  ///
+  /// In es, this message translates to:
+  /// **'Puerto'**
+  String get mailPort;
+
+  /// Hint campo puerto SMTP
+  ///
+  /// In es, this message translates to:
+  /// **'587 / 465 (opcional)'**
+  String get mailPortHint;
+
+  /// Texto resumen del puerto de correo
+  ///
+  /// In es, this message translates to:
+  /// **'Puerto: {port}'**
+  String mailPortSummary(String port);
+
+  /// Etiqueta campo dirección de correo
+  ///
+  /// In es, this message translates to:
+  /// **'Dirección de correo remitente'**
+  String get mailAddress;
+
+  /// Hint campo dirección de correo
+  ///
+  /// In es, this message translates to:
+  /// **'correo@empresa.com (opcional)'**
+  String get mailAddressHint;
+
+  /// Etiqueta campo usuario SMTP
+  ///
+  /// In es, this message translates to:
+  /// **'Usuario de correo'**
+  String get mailUser;
+
+  /// Hint campo usuario SMTP
+  ///
+  /// In es, this message translates to:
+  /// **'Usuario SMTP (opcional)'**
+  String get mailUserHint;
+
+  /// Etiqueta campo contraseña SMTP
+  ///
+  /// In es, this message translates to:
+  /// **'Contraseña de correo'**
+  String get mailPassword;
+
+  /// Hint campo contraseña SMTP
+  ///
+  /// In es, this message translates to:
+  /// **'Contraseña SMTP (opcional)'**
+  String get mailPasswordHint;
+
+  /// Título sección paso 5
+  ///
+  /// In es, this message translates to:
+  /// **'Punto de Emisión'**
+  String get step5Title;
+
+  /// Etiqueta campo tipo de documento
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo de documento'**
+  String get docType;
+
+  /// Hint campo tipo de documento
+  ///
+  /// In es, this message translates to:
+  /// **'Seleccione el tipo (requerido)'**
+  String get docTypeHint;
+
+  /// Etiqueta campo código establecimiento
+  ///
+  /// In es, this message translates to:
+  /// **'Código del establecimiento'**
+  String get establishmentCode;
+
+  /// Hint campo código establecimiento
+  ///
+  /// In es, this message translates to:
+  /// **'Ej: 001 (requerido)'**
+  String get establishmentCodeHint;
+
+  /// Etiqueta campo código punto de emisión
+  ///
+  /// In es, this message translates to:
+  /// **'Código del punto de emisión'**
+  String get emissionPointCode;
+
+  /// Hint campo código punto de emisión
+  ///
+  /// In es, this message translates to:
+  /// **'Ej: 001 (requerido)'**
+  String get emissionPointCodeHint;
+
+  /// Etiqueta campo secuencial actual
+  ///
+  /// In es, this message translates to:
+  /// **'Secuencial actual'**
+  String get currentSequential;
+
+  /// Hint campo secuencial actual
+  ///
+  /// In es, this message translates to:
+  /// **'Número inicial (requerido)'**
+  String get currentSequentialHint;
+
+  /// Etiqueta campo descripción punto de emisión
+  ///
+  /// In es, this message translates to:
+  /// **'Descripción'**
+  String get emissionDescription;
+
+  /// Hint campo descripción punto de emisión
+  ///
+  /// In es, this message translates to:
+  /// **'Descripción del punto de emisión (opcional)'**
+  String get emissionDescriptionHint;
+
+  /// Etiqueta switch punto de emisión activo
+  ///
+  /// In es, this message translates to:
+  /// **'Punto de emisión activo'**
+  String get activeEmissionPoint;
+
+  /// Título del widget resumen final (paso 5)
+  ///
+  /// In es, this message translates to:
+  /// **'Resumen completo'**
+  String get finalSummaryTitle;
+
+  /// Etiqueta razón social en resumen
+  ///
+  /// In es, this message translates to:
+  /// **'Razón social'**
+  String get summaryCompanyName;
+
+  /// Etiqueta identificación en resumen
+  ///
+  /// In es, this message translates to:
+  /// **'Identificación'**
+  String get summaryIdentification;
+
+  /// Etiqueta dirección en resumen
+  ///
+  /// In es, this message translates to:
+  /// **'Dirección'**
+  String get summaryAddress;
+
+  /// Etiqueta email en resumen
+  ///
+  /// In es, this message translates to:
+  /// **'Email'**
+  String get summaryEmail;
+
+  /// Etiqueta web en resumen
+  ///
+  /// In es, this message translates to:
+  /// **'Web'**
+  String get summaryWebsite;
+
+  /// Etiqueta establecimiento en resumen
+  ///
+  /// In es, this message translates to:
+  /// **'Establecimiento'**
+  String get summaryEstablishment;
+
+  /// Etiqueta punto de emisión en resumen
+  ///
+  /// In es, this message translates to:
+  /// **'Pto. emisión'**
+  String get summaryEmissionPoint;
+
+  /// Etiqueta certificado en resumen
+  ///
+  /// In es, this message translates to:
+  /// **'Certificado'**
+  String get summaryCertificate;
+
+  /// Valor certificado cargado en resumen
+  ///
+  /// In es, this message translates to:
+  /// **'Cargado ✓'**
+  String get summaryCertLoaded;
+
+  /// Valor certificado no cargado en resumen
+  ///
+  /// In es, this message translates to:
+  /// **'No cargado'**
+  String get summaryCertNotLoaded;
+
+  /// Título sección paso 6
+  ///
+  /// In es, this message translates to:
+  /// **'Grupos de Impuesto'**
+  String get step6Title;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

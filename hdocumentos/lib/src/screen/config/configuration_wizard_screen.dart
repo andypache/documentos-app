@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/config/company_model.dart';
@@ -36,13 +38,17 @@ class _ConfigurationWizardScreenState extends State<ConfigurationWizardScreen> {
   Future<void> _load() async {
     setState(() => _status = _LoadStatus.loading);
     try {
-      final company = await _service.getCompany(context);
+      final company = await _service
+          .getCompany(context)
+          .timeout(const Duration(seconds: 20));
       if (!mounted) return;
       setState(() {
         // Si el API devuelve datos úsalos; si no (empresa nueva) arranca vacío
         _company = company ?? CompanyModel.empty();
         _status = _LoadStatus.ready;
       });
+    } on TimeoutException catch (_) {
+      if (mounted) setState(() => _status = _LoadStatus.error);
     } catch (_) {
       if (mounted) setState(() => _status = _LoadStatus.error);
     }
@@ -231,7 +237,7 @@ class _CompanyStepperIndicator extends StatelessWidget {
       l10n.stepCert,
       l10n.stepMail,
       l10n.stepEmission,
-      'Impuestos',
+      l10n.stepTaxes,
     ];
 
     return Container(
@@ -500,7 +506,7 @@ class _CompanyNavigationButtons extends StatelessWidget {
                       )
                     : Icon(Icons.save_outlined, size: size.width * 0.042),
                 label: Text(
-                  provider.isSavingStep ? l10n.btnSaving : 'Guardar este paso',
+                  provider.isSavingStep ? l10n.btnSaving : l10n.btnSaveStep,
                   style: TextStyle(
                       fontSize: size.width * 0.034,
                       fontWeight: FontWeight.bold),

@@ -12,8 +12,6 @@ import 'package:provider/provider.dart';
 
 // ─── Instancias globales ──────────────────────────────────────────────────────
 const _storage = FlutterSecureStorage();
-// ignore: deprecated_member_use
-const storage = _storage; // alias público para compatibilidad
 AuthService authService = AuthService();
 
 // ─── Fachada pública ──────────────────────────────────────────────────────────
@@ -75,6 +73,7 @@ ServiceResponseModel getResponse(http.Response response) {
 /// Responsabilidad: construir headers y ejecutar llamadas HTTP.
 class _HttpClient {
   static const int _errorStatus = 509;
+  static const Duration _timeout = Duration(seconds: 15);
 
   /// Construye los headers de autorización con el token almacenado.
   static Future<Map<String, String>> _authHeaders() async {
@@ -111,7 +110,7 @@ class _HttpClient {
     try {
       final uri = _buildUri(url, params);
       final headers = await _authHeaders();
-      final response = await http.get(uri, headers: headers);
+      final response = await http.get(uri, headers: headers).timeout(_timeout);
       return getResponse(response);
     } on Exception catch (e) {
       // ignore: avoid_print
@@ -127,11 +126,13 @@ class _HttpClient {
   }) async {
     try {
       final headers = await _authHeaders();
-      final response = await http.post(
-        Uri.parse(url),
-        headers: headers,
-        body: jsonEncode(body),
-      );
+      final response = await http
+          .post(
+            Uri.parse(url),
+            headers: headers,
+            body: jsonEncode(body),
+          )
+          .timeout(_timeout);
       return getResponse(response);
     } on Exception catch (e) {
       // ignore: avoid_print
@@ -147,11 +148,13 @@ class _HttpClient {
     required Map<String, String> header,
   }) async {
     try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: header,
-        body: body,
-      );
+      final response = await http
+          .post(
+            Uri.parse(url),
+            headers: header,
+            body: body,
+          )
+          .timeout(_timeout);
       return getResponse(response);
     } on Exception catch (e) {
       // ignore: avoid_print

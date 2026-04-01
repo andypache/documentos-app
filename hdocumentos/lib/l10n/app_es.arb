@@ -134,5 +134,197 @@
   "@validatorExactLength": {
     "description": "Validación: longitud exacta",
     "placeholders": { "length": { "type": "int" } }
-  }
+  },
+
+  "btnSaveStep": "Guardar este paso",
+  "@btnSaveStep": { "description": "Botón guardar el paso actual en modo edición" },
+
+  "stepTaxes": "Impuestos",
+  "@stepTaxes": { "description": "Etiqueta paso 6 del wizard" },
+
+  "step2Title": "Logo y Configuración Web",
+  "@step2Title": { "description": "Título sección paso 2" },
+
+  "step2LogoLabel": "Logo de la empresa",
+  "@step2LogoLabel": { "description": "Etiqueta para el selector de logo" },
+
+  "step2Website": "Sitio web",
+  "@step2Website": { "description": "Etiqueta campo sitio web" },
+
+  "step2WebsiteHint": "https://www.empresa.com (opcional)",
+  "@step2WebsiteHint": { "description": "Hint campo sitio web" },
+
+  "step2MaxDiscount": "Descuento máximo (%)",
+  "@step2MaxDiscount": { "description": "Etiqueta campo descuento máximo" },
+
+  "step2MaxDiscountHint": "Ej: 10.00 (opcional)",
+  "@step2MaxDiscountHint": { "description": "Hint campo descuento máximo" },
+
+  "step2ItemAddress": "Dirección de artículos",
+  "@step2ItemAddress": { "description": "Etiqueta campo dirección artículos" },
+
+  "step2ItemAddressHint": "Dirección alternativa (opcional)",
+  "@step2ItemAddressHint": { "description": "Hint campo dirección artículos" },
+
+  "step2LogoLoaded": "Logo cargado",
+  "@step2LogoLoaded": { "description": "Texto cuando hay logo cargado en resumen" },
+
+  "step2MaxDiscountSummary": "Descuento máx: {value}%",
+  "@step2MaxDiscountSummary": {
+    "description": "Texto en resumen con el descuento máximo",
+    "placeholders": { "value": { "type": "String" } }
+  },
+
+  "step3Title": "Certificado Electrónico",
+  "@step3Title": { "description": "Título sección paso 3" },
+
+  "step3CertButton": "Cargar firma electrónica (.p12 / .cert)",
+  "@step3CertButton": { "description": "Texto botón cuando no hay certificado cargado" },
+
+  "step3CertLoaded": "Certificado cargado ✓",
+  "@step3CertLoaded": { "description": "Texto botón cuando hay certificado cargado" },
+
+  "step3CertRequired": "El certificado es requerido",
+  "@step3CertRequired": { "description": "Mensaje de error cuando no hay certificado" },
+
+  "step3CertSummary": "Certificado cargado",
+  "@step3CertSummary": { "description": "Texto en resumen cuando hay certificado" },
+
+  "certificateUser": "Usuario del certificado",
+  "@certificateUser": { "description": "Etiqueta campo usuario del certificado" },
+
+  "certificateUserHint": "Nombre del titular (requerido)",
+  "@certificateUserHint": { "description": "Hint campo usuario del certificado" },
+
+  "certificatePassword": "Contraseña del certificado",
+  "@certificatePassword": { "description": "Etiqueta campo contraseña del certificado" },
+
+  "certificatePasswordHint": "Contraseña (requerido)",
+  "@certificatePasswordHint": { "description": "Hint campo contraseña del certificado" },
+
+  "certificateExpiration": "Fecha de expiración",
+  "@certificateExpiration": { "description": "Etiqueta campo fecha expiración del certificado" },
+
+  "certificateExpirationHint": "Fecha de caducidad (requerido)",
+  "@certificateExpirationHint": { "description": "Hint campo fecha expiración del certificado" },
+
+  "certificateExpiresSummary": "Expira: {date}",
+  "@certificateExpiresSummary": {
+    "description": "Texto resumen fecha de expiración",
+    "placeholders": { "date": { "type": "String" } }
+  },
+
+  "step4Title": "Configuración de Correo",
+  "@step4Title": { "description": "Título sección paso 4" },
+
+  "step4InfoNote": "Campos opcionales. Se usan para el envío de facturas por correo.",
+  "@step4InfoNote": { "description": "Nota informativa paso 4" },
+
+  "mailServer": "Servidor de correo",
+  "@mailServer": { "description": "Etiqueta campo servidor de correo" },
+
+  "mailServerHint": "smtp.gmail.com (opcional)",
+  "@mailServerHint": { "description": "Hint campo servidor de correo" },
+
+  "mailPort": "Puerto",
+  "@mailPort": { "description": "Etiqueta campo puerto SMTP" },
+
+  "mailPortHint": "587 / 465 (opcional)",
+  "@mailPortHint": { "description": "Hint campo puerto SMTP" },
+
+  "mailPortSummary": "Puerto: {port}",
+  "@mailPortSummary": {
+    "description": "Texto resumen del puerto de correo",
+    "placeholders": { "port": { "type": "String" } }
+  },
+
+  "mailAddress": "Dirección de correo remitente",
+  "@mailAddress": { "description": "Etiqueta campo dirección de correo" },
+
+  "mailAddressHint": "correo@empresa.com (opcional)",
+  "@mailAddressHint": { "description": "Hint campo dirección de correo" },
+
+  "mailUser": "Usuario de correo",
+  "@mailUser": { "description": "Etiqueta campo usuario SMTP" },
+
+  "mailUserHint": "Usuario SMTP (opcional)",
+  "@mailUserHint": { "description": "Hint campo usuario SMTP" },
+
+  "mailPassword": "Contraseña de correo",
+  "@mailPassword": { "description": "Etiqueta campo contraseña SMTP" },
+
+  "mailPasswordHint": "Contraseña SMTP (opcional)",
+  "@mailPasswordHint": { "description": "Hint campo contraseña SMTP" },
+
+  "step5Title": "Punto de Emisión",
+  "@step5Title": { "description": "Título sección paso 5" },
+
+  "docType": "Tipo de documento",
+  "@docType": { "description": "Etiqueta campo tipo de documento" },
+
+  "docTypeHint": "Seleccione el tipo (requerido)",
+  "@docTypeHint": { "description": "Hint campo tipo de documento" },
+
+  "establishmentCode": "Código del establecimiento",
+  "@establishmentCode": { "description": "Etiqueta campo código establecimiento" },
+
+  "establishmentCodeHint": "Ej: 001 (requerido)",
+  "@establishmentCodeHint": { "description": "Hint campo código establecimiento" },
+
+  "emissionPointCode": "Código del punto de emisión",
+  "@emissionPointCode": { "description": "Etiqueta campo código punto de emisión" },
+
+  "emissionPointCodeHint": "Ej: 001 (requerido)",
+  "@emissionPointCodeHint": { "description": "Hint campo código punto de emisión" },
+
+  "currentSequential": "Secuencial actual",
+  "@currentSequential": { "description": "Etiqueta campo secuencial actual" },
+
+  "currentSequentialHint": "Número inicial (requerido)",
+  "@currentSequentialHint": { "description": "Hint campo secuencial actual" },
+
+  "emissionDescription": "Descripción",
+  "@emissionDescription": { "description": "Etiqueta campo descripción punto de emisión" },
+
+  "emissionDescriptionHint": "Descripción del punto de emisión (opcional)",
+  "@emissionDescriptionHint": { "description": "Hint campo descripción punto de emisión" },
+
+  "activeEmissionPoint": "Punto de emisión activo",
+  "@activeEmissionPoint": { "description": "Etiqueta switch punto de emisión activo" },
+
+  "finalSummaryTitle": "Resumen completo",
+  "@finalSummaryTitle": { "description": "Título del widget resumen final (paso 5)" },
+
+  "summaryCompanyName": "Razón social",
+  "@summaryCompanyName": { "description": "Etiqueta razón social en resumen" },
+
+  "summaryIdentification": "Identificación",
+  "@summaryIdentification": { "description": "Etiqueta identificación en resumen" },
+
+  "summaryAddress": "Dirección",
+  "@summaryAddress": { "description": "Etiqueta dirección en resumen" },
+
+  "summaryEmail": "Email",
+  "@summaryEmail": { "description": "Etiqueta email en resumen" },
+
+  "summaryWebsite": "Web",
+  "@summaryWebsite": { "description": "Etiqueta web en resumen" },
+
+  "summaryEstablishment": "Establecimiento",
+  "@summaryEstablishment": { "description": "Etiqueta establecimiento en resumen" },
+
+  "summaryEmissionPoint": "Pto. emisión",
+  "@summaryEmissionPoint": { "description": "Etiqueta punto de emisión en resumen" },
+
+  "summaryCertificate": "Certificado",
+  "@summaryCertificate": { "description": "Etiqueta certificado en resumen" },
+
+  "summaryCertLoaded": "Cargado ✓",
+  "@summaryCertLoaded": { "description": "Valor certificado cargado en resumen" },
+
+  "summaryCertNotLoaded": "No cargado",
+  "@summaryCertNotLoaded": { "description": "Valor certificado no cargado en resumen" },
+
+  "step6Title": "Grupos de Impuesto",
+  "@step6Title": { "description": "Título sección paso 6" }
 }

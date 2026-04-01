@@ -1,8 +1,8 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/provider/form/company_form_provider.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
-import 'package:hdocumentos/src/widgets/config/company_wizard_shared.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +12,7 @@ class CompanyWizardStep3Widget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final size = MediaQuery.of(context).size;
     final provider = Provider.of<CompanyFormProvider>(context);
     final company = provider.company;
@@ -24,7 +25,7 @@ class CompanyWizardStep3Widget extends StatelessWidget {
         children: [
           CompanyWizardSectionHeader(
             icon: Icons.security_outlined,
-            title: 'Certificado Electrónico',
+            title: l10n.step3Title,
             size: size,
           ),
           SizedBox(height: size.height * 0.02),
@@ -33,8 +34,8 @@ class CompanyWizardStep3Widget extends StatelessWidget {
             type: AppTheme.secondaryButton,
             icon: Icons.upload_file,
             textButton: company.certificatePath != null
-                ? 'Certificado cargado ✓'
-                : 'Cargar firma electrónica (.p12 / .cert)',
+                ? l10n.step3CertLoaded
+                : l10n.step3CertButton,
             minWidth: double.infinity,
             onPressed: () async {
               final result = await FilePicker.platform.pickFiles(
@@ -49,7 +50,7 @@ class CompanyWizardStep3Widget extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(top: size.height * 0.008),
               child: Text(
-                'El certificado es requerido',
+                l10n.step3CertRequired,
                 style: TextStyle(
                   color: Colors.redAccent,
                   fontSize: size.width * 0.03,
@@ -59,31 +60,33 @@ class CompanyWizardStep3Widget extends StatelessWidget {
           SizedBox(height: size.height * 0.018),
           InputFieldWidget(
             prefixIcon: Icons.person_outline,
-            labelText: 'Usuario del certificado',
-            hintText: 'Nombre del titular (requerido)',
+            labelText: l10n.certificateUser,
+            hintText: l10n.certificateUserHint,
             initialValue: company.certificateUser,
             filled: true,
             fillColor: AppTheme.whiteGradient,
-            validator: (v) =>
-                (v == null || v.isEmpty) ? 'Campo requerido' : null,
+            validator: FieldValidators.compose([
+              FieldValidators.required(l10n),
+            ]),
             onChanged: (v) => company.certificateUser = v,
           ),
           SizedBox(height: size.height * 0.018),
           InputFieldWidget(
             prefixIcon: Icons.lock_outline,
-            labelText: 'Contraseña del certificado',
-            hintText: 'Contraseña (requerido)',
+            labelText: l10n.certificatePassword,
+            hintText: l10n.certificatePasswordHint,
             obscureText: true,
             filled: true,
             fillColor: AppTheme.whiteGradient,
-            validator: (v) =>
-                (v == null || v.isEmpty) ? 'Campo requerido' : null,
+            validator: FieldValidators.compose([
+              FieldValidators.required(l10n),
+            ]),
             onChanged: (v) => company.certificatePassword = v,
           ),
           SizedBox(height: size.height * 0.018),
           InputDateFieldWidget(
-            labelText: 'Fecha de expiración',
-            hintText: 'Fecha de caducidad (requerido)',
+            labelText: l10n.certificateExpiration,
+            hintText: l10n.certificateExpirationHint,
             filled: true,
             fillColor: AppTheme.whiteGradient,
             onChanged: (v) =>
@@ -94,17 +97,18 @@ class CompanyWizardStep3Widget extends StatelessWidget {
           CompanyWizardStepSummary(
             items: [
               if (company.certificatePath != null)
-                const CompanyWizardSummaryItem(
+                CompanyWizardSummaryItem(
                     icon: Icons.check_circle_outline,
-                    text: 'Certificado cargado'),
+                    text: l10n.step3CertSummary),
               if (company.certificateUser?.isNotEmpty == true)
                 CompanyWizardSummaryItem(
                     icon: Icons.person_outline, text: company.certificateUser!),
               if (company.certificateExpirationDate != null)
                 CompanyWizardSummaryItem(
                     icon: Icons.calendar_today_outlined,
-                    text:
-                        'Expira: ${company.certificateExpirationDate!.day}/${company.certificateExpirationDate!.month}/${company.certificateExpirationDate!.year}'),
+                    text: l10n.certificateExpiresSummary(
+                      '${company.certificateExpirationDate!.day}/${company.certificateExpirationDate!.month}/${company.certificateExpirationDate!.year}',
+                    )),
             ],
             size: size,
           ),

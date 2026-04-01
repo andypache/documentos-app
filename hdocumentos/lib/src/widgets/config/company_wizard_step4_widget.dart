@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/provider/form/company_form_provider.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
-import 'package:hdocumentos/src/widgets/config/company_wizard_shared.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +11,7 @@ class CompanyWizardStep4Widget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final size = MediaQuery.of(context).size;
     final provider = Provider.of<CompanyFormProvider>(context);
     final company = provider.company;
@@ -23,7 +24,7 @@ class CompanyWizardStep4Widget extends StatelessWidget {
         children: [
           CompanyWizardSectionHeader(
             icon: Icons.mail_outline,
-            title: 'Configuración de Correo',
+            title: l10n.step4Title,
             size: size,
           ),
           SizedBox(height: size.height * 0.012),
@@ -43,7 +44,7 @@ class CompanyWizardStep4Widget extends StatelessWidget {
                 SizedBox(width: size.width * 0.02),
                 Expanded(
                   child: Text(
-                    'Campos opcionales. Se usan para el envío de facturas por correo.',
+                    l10n.step4InfoNote,
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.8),
                       fontSize: size.width * 0.03,
@@ -56,8 +57,8 @@ class CompanyWizardStep4Widget extends StatelessWidget {
           SizedBox(height: size.height * 0.02),
           InputFieldWidget(
             prefixIcon: Icons.dns_outlined,
-            labelText: 'Servidor de correo',
-            hintText: 'smtp.gmail.com (opcional)',
+            labelText: l10n.mailServer,
+            hintText: l10n.mailServerHint,
             initialValue: company.mailServer,
             filled: true,
             fillColor: AppTheme.whiteGradient,
@@ -66,8 +67,8 @@ class CompanyWizardStep4Widget extends StatelessWidget {
           SizedBox(height: size.height * 0.018),
           InputFieldWidget(
             prefixIcon: Icons.settings_ethernet,
-            labelText: 'Puerto',
-            hintText: '587 / 465 (opcional)',
+            labelText: l10n.mailPort,
+            hintText: l10n.mailPortHint,
             initialValue: company.mailPort,
             keyboardType: TextInputType.number,
             filled: true,
@@ -77,8 +78,8 @@ class CompanyWizardStep4Widget extends StatelessWidget {
           SizedBox(height: size.height * 0.018),
           InputFieldWidget(
             prefixIcon: Icons.alternate_email,
-            labelText: 'Dirección de correo remitente',
-            hintText: 'correo@empresa.com (opcional)',
+            labelText: l10n.mailAddress,
+            hintText: l10n.mailAddressHint,
             initialValue: company.mailAddress,
             keyboardType: TextInputType.emailAddress,
             filled: true,
@@ -88,8 +89,8 @@ class CompanyWizardStep4Widget extends StatelessWidget {
           SizedBox(height: size.height * 0.018),
           InputFieldWidget(
             prefixIcon: Icons.person_outline,
-            labelText: 'Usuario de correo',
-            hintText: 'Usuario SMTP (opcional)',
+            labelText: l10n.mailUser,
+            hintText: l10n.mailUserHint,
             initialValue: company.mailUser,
             filled: true,
             fillColor: AppTheme.whiteGradient,
@@ -98,8 +99,8 @@ class CompanyWizardStep4Widget extends StatelessWidget {
           SizedBox(height: size.height * 0.018),
           InputFieldWidget(
             prefixIcon: Icons.lock_outline,
-            labelText: 'Contraseña de correo',
-            hintText: 'Contraseña SMTP (opcional)',
+            labelText: l10n.mailPassword,
+            hintText: l10n.mailPasswordHint,
             obscureText: true,
             filled: true,
             fillColor: AppTheme.whiteGradient,
@@ -118,7 +119,7 @@ class CompanyWizardStep4Widget extends StatelessWidget {
               if (company.mailPort?.isNotEmpty == true)
                 CompanyWizardSummaryItem(
                     icon: Icons.settings_ethernet,
-                    text: 'Puerto: ${company.mailPort}'),
+                    text: l10n.mailPortSummary(company.mailPort!)),
             ],
             size: size,
           ),

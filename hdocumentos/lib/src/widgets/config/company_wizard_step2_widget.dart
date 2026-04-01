@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/provider/form/company_form_provider.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
-import 'package:hdocumentos/src/widgets/config/company_wizard_shared.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +11,7 @@ class CompanyWizardStep2Widget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final size = MediaQuery.of(context).size;
     final provider = Provider.of<CompanyFormProvider>(context);
     final company = provider.company;
@@ -23,13 +24,13 @@ class CompanyWizardStep2Widget extends StatelessWidget {
         children: [
           CompanyWizardSectionHeader(
             icon: Icons.image_outlined,
-            title: 'Logo y Configuración Web',
+            title: l10n.step2Title,
             size: size,
           ),
           SizedBox(height: size.height * 0.02),
           // Logo de la empresa
           ImagePickerFieldWidget(
-            label: 'Logo de la empresa',
+            label: l10n.step2LogoLabel,
             currentImage: provider.logoBytes,
             imageName: provider.company.logoPath,
             onImagePicked: (bytes, path) => provider.updateLogo(bytes, path),
@@ -37,8 +38,8 @@ class CompanyWizardStep2Widget extends StatelessWidget {
           SizedBox(height: size.height * 0.018),
           InputFieldWidget(
             prefixIcon: Icons.language_outlined,
-            labelText: 'Sitio web',
-            hintText: 'https://www.empresa.com (opcional)',
+            labelText: l10n.step2Website,
+            hintText: l10n.step2WebsiteHint,
             initialValue: company.website,
             keyboardType: TextInputType.url,
             filled: true,
@@ -48,8 +49,8 @@ class CompanyWizardStep2Widget extends StatelessWidget {
           SizedBox(height: size.height * 0.018),
           InputNumberFieldWidget(
             prefixIcon: Icons.discount_outlined,
-            labelText: 'Descuento máximo (%)',
-            hintText: 'Ej: 10.00 (opcional)',
+            labelText: l10n.step2MaxDiscount,
+            hintText: l10n.step2MaxDiscountHint,
             initialValue: company.maxDiscount,
             allowDecimals: true,
             onChanged: (v) => company.maxDiscount = double.tryParse(v),
@@ -57,8 +58,8 @@ class CompanyWizardStep2Widget extends StatelessWidget {
           SizedBox(height: size.height * 0.018),
           InputFieldWidget(
             prefixIcon: Icons.pin_drop_outlined,
-            labelText: 'Dirección de artículos',
-            hintText: 'Dirección alternativa (opcional)',
+            labelText: l10n.step2ItemAddress,
+            hintText: l10n.step2ItemAddressHint,
             initialValue: company.itemAddress,
             filled: true,
             fillColor: AppTheme.whiteGradient,
@@ -69,15 +70,17 @@ class CompanyWizardStep2Widget extends StatelessWidget {
           CompanyWizardStepSummary(
             items: [
               if (provider.logoBytes != null)
-                const CompanyWizardSummaryItem(
-                    icon: Icons.check_circle_outline, text: 'Logo cargado'),
+                CompanyWizardSummaryItem(
+                    icon: Icons.check_circle_outline,
+                    text: l10n.step2LogoLoaded),
               if (company.website?.isNotEmpty == true)
                 CompanyWizardSummaryItem(
                     icon: Icons.language_outlined, text: company.website!),
               if (company.maxDiscount != null)
                 CompanyWizardSummaryItem(
                     icon: Icons.discount_outlined,
-                    text: 'Descuento máx: ${company.maxDiscount}%'),
+                    text: l10n.step2MaxDiscountSummary(
+                        company.maxDiscount.toString())),
             ],
             size: size,
           ),

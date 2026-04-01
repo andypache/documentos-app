@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/common/key_value_model.dart';
+import 'package:hdocumentos/src/provider/app_init_provider.dart';
 import 'package:hdocumentos/src/provider/form/company_form_provider.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
-import 'package:hdocumentos/src/widgets/config/company_wizard_shared.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -12,16 +13,17 @@ class CompanyWizardStep5Widget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final size = MediaQuery.of(context).size;
     final provider = Provider.of<CompanyFormProvider>(context);
     final company = provider.company;
 
-    // Tipos de documento (en producción vendría del backend)
-    final List<KeyValueModel> docTypes = [
-      KeyValueModel(key: '01', value: 'Factura'),
-      KeyValueModel(key: '04', value: 'Nota de Crédito'),
-      KeyValueModel(key: '05', value: 'Nota de Débito'),
-    ];
+    // Tipos de documento obtenidos del catálogo del servidor
+    final catalogs = context.watch<AppInitProvider>().catalogs;
+    final List<KeyValueModel> docTypes = catalogs?.documentTypes
+            .map((e) => KeyValueModel(key: e.code, value: e.description))
+            .toList() ??
+        [];
 
     return Form(
       key: provider.formKeyStep5,
@@ -31,14 +33,14 @@ class CompanyWizardStep5Widget extends StatelessWidget {
         children: [
           CompanyWizardSectionHeader(
             icon: Icons.point_of_sale_outlined,
-            title: 'Punto de Emisión',
+            title: l10n.step5Title,
             size: size,
           ),
           SizedBox(height: size.height * 0.02),
           DropdownButtonFieldWidget(
             prefixIcon: Icons.description_outlined,
-            labelText: 'Tipo de documento',
-            hintText: 'Seleccione el tipo (requerido)',
+            labelText: l10n.docType,
+            hintText: l10n.docTypeHint,
             items: docTypes,
             filled: true,
             fillColor: AppTheme.whiteGradient,
@@ -52,48 +54,47 @@ class CompanyWizardStep5Widget extends StatelessWidget {
           SizedBox(height: size.height * 0.018),
           InputFieldWidget(
             prefixIcon: Icons.store_mall_directory_outlined,
-            labelText: 'Código del establecimiento',
-            hintText: 'Ej: 001 (requerido)',
+            labelText: l10n.establishmentCode,
+            hintText: l10n.establishmentCodeHint,
             initialValue: company.establishmentCode,
             filled: true,
             fillColor: AppTheme.whiteGradient,
-            validator: (v) {
-              if (v == null || v.isEmpty) return 'Campo requerido';
-              if (v.length != 3) return 'Debe tener 3 dígitos';
-              return null;
-            },
+            validator: FieldValidators.compose([
+              FieldValidators.required(l10n),
+              FieldValidators.exactLength(l10n, 3),
+            ]),
             onChanged: (v) => company.establishmentCode = v,
           ),
           SizedBox(height: size.height * 0.018),
           InputFieldWidget(
             prefixIcon: Icons.receipt_long_outlined,
-            labelText: 'Código del punto de emisión',
-            hintText: 'Ej: 001 (requerido)',
+            labelText: l10n.emissionPointCode,
+            hintText: l10n.emissionPointCodeHint,
             initialValue: company.emissionPointCode,
             filled: true,
             fillColor: AppTheme.whiteGradient,
-            validator: (v) {
-              if (v == null || v.isEmpty) return 'Campo requerido';
-              if (v.length != 3) return 'Debe tener 3 dígitos';
-              return null;
-            },
+            validator: FieldValidators.compose([
+              FieldValidators.required(l10n),
+              FieldValidators.exactLength(l10n, 3),
+            ]),
             onChanged: (v) => company.emissionPointCode = v,
           ),
           SizedBox(height: size.height * 0.018),
           InputNumberFieldWidget(
             prefixIcon: Icons.format_list_numbered,
-            labelText: 'Secuencial actual',
-            hintText: 'Número inicial (requerido)',
+            labelText: l10n.currentSequential,
+            hintText: l10n.currentSequentialHint,
             initialValue: (company.currentSequential ?? 1).toDouble(),
-            validator: (v) =>
-                (v == null || v.isEmpty) ? 'Campo requerido' : null,
+            validator: FieldValidators.compose([
+              FieldValidators.required(l10n),
+            ]),
             onChanged: (v) => company.currentSequential = int.tryParse(v) ?? 1,
           ),
           SizedBox(height: size.height * 0.018),
           InputFieldWidget(
             prefixIcon: Icons.notes_outlined,
-            labelText: 'Descripción',
-            hintText: 'Descripción del punto de emisión (opcional)',
+            labelText: l10n.emissionDescription,
+            hintText: l10n.emissionDescriptionHint,
             initialValue: company.description,
             filled: true,
             fillColor: AppTheme.whiteGradient,
@@ -101,7 +102,7 @@ class CompanyWizardStep5Widget extends StatelessWidget {
           ),
           SizedBox(height: size.height * 0.018),
           InputSwitchFieldWidget(
-            label: 'Punto de emisión activo',
+            label: l10n.activeEmissionPoint,
             value: company.isActive ?? true,
             onChanged: (v) => company.isActive = v,
           ),
@@ -121,6 +122,7 @@ class _FinalSummaryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final company = Provider.of<CompanyFormProvider>(context).company;
 
     return Container(
@@ -141,7 +143,7 @@ class _FinalSummaryWidget extends StatelessWidget {
                   color: AppTheme.primaryButton, size: size.width * 0.048),
               SizedBox(width: size.width * 0.02),
               Text(
-                'Resumen completo',
+                l10n.finalSummaryTitle,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: size.width * 0.038,
@@ -154,26 +156,33 @@ class _FinalSummaryWidget extends StatelessWidget {
               color: Colors.white.withOpacity(0.2),
               height: size.height * 0.025),
           _SummaryRow(
-              label: 'Razón social', value: company.businessName, size: size),
+              label: l10n.summaryCompanyName,
+              value: company.businessName,
+              size: size),
           _SummaryRow(
-              label: 'Identificación',
+              label: l10n.summaryIdentification,
               value: company.identification,
               size: size),
-          _SummaryRow(label: 'Dirección', value: company.address, size: size),
-          _SummaryRow(label: 'Email', value: company.email, size: size),
-          if (company.website?.isNotEmpty == true)
-            _SummaryRow(label: 'Web', value: company.website, size: size),
           _SummaryRow(
-              label: 'Establecimiento',
+              label: l10n.summaryAddress, value: company.address, size: size),
+          _SummaryRow(
+              label: l10n.summaryEmail, value: company.email, size: size),
+          if (company.website?.isNotEmpty == true)
+            _SummaryRow(
+                label: l10n.summaryWebsite, value: company.website, size: size),
+          _SummaryRow(
+              label: l10n.summaryEstablishment,
               value: company.establishmentCode,
               size: size),
           _SummaryRow(
-              label: 'Pto. emisión',
+              label: l10n.summaryEmissionPoint,
               value: company.emissionPointCode,
               size: size),
           _SummaryRow(
-            label: 'Certificado',
-            value: company.certificatePath != null ? 'Cargado ✓' : 'No cargado',
+            label: l10n.summaryCertificate,
+            value: company.certificatePath != null
+                ? l10n.summaryCertLoaded
+                : l10n.summaryCertNotLoaded,
             size: size,
             valueColor: company.certificatePath != null
                 ? Colors.greenAccent
