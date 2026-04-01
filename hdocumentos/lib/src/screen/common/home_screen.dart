@@ -180,7 +180,7 @@ class _HomeScreenBodyState extends State<_HomeScreenBody> {
     );
 
     return Column(children: [
-      _HomeTopBar(onReload: _onReloadPressed),
+      _HomeTopBar(onReload: initProvider.hasCompany ? _onReloadPressed : null),
       if (initProvider.isLoading)
         const Expanded(
           child: Center(
@@ -207,36 +207,12 @@ class _HomeScreenBodyState extends State<_HomeScreenBody> {
 // ─── Barra superior con título de sesión + botón recarga ────────────────────
 
 class _HomeTopBar extends StatelessWidget {
-  final VoidCallback onReload;
+  final VoidCallback? onReload;
 
-  const _HomeTopBar({required this.onReload});
+  const _HomeTopBar({this.onReload});
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return Stack(
-      alignment: Alignment.centerRight,
-      children: [
-        const UserSessionTitle(),
-        Positioned(
-          right: 56, // deja espacio al selector de idioma
-          top: 0,
-          bottom: 0,
-          child: SafeArea(
-            bottom: false,
-            child: Tooltip(
-              message: l10n.reloadDialogTitle,
-              child: IconButton(
-                onPressed: onReload,
-                icon: const Icon(Icons.sync_rounded),
-                color: AppTheme.primaryButton,
-                iconSize: 22,
-                splashRadius: 20,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
+    return UserSessionTitle(onReload: onReload);
   }
 }

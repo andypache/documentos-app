@@ -5,8 +5,11 @@ import 'package:hdocumentos/src/widgets/common/language_selector_widget.dart';
 
 ///Widgets that put user session into top screen
 class UserSessionTitle extends StatelessWidget {
+  /// Callback opcional para el botón de recarga. Si es null, el botón no aparece.
+  final VoidCallback? onReload;
+
   //Constructor
-  const UserSessionTitle({Key? key}) : super(key: key);
+  const UserSessionTitle({Key? key, this.onReload}) : super(key: key);
 
   //Build widgets
   @override
@@ -87,9 +90,23 @@ class UserSessionTitle extends StatelessWidget {
                     Text(session.identification,
                         style: TextStyle(
                             fontSize: 9, color: Colors.white.withOpacity(0.6)))
-                  ]))
+                  ])),
+              // Botón de recarga (opcional)
+              if (onReload != null) ...[
+                const SizedBox(width: 4),
+                IconButton(
+                  onPressed: onReload,
+                  icon: const Icon(Icons.sync_rounded),
+                  color: AppTheme.primaryButton,
+                  iconSize: 20,
+                  splashRadius: 18,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  tooltip: '',
+                ),
+              ],
               // Selector de idioma
-              ,
+              const SizedBox(width: 4),
               const LanguageSelectorWidget(),
             ])));
   }
