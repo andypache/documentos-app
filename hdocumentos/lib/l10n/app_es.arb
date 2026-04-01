@@ -338,5 +338,50 @@
   "@btnLogout": { "description": "Botón para cerrar sesión" },
 
   "stepSavedSuccess": "Paso guardado correctamente",
-  "@stepSavedSuccess": { "description": "Mensaje cuando un paso del wizard se guarda exitosamente" }
+  "@stepSavedSuccess": { "description": "Mensaje cuando un paso del wizard se guarda exitosamente" },
+
+  "loginTitle": "Iniciar sesi\u00f3n",
+  "@loginTitle": { "description": "T\u00edtulo de la pantalla de login" },
+
+  "loginSubtitle": "Ingresa tus credenciales para continuar",
+  "@loginSubtitle": { "description": "Subt\u00edtulo de la pantalla de login" },
+
+  "loginFieldUser": "Usuario",
+  "@loginFieldUser": { "description": "Etiqueta campo usuario" },
+
+  "loginFieldUserHint": "Ingresa tu usuario",
+  "@loginFieldUserHint": { "description": "Hint campo usuario" },
+
+  "loginFieldPassword": "Contrase\u00f1a",
+  "@loginFieldPassword": { "description": "Etiqueta campo contrase\u00f1a" },
+
+  "loginFieldPasswordHint": "Ingresa tu contrase\u00f1a",
+  "@loginFieldPasswordHint": { "description": "Hint campo contrase\u00f1a" },
+
+  "loginKeepSession": "Mantener sesi\u00f3n iniciada",
+  "@loginKeepSession": { "description": "Label checkbox mantener sesi\u00f3n" },
+
+  "loginBtnSignIn": "Ingresar",
+  "@loginBtnSignIn": { "description": "Bot\u00f3n de login" },
+
+  "loginBtnSigningIn": "Ingresando...",
+  "@loginBtnSigningIn": { "description": "Bot\u00f3n mientras se procesa el login" },
+
+  "loginRegisterLink": "\u00bfNo tienes cuenta? Reg\u00edstrate",
+  "@loginRegisterLink": { "description": "Enlace para ir al registro" },
+
+  "loginErrUserRequired": "El usuario es requerido",
+  "@loginErrUserRequired": { "description": "Error campo usuario vac\u00edo" },
+
+  "loginErrUserMin": "M\u00ednimo 3 caracteres",
+  "@loginErrUserMin": { "description": "Error usuario muy corto" },
+
+  "loginErrPasswordRequired": "La contrase\u00f1a es requerida",
+  "@loginErrPasswordRequired": { "description": "Error campo contrase\u00f1a vac\u00edo" },
+
+  "loginErrPasswordMin": "M\u00ednimo 4 caracteres",
+  "@loginErrPasswordMin": { "description": "Error contrase\u00f1a muy corta" },
+
+  "loginErrGeneral": "No se pudo iniciar sesi\u00f3n. Intente m\u00e1s tarde",
+  "@loginErrGeneral": { "description": "Error gen\u00e9rico de login" }
 }

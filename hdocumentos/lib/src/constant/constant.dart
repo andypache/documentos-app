@@ -24,7 +24,7 @@ String apiCompanyEmission = "${apiCompany}company/update/emission";
 String apiCompanyTaxGroups = "${apiCompany}company/update/tax-groups";
 
 //URL for common
-String apiDataCatalog = "${apiCompany}common/catalogs";
+String apiDataCatalog = "$apiCompany/catalogs";
 
 //Return Column error
 Widget errorLoadContainer(error) {

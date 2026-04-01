@@ -360,4 +360,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stepSavedSuccess => 'Step saved successfully';
+
+  @override
+  String get loginTitle => 'Sign In';
+
+  @override
+  String get loginSubtitle => 'Enter your credentials to continue';
+
+  @override
+  String get loginFieldUser => 'Username';
+
+  @override
+  String get loginFieldUserHint => 'Enter your username';
+
+  @override
+  String get loginFieldPassword => 'Password';
+
+  @override
+  String get loginFieldPasswordHint => 'Enter your password';
+
+  @override
+  String get loginKeepSession => 'Keep me signed in';
+
+  @override
+  String get loginBtnSignIn => 'Sign In';
+
+  @override
+  String get loginBtnSigningIn => 'Signing in...';
+
+  @override
+  String get loginRegisterLink => 'Don\'t have an account? Register';
+
+  @override
+  String get loginErrUserRequired => 'Username is required';
+
+  @override
+  String get loginErrUserMin => 'Minimum 3 characters';
+
+  @override
+  String get loginErrPasswordRequired => 'Password is required';
+
+  @override
+  String get loginErrPasswordMin => 'Minimum 4 characters';
+
+  @override
+  String get loginErrGeneral => 'Could not sign in. Please try again later';
 }

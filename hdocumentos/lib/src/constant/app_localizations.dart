@@ -770,6 +770,96 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Paso guardado correctamente'**
   String get stepSavedSuccess;
+
+  /// Título de la pantalla de login
+  ///
+  /// In es, this message translates to:
+  /// **'Iniciar sesión'**
+  String get loginTitle;
+
+  /// Subtítulo de la pantalla de login
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa tus credenciales para continuar'**
+  String get loginSubtitle;
+
+  /// Etiqueta campo usuario
+  ///
+  /// In es, this message translates to:
+  /// **'Usuario'**
+  String get loginFieldUser;
+
+  /// Hint campo usuario
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa tu usuario'**
+  String get loginFieldUserHint;
+
+  /// Etiqueta campo contraseña
+  ///
+  /// In es, this message translates to:
+  /// **'Contraseña'**
+  String get loginFieldPassword;
+
+  /// Hint campo contraseña
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa tu contraseña'**
+  String get loginFieldPasswordHint;
+
+  /// Label checkbox mantener sesión
+  ///
+  /// In es, this message translates to:
+  /// **'Mantener sesión iniciada'**
+  String get loginKeepSession;
+
+  /// Botón de login
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresar'**
+  String get loginBtnSignIn;
+
+  /// Botón mientras se procesa el login
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresando...'**
+  String get loginBtnSigningIn;
+
+  /// Enlace para ir al registro
+  ///
+  /// In es, this message translates to:
+  /// **'¿No tienes cuenta? Regístrate'**
+  String get loginRegisterLink;
+
+  /// Error campo usuario vacío
+  ///
+  /// In es, this message translates to:
+  /// **'El usuario es requerido'**
+  String get loginErrUserRequired;
+
+  /// Error usuario muy corto
+  ///
+  /// In es, this message translates to:
+  /// **'Mínimo 3 caracteres'**
+  String get loginErrUserMin;
+
+  /// Error campo contraseña vacío
+  ///
+  /// In es, this message translates to:
+  /// **'La contraseña es requerida'**
+  String get loginErrPasswordRequired;
+
+  /// Error contraseña muy corta
+  ///
+  /// In es, this message translates to:
+  /// **'Mínimo 4 caracteres'**
+  String get loginErrPasswordMin;
+
+  /// Error genérico de login
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo iniciar sesión. Intente más tarde'**
+  String get loginErrGeneral;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

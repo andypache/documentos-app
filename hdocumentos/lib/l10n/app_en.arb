@@ -338,5 +338,50 @@
   "@btnLogout": { "description": "Button to close session" },
 
   "stepSavedSuccess": "Step saved successfully",
-  "@stepSavedSuccess": { "description": "Message when a wizard step is saved successfully" }
+  "@stepSavedSuccess": { "description": "Message when a wizard step is saved successfully" },
+
+  "loginTitle": "Sign In",
+  "@loginTitle": { "description": "Login screen title" },
+
+  "loginSubtitle": "Enter your credentials to continue",
+  "@loginSubtitle": { "description": "Login screen subtitle" },
+
+  "loginFieldUser": "Username",
+  "@loginFieldUser": { "description": "Username field label" },
+
+  "loginFieldUserHint": "Enter your username",
+  "@loginFieldUserHint": { "description": "Username field hint" },
+
+  "loginFieldPassword": "Password",
+  "@loginFieldPassword": { "description": "Password field label" },
+
+  "loginFieldPasswordHint": "Enter your password",
+  "@loginFieldPasswordHint": { "description": "Password field hint" },
+
+  "loginKeepSession": "Keep me signed in",
+  "@loginKeepSession": { "description": "Keep session checkbox label" },
+
+  "loginBtnSignIn": "Sign In",
+  "@loginBtnSignIn": { "description": "Login button" },
+
+  "loginBtnSigningIn": "Signing in...",
+  "@loginBtnSigningIn": { "description": "Login button while processing" },
+
+  "loginRegisterLink": "Don't have an account? Register",
+  "@loginRegisterLink": { "description": "Link to register screen" },
+
+  "loginErrUserRequired": "Username is required",
+  "@loginErrUserRequired": { "description": "Error empty username" },
+
+  "loginErrUserMin": "Minimum 3 characters",
+  "@loginErrUserMin": { "description": "Error username too short" },
+
+  "loginErrPasswordRequired": "Password is required",
+  "@loginErrPasswordRequired": { "description": "Error empty password" },
+
+  "loginErrPasswordMin": "Minimum 4 characters",
+  "@loginErrPasswordMin": { "description": "Error password too short" },
+
+  "loginErrGeneral": "Could not sign in. Please try again later",
+  "@loginErrGeneral": { "description": "Generic login error" }
 }

@@ -38,6 +38,13 @@ class AppTheme {
   static const Color actionSaveDark = Color(0xFF00695C); // teal guardar paso
   static const Color actionDanger = Color(0xFFC62828); // rojo peligro/logout
 
+  // Colores de la pantalla de login
+  static const Color loginCardBg =
+      Color(0xFF1A3A42); // card oscuro sobre gradiente
+  static const Color loginInputBorder = Color(0xFF2E6A78); // borde de inputs
+  static const Color loginInputFill = Color(0xFF0F2B32); // fondo de inputs
+  static const Color loginDivider = Color(0xFF2E6A78); // divisor
+
   static const Color primaryGradient = Color.fromRGBO(236, 98, 188, 1);
   static const Color secondaryGradient = Color.fromRGBO(251, 142, 172, 1);
   static const Color whiteGradient = Color.fromRGBO(255, 255, 255, 0.1);
