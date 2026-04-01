@@ -26,6 +26,13 @@ class AppTheme {
   static const Color red = Colors.red;
   static const Color transparent = Colors.transparent;
 
+  // Colores de notificación empresarial
+  static const Color notificationWarning = Color(0xFFFFA000);
+  static const Color notificationErrorBg = Color(0xFF3B1A1A);
+  static const Color notificationSuccessBg = Color(0xFF16311F);
+  static const Color notificationWarningBg = Color(0xFF332600);
+  static const Color notificationInfoBg = Color(0xFF0D2137);
+
   static const Color primaryGradient = Color.fromRGBO(236, 98, 188, 1);
   static const Color secondaryGradient = Color.fromRGBO(251, 142, 172, 1);
   static const Color whiteGradient = Color.fromRGBO(255, 255, 255, 0.1);
