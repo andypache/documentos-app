@@ -501,4 +501,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get navLogout => 'Salir';
+
+  @override
+  String get reloadDialogTitle => 'Actualizar parámetros';
+
+  @override
+  String get reloadDialogBody => '¿Deseas actualizar nuevamente los parámetros del sistema y los datos de la empresa?';
+
+  @override
+  String get reloadDialogConfirm => 'Actualizar';
+
+  @override
+  String get reloadDialogCancel => 'Cancelar';
+
+  @override
+  String get reloadSuccess => 'Parámetros actualizados correctamente';
 }

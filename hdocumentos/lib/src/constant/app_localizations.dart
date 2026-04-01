@@ -1052,6 +1052,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Salir'**
   String get navLogout;
+
+  /// Título del diálogo de confirmación de recarga
+  ///
+  /// In es, this message translates to:
+  /// **'Actualizar parámetros'**
+  String get reloadDialogTitle;
+
+  /// Cuerpo del diálogo de confirmación de recarga
+  ///
+  /// In es, this message translates to:
+  /// **'¿Deseas actualizar nuevamente los parámetros del sistema y los datos de la empresa?'**
+  String get reloadDialogBody;
+
+  /// Botón confirmar recarga
+  ///
+  /// In es, this message translates to:
+  /// **'Actualizar'**
+  String get reloadDialogConfirm;
+
+  /// Botón cancelar recarga
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get reloadDialogCancel;
+
+  /// Mensaje de éxito tras la recarga
+  ///
+  /// In es, this message translates to:
+  /// **'Parámetros actualizados correctamente'**
+  String get reloadSuccess;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

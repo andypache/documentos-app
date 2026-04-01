@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+// ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hdocumentos/src/model/model.dart';
@@ -14,13 +15,32 @@ class CompanyService extends ChangeNotifier {
   /// Retorna los catálogos del sistema.
   /// Primero intenta desde caché local; si no existe, los obtiene del API
   /// y los persiste para futuras llamadas.
-  Future<CatalogModelList?> getCatalogs(BuildContext context) async {
+  ///
+  /// Si [forceRefresh] es true, elimina la caché local y envía el header
+  /// `X-Refresh-Cache: true` para que el backend invalide su propia caché.
+  Future<CatalogModelList?> getCatalogs(
+    BuildContext context, {
+    bool forceRefresh = false,
+  }) async {
+    // Capturar el contexto antes de cualquier await para evitar
+    // el warning use_build_context_synchronously y el bug de contexto desmontado.
+    // getFetch maneja internamente el caso !context.mounted.
+    final extraHeaders = forceRefresh ? _refreshCacheHeader : null;
+
+    if (forceRefresh) await _storage.delete(key: _cacheKey);
+
     final cached = await _readFromCache();
     if (cached != null) return cached;
 
-    if (!context.mounted) return null;
-    return await _fetchFromApi(context);
+    return await _fetchFromApi(
+      context,
+      extraHeaders: extraHeaders,
+    );
   }
+
+  static const Map<String, String> _refreshCacheHeader = {
+    'X-Refresh-Cache': 'true',
+  };
 
   // ─── Caché ────────────────────────────────────────────────────────────────
 
@@ -42,9 +62,16 @@ class CompanyService extends ChangeNotifier {
 
   // ─── API ──────────────────────────────────────────────────────────────────
 
-  Future<CatalogModelList?> _fetchFromApi(BuildContext context) async {
-    final response =
-        await getFetch(context: context, url: apiDataCatalog, params: {});
+  Future<CatalogModelList?> _fetchFromApi(
+    BuildContext context, {
+    Map<String, String>? extraHeaders,
+  }) async {
+    final response = await getFetch(
+      context: context,
+      url: apiDataCatalog,
+      params: {},
+      extraHeaders: extraHeaders,
+    );
 
     if (response.statusHttp != 200) {
       NotificationService.showSnackbarError(response.message);
@@ -54,7 +81,8 @@ class CompanyService extends ChangeNotifier {
     return _parseResponse(response);
   }
 
-  CatalogModelList? _parseResponse(ServiceResponseModel response) {
+  Future<CatalogModelList?> _parseResponse(
+      ServiceResponseModel response) async {
     final l10n = NotificationService.l10n;
     try {
       final responseModel = response.createDataResponse();
@@ -66,7 +94,7 @@ class CompanyService extends ChangeNotifier {
         return null;
       }
 
-      _writeToCache(data);
+      await _writeToCache(data);
       return CatalogModelList.fromJson(data);
     } catch (_) {
       NotificationService.showSnackbarError(l10n!.invalidDataFormatForCatalogs);
@@ -83,14 +111,22 @@ class CompanyService extends ChangeNotifier {
 
   /// Obtiene la compañía por defecto desde el API.
   /// Retorna null si no existe (404) o si ocurre un error.
-  Future<CompanyModel?> getCompany(BuildContext context) async {
+  ///
+  /// Si [forceRefresh] es true, envía `X-Refresh-Cache: true` para que
+  /// el backend invalide su caché antes de responder.
+  Future<CompanyModel?> getCompany(
+    BuildContext context, {
+    bool forceRefresh = false,
+  }) async {
     final username = Preferences.userSession.username;
     if (username.isEmpty) return null;
 
     final response = await getFetch(
-        context: context,
-        url: apiCompanyDefault,
-        params: {'username': username});
+      context: context,
+      url: apiCompanyDefault,
+      params: {'username': username},
+      extraHeaders: forceRefresh ? _refreshCacheHeader : null,
+    );
 
     if (response.statusHttp == 404) return null;
 

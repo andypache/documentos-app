@@ -463,5 +463,20 @@
   "navConfig": "Settings",
   "@navConfig": { "description": "Nav settings label" },
   "navLogout": "Logout",
-  "@navLogout": { "description": "Nav logout label" }
+  "@navLogout": { "description": "Nav logout label" },
+
+  "reloadDialogTitle": "Refresh parameters",
+  "@reloadDialogTitle": { "description": "Title of the reload confirmation dialog" },
+
+  "reloadDialogBody": "Do you want to refresh the system parameters and company data again?",
+  "@reloadDialogBody": { "description": "Body of the reload confirmation dialog" },
+
+  "reloadDialogConfirm": "Refresh",
+  "@reloadDialogConfirm": { "description": "Confirm reload button" },
+
+  "reloadDialogCancel": "Cancel",
+  "@reloadDialogCancel": { "description": "Cancel reload button" },
+
+  "reloadSuccess": "Parameters updated successfully",
+  "@reloadSuccess": { "description": "Success message after reload" }
 }

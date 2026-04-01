@@ -18,12 +18,15 @@ AuthService authService = AuthService();
 
 /// Realiza una petición GET autenticada.
 /// Maneja refresco de token automático ante 401.
+/// [extraHeaders] permite inyectar cabeceras adicionales (ej: X-Refresh-Cache).
 Future<ServiceResponseModel> getFetch({
   required BuildContext context,
   required String url,
   required Map<String, dynamic> params,
+  Map<String, String>? extraHeaders,
 }) async {
-  final result = await _HttpClient.get(url: url, params: params);
+  final result = await _HttpClient.get(
+      url: url, params: params, extraHeaders: extraHeaders);
   if (!context.mounted) return result;
   return await _TokenRefreshHandler.handle(
         context: context,
@@ -103,13 +106,16 @@ class _HttpClient {
   }
 
   /// Ejecuta GET autenticado.
+  /// [extraHeaders] se fusionan sobre los headers de autorización.
   static Future<ServiceResponseModel> get({
     required String url,
     required Map<String, dynamic> params,
+    Map<String, String>? extraHeaders,
   }) async {
     try {
       final uri = _buildUri(url, params);
       final headers = await _authHeaders();
+      if (extraHeaders != null) headers.addAll(extraHeaders);
       final response = await http.get(uri, headers: headers).timeout(_timeout);
       return getResponse(response);
     } on Exception catch (e) {

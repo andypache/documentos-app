@@ -464,5 +464,20 @@
   "navConfig": "Configurar",
   "@navConfig": { "description": "Etiqueta nav configuración" },
   "navLogout": "Salir",
-  "@navLogout": { "description": "Etiqueta nav salir" }
+  "@navLogout": { "description": "Etiqueta nav salir" },
+
+  "reloadDialogTitle": "Actualizar parámetros",
+  "@reloadDialogTitle": { "description": "Título del diálogo de confirmación de recarga" },
+
+  "reloadDialogBody": "¿Deseas actualizar nuevamente los parámetros del sistema y los datos de la empresa?",
+  "@reloadDialogBody": { "description": "Cuerpo del diálogo de confirmación de recarga" },
+
+  "reloadDialogConfirm": "Actualizar",
+  "@reloadDialogConfirm": { "description": "Botón confirmar recarga" },
+
+  "reloadDialogCancel": "Cancelar",
+  "@reloadDialogCancel": { "description": "Botón cancelar recarga" },
+
+  "reloadSuccess": "Parámetros actualizados correctamente",
+  "@reloadSuccess": { "description": "Mensaje de éxito tras la recarga" }
 }

@@ -65,6 +65,11 @@ class AppTheme {
   // Bottom navigation bar
   static const Color bottomNavBg = Color(0xFF1A2236); // fondo barra inferior
 
+  // Diálogo de confirmación
+  static const Color dialogBackground =
+      Color(0xFF1A3A42); // fondo diálogo oscuro
+  static const Color dialogBorder = Color(0xFF2E6A78); // borde diálogo
+
   static const Color primaryGradient = Color.fromRGBO(236, 98, 188, 1);
   static const Color secondaryGradient = Color.fromRGBO(251, 142, 172, 1);
   static const Color whiteGradient = Color.fromRGBO(255, 255, 255, 0.1);

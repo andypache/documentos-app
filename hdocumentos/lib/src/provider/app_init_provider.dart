@@ -46,19 +46,30 @@ class AppInitProvider extends ChangeNotifier {
   ///
   /// IMPORTANTE: capturamos [l10n] ANTES de cualquier await para evitar
   /// el problema de locale incorrecto cuando el contexto ya cambió.
-  Future<void> init(BuildContext context) async {
-    if (_status == AppInitStatus.ready || _status == AppInitStatus.loading) {
-      return;
-    }
+  Future<void> init(BuildContext context, {bool forceRefresh = false}) async {
+    // Bloquear siempre si ya hay una carga en curso (evita ejecuciones concurrentes)
+    if (_status == AppInitStatus.loading) return;
+    // Sin forceRefresh, también bloquear si ya está listo
+    if (!forceRefresh && _status == AppInitStatus.ready) return;
+
     _setStatus(AppInitStatus.loading);
+
+    // Limpiar catálogos para que _catalogs==null detecte fallo real tras la carga
+    if (forceRefresh) _catalogs = null;
 
     // Capturar l10n antes del primer await — soluciona el bug de idioma
     final l10n = AppLocalizations.of(context);
 
     try {
-      await _loadCatalogs(context, l10n);
-      if (!context.mounted) return;
-      await _loadCompany(context);
+      await _loadCatalogs(context, l10n, forceRefresh: forceRefresh);
+      // Fallo real de API: _catalogs sigue null → pasar a error
+      if (_catalogs == null) {
+        _errorMessage = l10n.initApplicationError;
+        _setStatus(AppInitStatus.error);
+        return;
+      }
+      // ignore: use_build_context_synchronously
+      await _loadCompany(context, forceRefresh: forceRefresh);
       _setStatus(AppInitStatus.ready);
     } catch (e) {
       _errorMessage = e.toString();
@@ -70,6 +81,16 @@ class AppInitProvider extends ChangeNotifier {
   Future<void> retry(BuildContext context) async {
     _status = AppInitStatus.idle;
     await init(context);
+  }
+
+  /// Fuerza la recarga de catálogos y datos de empresa aunque ya estén listos.
+  /// Envía `X-Refresh-Cache: true` en cada petición HTTP para invalidar
+  /// la caché del backend, y elimina la caché local de catálogos.
+  ///
+  /// No resetea el estado antes de llamar a [init] para evitar notificaciones
+  /// dobles; [init] transiciona directamente de cualquier estado a [loading].
+  Future<void> reload(BuildContext context) async {
+    await init(context, forceRefresh: true);
   }
 
   /// Limpia el estado de la sesión (usar en logout).
@@ -85,18 +106,25 @@ class AppInitProvider extends ChangeNotifier {
   // ─── Carga de datos ────────────────────────────────────────────────────────
 
   Future<void> _loadCatalogs(
-      BuildContext context, AppLocalizations l10n) async {
-    final result = await _companyService.getCatalogs(context);
-    if (result == null) {
-      throw Exception(l10n.initApplicationError);
-    }
-    _catalogs = result;
+    BuildContext context,
+    AppLocalizations l10n, {
+    bool forceRefresh = false,
+  }) async {
+    final result =
+        await _companyService.getCatalogs(context, forceRefresh: forceRefresh);
+    if (result != null) _catalogs = result;
+    // Si result==null (API falló o contexto desmontado), _catalogs queda null
+    // y el flujo en init() lo detecta y pasa a estado error.
   }
 
   /// Carga la empresa por defecto. No lanza excepción si no existe (404):
   /// en ese caso [_hasCompany] queda en false y el flujo continúa normal.
-  Future<void> _loadCompany(BuildContext context) async {
-    final result = await _companyService.getCompany(context);
+  Future<void> _loadCompany(
+    BuildContext context, {
+    bool forceRefresh = false,
+  }) async {
+    final result =
+        await _companyService.getCompany(context, forceRefresh: forceRefresh);
     _company = result;
     _hasCompany = result != null;
   }

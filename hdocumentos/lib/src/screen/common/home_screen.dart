@@ -133,8 +133,42 @@ class _ErrorOverlay extends StatelessWidget {
 }
 
 ///Body for home into scroll view
-class _HomeScreenBody extends StatelessWidget {
+class _HomeScreenBody extends StatefulWidget {
   const _HomeScreenBody({Key? key}) : super(key: key);
+
+  @override
+  State<_HomeScreenBody> createState() => _HomeScreenBodyState();
+}
+
+class _HomeScreenBodyState extends State<_HomeScreenBody> {
+  /// Abre el diálogo de confirmación y, si el usuario acepta, recarga
+  /// catálogos y datos de empresa mostrando feedback visual al terminar.
+  Future<void> _onReloadPressed() async {
+    final confirmed = await showReloadConfirmDialog(context);
+    if (confirmed != true || !context.mounted) return;
+
+    final l10n = AppLocalizations.of(context);
+    final initProvider = context.read<AppInitProvider>();
+
+    await initProvider.reload(context);
+
+    if (!context.mounted) return;
+    final isSuccess = initProvider.isReady;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          isSuccess ? l10n.reloadSuccess : initProvider.errorMessage,
+          style: const TextStyle(color: AppTheme.textPrimary),
+        ),
+        backgroundColor:
+            isSuccess ? AppTheme.actionSave : AppTheme.actionDanger,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -146,14 +180,63 @@ class _HomeScreenBody extends StatelessWidget {
     );
 
     return Column(children: [
-      const UserSessionTitle(),
-      SingleChildScrollView(
-          child: Column(children: [
-        CardSwiperWidget(menus: menus),
-        const SizedBox(height: 20),
-        CardSlider(
-            bills: billExamples, title: l10n.homeSalesTitle, onNextPage: () {})
-      ]))
+      _HomeTopBar(onReload: _onReloadPressed),
+      if (initProvider.isLoading)
+        const Expanded(
+          child: Center(
+            child: CircularProgressIndicator(color: AppTheme.primaryButton),
+          ),
+        )
+      else
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(children: [
+              CardSwiperWidget(menus: menus),
+              const SizedBox(height: 20),
+              CardSlider(
+                  bills: billExamples,
+                  title: l10n.homeSalesTitle,
+                  onNextPage: () {}),
+            ]),
+          ),
+        ),
     ]);
+  }
+}
+
+// ─── Barra superior con título de sesión + botón recarga ────────────────────
+
+class _HomeTopBar extends StatelessWidget {
+  final VoidCallback onReload;
+
+  const _HomeTopBar({required this.onReload});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Stack(
+      alignment: Alignment.centerRight,
+      children: [
+        const UserSessionTitle(),
+        Positioned(
+          right: 56, // deja espacio al selector de idioma
+          top: 0,
+          bottom: 0,
+          child: SafeArea(
+            bottom: false,
+            child: Tooltip(
+              message: l10n.reloadDialogTitle,
+              child: IconButton(
+                onPressed: onReload,
+                icon: const Icon(Icons.sync_rounded),
+                color: AppTheme.primaryButton,
+                iconSize: 22,
+                splashRadius: 20,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
