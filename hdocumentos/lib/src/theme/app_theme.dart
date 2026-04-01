@@ -45,6 +45,17 @@ class AppTheme {
   static const Color loginInputFill = Color(0xFF0F2B32); // fondo de inputs
   static const Color loginDivider = Color(0xFF2E6A78); // divisor
 
+  // Colores del menú principal (swiper cards)
+  static const Color menuBill = Color(0xFFFF8F00); // naranja facturar
+  static const Color menuClient = Color(0xFF43A047); // verde clientes
+  static const Color menuItem = Color(0xFFFFB300); // ámbar productos
+  static const Color menuReport = Color(0xFF1E88E5); // azul reportes
+  static const Color menuReview = Color(0xFFEC407A); // rosa revisión
+  static const Color menuConfig = Color(0xFF26C6DA); // cyan configuración
+
+  // Bottom navigation bar
+  static const Color bottomNavBg = Color(0xFF1A2236); // fondo barra inferior
+
   static const Color primaryGradient = Color.fromRGBO(236, 98, 188, 1);
   static const Color secondaryGradient = Color.fromRGBO(251, 142, 172, 1);
   static const Color whiteGradient = Color.fromRGBO(255, 255, 255, 0.1);

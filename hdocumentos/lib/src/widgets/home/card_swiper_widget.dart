@@ -3,23 +3,24 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:hdocumentos/src/model/common/menu_option_model.dart';
-import 'package:hdocumentos/src/router/app_routes.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
 
-///Widgets for menu swiper
+/// Widget swiper del menú principal.
+/// Recibe [menus] desde el padre (ya filtrados según [hasCompany]).
 class CardSwiperWidget extends StatelessWidget {
-  const CardSwiperWidget({Key? key}) : super(key: key);
+  final List<MenuOptionModel> menus;
+
+  const CardSwiperWidget({Key? key, required this.menus}) : super(key: key);
 
   //Build widgets
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    List<MenuOptionModel> homeMenus = AppRoutes.homeMenus;
-
-    if (homeMenus.isEmpty) {
+    if (menus.isEmpty) {
       return const LoadingWidget();
     }
+
+    final size = MediaQuery.of(context).size;
 
     // Calcular dimensiones responsivas
     final cardWidth = size.width * 0.65;
@@ -32,12 +33,12 @@ class CardSwiperWidget extends StatelessWidget {
         width: double.infinity,
         height: cardHeight,
         child: Swiper(
-            itemCount: homeMenus.length,
+            itemCount: menus.length,
             layout: SwiperLayout.STACK,
             itemWidth: cardWidth,
             itemHeight: cardHeight,
             itemBuilder: (_, int index) {
-              final menu = homeMenus[index];
+              final menu = menus[index];
               menu.id = 'swiper-${menu.id}';
               return GestureDetector(
                   onTap: () => Navigator.pushNamed(context, menu.route),

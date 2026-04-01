@@ -860,6 +860,108 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No se pudo iniciar sesión. Intente más tarde'**
   String get loginErrGeneral;
+
+  /// Menú facturación
+  ///
+  /// In es, this message translates to:
+  /// **'FACTURAR'**
+  String get homeMenuBill;
+
+  /// Descripción menú facturación
+  ///
+  /// In es, this message translates to:
+  /// **'Genere sus facturas para un bien o servicio'**
+  String get homeMenuBillDesc;
+
+  /// Menú clientes
+  ///
+  /// In es, this message translates to:
+  /// **'CLIENTES'**
+  String get homeMenuClient;
+
+  /// Descripción menú clientes
+  ///
+  /// In es, this message translates to:
+  /// **'Gestione sus clientes, cree, edite o elimine'**
+  String get homeMenuClientDesc;
+
+  /// Menú productos
+  ///
+  /// In es, this message translates to:
+  /// **'PRODUCTOS'**
+  String get homeMenuItem;
+
+  /// Descripción menú productos
+  ///
+  /// In es, this message translates to:
+  /// **'Gestione sus productos, cree, edite o elimine'**
+  String get homeMenuItemDesc;
+
+  /// Menú reportes
+  ///
+  /// In es, this message translates to:
+  /// **'REPORTES'**
+  String get homeMenuReport;
+
+  /// Descripción menú reportes
+  ///
+  /// In es, this message translates to:
+  /// **'Genere sus facturas en pdf'**
+  String get homeMenuReportDesc;
+
+  /// Menú revisión
+  ///
+  /// In es, this message translates to:
+  /// **'REVISIÓN'**
+  String get homeMenuReview;
+
+  /// Descripción menú revisión
+  ///
+  /// In es, this message translates to:
+  /// **'Verifique sus facturas en el SRI'**
+  String get homeMenuReviewDesc;
+
+  /// Menú configuración
+  ///
+  /// In es, this message translates to:
+  /// **'CONFIGURACIÓN'**
+  String get homeMenuConfig;
+
+  /// Descripción menú configuración
+  ///
+  /// In es, this message translates to:
+  /// **'Configure su empresa, cambie su imagen y firma electrónica'**
+  String get homeMenuConfigDesc;
+
+  /// Título sección mis ventas
+  ///
+  /// In es, this message translates to:
+  /// **'Mis Ventas'**
+  String get homeSalesTitle;
+
+  /// Etiqueta nav factura
+  ///
+  /// In es, this message translates to:
+  /// **'Factura'**
+  String get navBill;
+
+  /// Etiqueta nav reportes
+  ///
+  /// In es, this message translates to:
+  /// **'Reportes'**
+  String get navReports;
+
+  /// Etiqueta nav configuración
+  ///
+  /// In es, this message translates to:
+  /// **'Configurar'**
+  String get navConfig;
+
+  /// Etiqueta nav salir
+  ///
+  /// In es, this message translates to:
+  /// **'Salir'**
+  String get navLogout;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

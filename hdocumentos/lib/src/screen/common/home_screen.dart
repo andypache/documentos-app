@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/constant/example_data.dart';
 import 'package:hdocumentos/src/provider/app_init_provider.dart';
+import 'package:hdocumentos/src/router/app_routes.dart';
 import 'package:hdocumentos/src/service/service.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
@@ -82,13 +83,14 @@ class _ErrorOverlay extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.cloud_off_rounded,
-                color: Colors.white70, size: 48),
+            Icon(Icons.cloud_off_rounded,
+                color: AppTheme.white.withOpacity(0.7), size: 48),
             const SizedBox(height: 12),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white70, fontSize: 13),
+              style: TextStyle(
+                  color: AppTheme.white.withOpacity(0.7), fontSize: 13),
             ),
             const SizedBox(height: 20),
             Row(
@@ -130,21 +132,27 @@ class _ErrorOverlay extends StatelessWidget {
   }
 }
 
-///Body for home into sroll view
+///Body for home into scroll view
 class _HomeScreenBody extends StatelessWidget {
   const _HomeScreenBody({Key? key}) : super(key: key);
 
-  ///Put user session title and cart menu
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final initProvider = context.watch<AppInitProvider>();
+    final menus = AppRoutes.buildHomeMenus(
+      l10n,
+      hasCompany: initProvider.hasCompany,
+    );
+
     return Column(children: [
       const UserSessionTitle(),
-      //SingleChildScrollView(child: CartTableWidget())
       SingleChildScrollView(
           child: Column(children: [
-        const CardSwiperWidget(),
+        CardSwiperWidget(menus: menus),
         const SizedBox(height: 20),
-        CardSlider(bills: billExamples, title: "Mis Ventas", onNextPage: () {})
+        CardSlider(
+            bills: billExamples, title: l10n.homeSalesTitle, onNextPage: () {})
       ]))
     ]);
   }

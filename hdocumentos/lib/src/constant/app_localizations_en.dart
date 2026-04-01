@@ -405,4 +405,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loginErrGeneral => 'Could not sign in. Please try again later';
+
+  @override
+  String get homeMenuBill => 'BILLING';
+
+  @override
+  String get homeMenuBillDesc => 'Generate invoices for goods or services';
+
+  @override
+  String get homeMenuClient => 'CLIENTS';
+
+  @override
+  String get homeMenuClientDesc => 'Manage your clients, create, edit or delete';
+
+  @override
+  String get homeMenuItem => 'PRODUCTS';
+
+  @override
+  String get homeMenuItemDesc => 'Manage your products, create, edit or delete';
+
+  @override
+  String get homeMenuReport => 'REPORTS';
+
+  @override
+  String get homeMenuReportDesc => 'Generate your invoices as PDF';
+
+  @override
+  String get homeMenuReview => 'REVIEW';
+
+  @override
+  String get homeMenuReviewDesc => 'Verify your invoices with the SRI';
+
+  @override
+  String get homeMenuConfig => 'SETTINGS';
+
+  @override
+  String get homeMenuConfigDesc => 'Set up your company, change your logo and e-signature';
+
+  @override
+  String get homeSalesTitle => 'My Sales';
+
+  @override
+  String get navBill => 'Invoice';
+
+  @override
+  String get navReports => 'Reports';
+
+  @override
+  String get navConfig => 'Settings';
+
+  @override
+  String get navLogout => 'Logout';
 }

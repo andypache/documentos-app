@@ -1,61 +1,78 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/screen/screen.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 
-//Class that containt all router with render widwegs into app
+/// Clase que centraliza todas las rutas y los elementos de menú de la app.
 class AppRoutes {
-  static List<MenuOptionModel> homeMenus = [
-    MenuOptionModel(
-        id: "1",
-        color: Colors.orange,
-        route: "bill",
-        icon: Icons.point_of_sale_sharp,
-        text: 'FACTURAR',
-        screen: const Text('Menu'),
-        description: 'Genere sus facturas para un bien o servicio'),
-    MenuOptionModel(
-        id: "2",
-        color: Colors.green,
-        route: "client",
-        icon: Icons.person_add_alt_1_outlined,
-        text: 'CLIENTES',
-        screen: const Text('Menu'),
-        description: 'Gestione sus clientes, cree, edite o elimine'),
-    MenuOptionModel(
-        id: "3",
-        color: Colors.amber,
-        route: "item",
-        icon: Icons.shopping_cart_outlined,
-        text: 'PRODUCTOS',
-        screen: const Text('Menu'),
-        description: 'Gestione sus productos, cree, edite o elimine'),
-    MenuOptionModel(
-        id: "4",
-        color: AppTheme.blue,
-        route: "report",
-        icon: Icons.file_copy_outlined,
-        text: 'REPORTES',
-        screen: const Text('Menu'),
-        description: 'Genere sus facturas en pdf'),
-    MenuOptionModel(
-        id: "5",
-        color: AppTheme.pinkAccent,
-        route: "review",
-        icon: Icons.send_and_archive,
-        text: 'REVISIÓN',
-        screen: const Text('Menu'),
-        description: 'Verifique sus facturas en el SRI'),
-    MenuOptionModel(
-        id: "6",
-        color: AppTheme.secondaryButton,
-        route: "config",
-        icon: Icons.settings_applications_outlined,
-        text: 'CONFIGURACIÓN',
-        screen: const Text('Menu'),
-        description:
-            'Configure su empresa, cambie su imagen y firma electrónica')
-  ];
+  /// Construye la lista de opciones del swiper del home.
+  ///
+  /// [l10n] provee los textos traducidos.
+  /// [hasCompany] controla si se incluye la tarjeta de Configuración:
+  ///   - false → empresa no configurada → mostrar CONFIGURACIÓN en el swiper.
+  ///   - true  → empresa ya configurada → NO mostrar en swiper (va en BottomNav).
+  static List<MenuOptionModel> buildHomeMenus(
+    AppLocalizations l10n, {
+    required bool hasCompany,
+  }) {
+    final menus = [
+      MenuOptionModel(
+          id: '1',
+          color: AppTheme.menuBill,
+          route: 'bill',
+          icon: Icons.point_of_sale_sharp,
+          text: l10n.homeMenuBill,
+          screen: const Text('Menu'),
+          description: l10n.homeMenuBillDesc),
+      MenuOptionModel(
+          id: '2',
+          color: AppTheme.menuClient,
+          route: 'client',
+          icon: Icons.person_add_alt_1_outlined,
+          text: l10n.homeMenuClient,
+          screen: const Text('Menu'),
+          description: l10n.homeMenuClientDesc),
+      MenuOptionModel(
+          id: '3',
+          color: AppTheme.menuItem,
+          route: 'item',
+          icon: Icons.shopping_cart_outlined,
+          text: l10n.homeMenuItem,
+          screen: const Text('Menu'),
+          description: l10n.homeMenuItemDesc),
+      MenuOptionModel(
+          id: '4',
+          color: AppTheme.menuReport,
+          route: 'report',
+          icon: Icons.file_copy_outlined,
+          text: l10n.homeMenuReport,
+          screen: const Text('Menu'),
+          description: l10n.homeMenuReportDesc),
+      MenuOptionModel(
+          id: '5',
+          color: AppTheme.menuReview,
+          route: 'review',
+          icon: Icons.send_and_archive,
+          text: l10n.homeMenuReview,
+          screen: const Text('Menu'),
+          description: l10n.homeMenuReviewDesc),
+    ];
+
+    // Solo mostrar CONFIGURACIÓN en el swiper si la empresa NO está configurada
+    if (!hasCompany) {
+      menus.add(MenuOptionModel(
+          id: '6',
+          color: AppTheme.menuConfig,
+          route: 'config',
+          icon: Icons.settings_applications_outlined,
+          text: l10n.homeMenuConfig,
+          screen: const Text('Menu'),
+          description: l10n.homeMenuConfigDesc));
+    }
+
+    return menus;
+  }
 
   //Initial route
   static const initialRoute = 'check';

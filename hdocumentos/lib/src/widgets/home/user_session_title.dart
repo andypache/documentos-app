@@ -33,10 +33,11 @@ class UserSessionTitle extends StatelessWidget {
                 height: avatarSize,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white30, width: 1.2),
+                  border: Border.all(
+                      color: AppTheme.white.withOpacity(0.3), width: 1.2),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.12),
+                      color: AppTheme.black.withOpacity(0.12),
                       blurRadius: 4,
                       offset: const Offset(0, 1),
                     ),

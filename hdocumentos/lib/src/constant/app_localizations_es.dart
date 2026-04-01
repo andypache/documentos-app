@@ -405,4 +405,55 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get loginErrGeneral => 'No se pudo iniciar sesión. Intente más tarde';
+
+  @override
+  String get homeMenuBill => 'FACTURAR';
+
+  @override
+  String get homeMenuBillDesc => 'Genere sus facturas para un bien o servicio';
+
+  @override
+  String get homeMenuClient => 'CLIENTES';
+
+  @override
+  String get homeMenuClientDesc => 'Gestione sus clientes, cree, edite o elimine';
+
+  @override
+  String get homeMenuItem => 'PRODUCTOS';
+
+  @override
+  String get homeMenuItemDesc => 'Gestione sus productos, cree, edite o elimine';
+
+  @override
+  String get homeMenuReport => 'REPORTES';
+
+  @override
+  String get homeMenuReportDesc => 'Genere sus facturas en pdf';
+
+  @override
+  String get homeMenuReview => 'REVISIÓN';
+
+  @override
+  String get homeMenuReviewDesc => 'Verifique sus facturas en el SRI';
+
+  @override
+  String get homeMenuConfig => 'CONFIGURACIÓN';
+
+  @override
+  String get homeMenuConfigDesc => 'Configure su empresa, cambie su imagen y firma electrónica';
+
+  @override
+  String get homeSalesTitle => 'Mis Ventas';
+
+  @override
+  String get navBill => 'Factura';
+
+  @override
+  String get navReports => 'Reportes';
+
+  @override
+  String get navConfig => 'Configurar';
+
+  @override
+  String get navLogout => 'Salir';
 }

@@ -6,41 +6,59 @@ import 'package:hdocumentos/src/service/service.dart';
 /// Estado de la inicialización de la app
 enum AppInitStatus { idle, loading, ready, error }
 
-/// Responsabilidad: cargar los datos globales de la sesión (catálogos,
-/// parámetros del sistema) una única vez tras el login.
-/// Expone [catalogs] y [status] para que cualquier widget descendiente
-/// pueda acceder a los datos sin volver a solicitarlos al backend.
+/// Responsabilidad: cargar catálogos y datos de empresa una vez por sesión.
+///
+/// - [catalogs]: catálogos del sistema (tipos de documento, impuestos, etc.)
+/// - [company]: datos de la compañía configurada. Puede ser null si aún no
+///   está configurada (respuesta 404 o error).
+/// - [hasCompany]: true cuando [company] se cargó con éxito (HTTP 200).
+///   Controla la visibilidad del menú "Configuración" y el botón del BottomNav.
 class AppInitProvider extends ChangeNotifier {
   final CompanyService _companyService = CompanyService();
 
   AppInitStatus _status = AppInitStatus.idle;
   String _errorMessage = '';
   CatalogModelList? _catalogs;
+  CompanyModel? _company;
+  bool _hasCompany = false;
 
-  // ─── Getters ────────────────────────────────────────────────────────────────
+  // ─── Getters ───────────────────────────────────────────────────────────────
 
   AppInitStatus get status => _status;
   String get errorMessage => _errorMessage;
   CatalogModelList? get catalogs => _catalogs;
+  CompanyModel? get company => _company;
+
+  /// true → empresa ya configurada → mostrar botón config en BottomNav,
+  ///         ocultar tarjeta "CONFIGURACIÓN" del swiper.
+  /// false → empresa no configurada → mostrar tarjeta config en swiper,
+  ///          ocultar botón config en BottomNav.
+  bool get hasCompany => _hasCompany;
 
   bool get isLoading => _status == AppInitStatus.loading;
   bool get isReady => _status == AppInitStatus.ready;
   bool get hasError => _status == AppInitStatus.error;
 
-  // ─── Inicialización ─────────────────────────────────────────────────────────
+  // ─── Inicialización ────────────────────────────────────────────────────────
 
-  /// Carga todos los datos globales necesarios para la sesión.
-  /// Debe llamarse una sola vez al montar [HomeScreen].
+  /// Llama primero a [getCatalogs] y luego a [getCompany].
+  /// Debe invocarse una sola vez al montar [HomeScreen].
+  ///
+  /// IMPORTANTE: capturamos [l10n] ANTES de cualquier await para evitar
+  /// el problema de locale incorrecto cuando el contexto ya cambió.
   Future<void> init(BuildContext context) async {
     if (_status == AppInitStatus.ready || _status == AppInitStatus.loading) {
       return;
     }
-
     _setStatus(AppInitStatus.loading);
 
+    // Capturar l10n antes del primer await — soluciona el bug de idioma
+    final l10n = AppLocalizations.of(context);
+
     try {
-      await _loadCatalogs(context);
+      await _loadCatalogs(context, l10n);
       if (!context.mounted) return;
+      await _loadCompany(context);
       _setStatus(AppInitStatus.ready);
     } catch (e) {
       _errorMessage = e.toString();
@@ -54,19 +72,20 @@ class AppInitProvider extends ChangeNotifier {
     await init(context);
   }
 
-  /// Limpia el estado de la sesión. Llamar en logout para que la próxima
-  /// sesión recargue los catálogos desde cero.
+  /// Limpia el estado de la sesión (usar en logout).
   void reset() {
     _status = AppInitStatus.idle;
     _catalogs = null;
+    _company = null;
+    _hasCompany = false;
     _errorMessage = '';
     notifyListeners();
   }
 
-  // ─── Carga de datos ─────────────────────────────────────────────────────────
+  // ─── Carga de datos ────────────────────────────────────────────────────────
 
-  Future<void> _loadCatalogs(BuildContext context) async {
-    final l10n = AppLocalizations.of(context);
+  Future<void> _loadCatalogs(
+      BuildContext context, AppLocalizations l10n) async {
     final result = await _companyService.getCatalogs(context);
     if (result == null) {
       throw Exception(l10n.initApplicationError);
@@ -74,7 +93,15 @@ class AppInitProvider extends ChangeNotifier {
     _catalogs = result;
   }
 
-  // ─── Helpers ────────────────────────────────────────────────────────────────
+  /// Carga la empresa por defecto. No lanza excepción si no existe (404):
+  /// en ese caso [_hasCompany] queda en false y el flujo continúa normal.
+  Future<void> _loadCompany(BuildContext context) async {
+    final result = await _companyService.getCompany(context);
+    _company = result;
+    _hasCompany = result != null;
+  }
+
+  // ─── Helpers ───────────────────────────────────────────────────────────────
 
   void _setStatus(AppInitStatus status) {
     _status = status;
