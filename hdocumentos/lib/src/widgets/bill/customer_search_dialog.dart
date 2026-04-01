@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
+import 'package:hdocumentos/src/widgets/common/loading_widget.dart';
 
 /// Diálogo para buscar y seleccionar un cliente
 class CustomerSearchDialog extends StatefulWidget {
@@ -315,9 +316,7 @@ class _CustomerSearchDialogState extends State<CustomerSearchDialog> {
     }
 
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(color: AppTheme.primaryButton),
-      );
+      return const ContentLoadingWidget();
     }
 
     if (_displayedCustomers.isEmpty) {

@@ -113,15 +113,14 @@ class _BillScreenState extends State<BillScreen> {
           onWillPop: () async => false,
           child: const Center(
             child: Card(
+              color: AppTheme.secondary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
               child: Padding(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 16),
-                    Text('Guardando factura...'),
-                  ],
+                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 28),
+                child: ContentLoadingWidget(
+                  padding: EdgeInsets.zero,
                 ),
               ),
             ),

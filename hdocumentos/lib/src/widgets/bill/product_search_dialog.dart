@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
+import 'package:hdocumentos/src/widgets/common/loading_widget.dart';
 
 /// Diálogo para buscar y seleccionar productos
 class ProductSearchDialog extends StatefulWidget {
@@ -383,9 +384,7 @@ class _ProductSearchDialogState extends State<ProductSearchDialog> {
     }
 
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(color: AppTheme.primaryButton),
-      );
+      return const ContentLoadingWidget();
     }
 
     if (_displayedItems.isEmpty) {

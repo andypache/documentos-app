@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/provider/form/customer_form_provider.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
@@ -264,16 +265,11 @@ class _NavigationButtons extends StatelessWidget {
                 ? null
                 : () => _handleSaveCustomer(context, customerForm),
             icon: customerForm.isLoading
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2,
-                    ),
-                  )
+                ? const ButtonLoadingIndicator()
                 : const Icon(Icons.save),
-            label: Text(customerForm.isLoading ? 'Guardando...' : 'Guardar'),
+            label: Text(customerForm.isLoading
+                ? AppLocalizations.of(context).btnSaving
+                : AppLocalizations.of(context).btnSave),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.primaryButton,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),

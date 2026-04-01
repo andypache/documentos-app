@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
+import 'package:hdocumentos/src/widgets/common/loading_widget.dart';
 
 /// Widget para seleccionar el método de pago
 class PaymentMethodWidget extends StatelessWidget {
@@ -77,14 +78,8 @@ class PaymentMethodWidget extends StatelessWidget {
   }
 
   Widget _buildLoadingState() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: const Center(
-        child: CircularProgressIndicator(
-          color: AppTheme.primaryButton,
-          strokeWidth: 2,
-        ),
-      ),
+    return const ContentLoadingWidget(
+      padding: EdgeInsets.symmetric(vertical: 16),
     );
   }
 

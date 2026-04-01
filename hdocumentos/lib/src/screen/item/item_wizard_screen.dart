@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/provider/form/item_form_provider.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
@@ -287,18 +288,13 @@ class _WizardNavigationButtons extends StatelessWidget {
                 ? null
                 : () => _onSaveItem(context, itemForm),
             icon: itemForm.isLoading
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2,
-                    ),
-                  )
+                ? const ButtonLoadingIndicator()
                 : const Icon(Icons.save),
-            label: Text(itemForm.isLoading ? 'Guardando...' : 'Guardar'),
+            label: Text(itemForm.isLoading
+                ? AppLocalizations.of(context).btnSaving
+                : AppLocalizations.of(context).btnSave),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
+              backgroundColor: AppTheme.actionSave,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
             ),
           ),

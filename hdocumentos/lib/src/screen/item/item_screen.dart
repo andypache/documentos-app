@@ -255,12 +255,7 @@ class _ItemListSection extends StatelessWidget {
 
     // Cargando
     if (provider.isLoading) {
-      return Padding(
-        padding: EdgeInsets.all(size.height * 0.06),
-        child: const Center(
-          child: CircularProgressIndicator(color: AppTheme.primaryButton),
-        ),
-      );
+      return const ContentLoadingWidget();
     }
 
     // Sin resultados

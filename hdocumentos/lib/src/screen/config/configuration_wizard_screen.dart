@@ -61,12 +61,13 @@ class _ConfigurationWizardScreenState extends State<ConfigurationWizardScreen> {
     switch (_status) {
       case _LoadStatus.loading:
         return const Scaffold(
-          backgroundColor: Colors.transparent,
+          backgroundColor: AppTheme.transparent,
           body: Stack(
             children: [
               BrackgroundWidget(),
-              Center(
-                child: CircularProgressIndicator(color: Colors.white),
+              AppLoadingWidget(
+                overlay: true,
+                color: AppTheme.white,
               ),
             ],
           ),
@@ -461,11 +462,8 @@ class _CompanyNavigationButtons extends StatelessWidget {
                               ? null
                               : () => _handleSave(context, provider),
                           icon: busy
-                              ? SizedBox(
-                                  width: size.width * 0.045,
-                                  height: size.width * 0.045,
-                                  child: const CircularProgressIndicator(
-                                      strokeWidth: 2, color: Colors.white),
+                              ? ButtonLoadingIndicator(
+                                  size: size.width * 0.045,
                                 )
                               : Icon(Icons.save_rounded,
                                   size: size.width * 0.045),
@@ -476,7 +474,7 @@ class _CompanyNavigationButtons extends StatelessWidget {
                                 fontWeight: FontWeight.bold),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green.shade600,
+                            backgroundColor: AppTheme.actionSave,
                             padding: EdgeInsets.symmetric(
                               horizontal: size.width * 0.05,
                               vertical: size.height * 0.012,
@@ -498,11 +496,8 @@ class _CompanyNavigationButtons extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: busy ? null : () => provider.saveStep(context),
                 icon: provider.isSavingStep
-                    ? SizedBox(
-                        width: size.width * 0.042,
-                        height: size.width * 0.042,
-                        child: const CircularProgressIndicator(
-                            strokeWidth: 2, color: Colors.white),
+                    ? ButtonLoadingIndicator(
+                        size: size.width * 0.042,
                       )
                     : Icon(Icons.save_outlined, size: size.width * 0.042),
                 label: Text(
@@ -512,7 +507,7 @@ class _CompanyNavigationButtons extends StatelessWidget {
                       fontWeight: FontWeight.bold),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal.shade600,
+                  backgroundColor: AppTheme.actionSaveDark,
                   padding: EdgeInsets.symmetric(vertical: size.height * 0.013),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),

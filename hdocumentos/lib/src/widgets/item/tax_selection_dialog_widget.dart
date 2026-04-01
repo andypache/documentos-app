@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/model/item/item_tax_model.dart';
 import 'package:hdocumentos/src/model/item/system_parameter_model.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
+import 'package:hdocumentos/src/widgets/common/loading_widget.dart';
 
 ///Diálogo para seleccionar impuestos
 class TaxSelectionDialogWidget extends StatefulWidget {
@@ -275,11 +276,7 @@ class _TaxSelectionDialogWidgetState extends State<TaxSelectionDialogWidget> {
             // Content
             Expanded(
               child: _isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(
-                        color: AppTheme.primaryButton,
-                      ),
-                    )
+                  ? const ContentLoadingWidget()
                   : ListView(
                       padding: const EdgeInsets.all(20),
                       children: groupedTaxes.entries.map((entry) {

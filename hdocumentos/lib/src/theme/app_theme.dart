@@ -33,6 +33,11 @@ class AppTheme {
   static const Color notificationWarningBg = Color(0xFF332600);
   static const Color notificationInfoBg = Color(0xFF0D2137);
 
+  // Colores de acciones empresariales
+  static const Color actionSave = Color(0xFF388E3C); // verde guardar
+  static const Color actionSaveDark = Color(0xFF00695C); // teal guardar paso
+  static const Color actionDanger = Color(0xFFC62828); // rojo peligro/logout
+
   static const Color primaryGradient = Color.fromRGBO(236, 98, 188, 1);
   static const Color secondaryGradient = Color.fromRGBO(251, 142, 172, 1);
   static const Color whiteGradient = Color.fromRGBO(255, 255, 255, 0.1);

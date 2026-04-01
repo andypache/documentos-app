@@ -57,18 +57,10 @@ class _LoadingOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const CircularProgressIndicator(color: Colors.white),
-          const SizedBox(height: 16),
-          Text(
-            l10n.loading,
-            style: const TextStyle(color: Colors.white, fontSize: 14),
-          ),
-        ],
-      ),
+    return AppLoadingWidget(
+      label: l10n.loading,
+      overlay: true,
+      color: AppTheme.white,
     );
   }
 }
@@ -124,7 +116,7 @@ class _ErrorOverlay extends StatelessWidget {
                   icon: const Icon(Icons.logout_rounded),
                   label: Text(l10n.btnLogout),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red.shade700,
+                    backgroundColor: AppTheme.actionDanger,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                   ),
