@@ -47,18 +47,20 @@ class BottomNavigationWidget extends StatelessWidget {
     final initProvider = context.watch<AppInitProvider>();
     final hasCompany = initProvider.hasCompany;
 
-    // Índices calculados dinámicamente según presencia del botón Configurar
-    // Factura=0 | Actualizar=1 | [Config=2] | Salir=2|3
-    const syncIndex = 1;
+    // ─── Con company:    bill(0) | refresh(1) | config(2) | logout(3)
+    // ─── Sin company:    refresh(0) | logout(1)
+    final billIndex = hasCompany ? 0 : -1;
+    final syncIndex = hasCompany ? 1 : 0;
     final configIndex = hasCompany ? 2 : -1;
-    final logoutIndex = hasCompany ? 3 : 2;
+    final logoutIndex = hasCompany ? 3 : 1;
 
     // Construcción dinámica de ítems
     final items = <BottomNavigationBarItem>[
-      BottomNavigationBarItem(
-        icon: const Icon(Icons.receipt_long_outlined),
-        label: l10n.navBill,
-      ),
+      if (hasCompany)
+        BottomNavigationBarItem(
+          icon: const Icon(Icons.receipt_long_outlined),
+          label: l10n.navBill,
+        ),
       BottomNavigationBarItem(
         icon: const Icon(Icons.sync_rounded),
         label: l10n.reloadDialogTitle,
@@ -86,8 +88,9 @@ class BottomNavigationWidget extends StatelessWidget {
           Navigator.pushNamed(context, 'config');
         } else if (index == syncIndex) {
           await _onReloadPressed(context);
+        } else if (index == billIndex) {
+          Navigator.pushNamed(context, 'bill');
         }
-        // índice 0 → factura: pendiente de implementar
       },
       type: BottomNavigationBarType.fixed,
       showSelectedLabels: false,

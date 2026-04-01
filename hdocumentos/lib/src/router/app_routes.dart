@@ -16,7 +16,24 @@ class AppRoutes {
     AppLocalizations l10n, {
     required bool hasCompany,
   }) {
-    final menus = [
+    // Sin company → solo CONFIGURACIÓN en el swiper para que el usuario
+    // pueda configurar su empresa antes de usar las demás funciones.
+    if (!hasCompany) {
+      return [
+        MenuOptionModel(
+            id: '6',
+            color: AppTheme.menuConfig,
+            route: 'config',
+            icon: Icons.settings_applications_outlined,
+            text: l10n.homeMenuConfig,
+            screen: const Text('Menu'),
+            description: l10n.homeMenuConfigDesc),
+      ];
+    }
+
+    // Con company → todas las opciones excepto CONFIGURACIÓN
+    // (config queda en el BottomNavigationBar).
+    return [
       MenuOptionModel(
           id: '1',
           color: AppTheme.menuBill,
@@ -58,20 +75,6 @@ class AppRoutes {
           screen: const Text('Menu'),
           description: l10n.homeMenuReviewDesc),
     ];
-
-    // Solo mostrar CONFIGURACIÓN en el swiper si la empresa NO está configurada
-    if (!hasCompany) {
-      menus.add(MenuOptionModel(
-          id: '6',
-          color: AppTheme.menuConfig,
-          route: 'config',
-          icon: Icons.settings_applications_outlined,
-          text: l10n.homeMenuConfig,
-          screen: const Text('Menu'),
-          description: l10n.homeMenuConfigDesc));
-    }
-
-    return menus;
   }
 
   //Initial route
