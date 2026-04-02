@@ -5,6 +5,7 @@ import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/config/company_model.dart';
 import 'package:hdocumentos/src/provider/form/company_form_provider.dart';
 import 'package:hdocumentos/src/service/company_service.dart';
+import 'package:hdocumentos/src/service/notification_service.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
@@ -56,8 +57,6 @@ class _ConfigurationWizardScreenState extends State<ConfigurationWizardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     switch (_status) {
       case _LoadStatus.loading:
         return const Scaffold(
@@ -80,40 +79,44 @@ class _ConfigurationWizardScreenState extends State<ConfigurationWizardScreen> {
             children: [
               const BrackgroundWidget(),
               Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.cloud_off_rounded,
-                        color: Colors.white54, size: size.width * 0.15),
-                    SizedBox(height: size.height * 0.02),
-                    Text(
-                      'No se pudo cargar la información',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: size.width * 0.04,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: size.height * 0.015),
-                    ElevatedButton.icon(
-                      onPressed: _load,
-                      icon: const Icon(Icons.refresh_rounded),
-                      label: const Text('Reintentar'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryButton,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                child: Builder(builder: (context) {
+                  final l10n = AppLocalizations.of(context);
+                  final size = MediaQuery.of(context).size;
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.cloud_off_rounded,
+                          color: Colors.white54, size: size.width * 0.15),
+                      SizedBox(height: size.height * 0.02),
+                      Text(
+                        l10n.couldNotLoadInfo,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: size.width * 0.04,
+                            fontWeight: FontWeight.bold),
                       ),
-                    ),
-                    SizedBox(height: size.height * 0.01),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text('Cancelar',
-                          style: TextStyle(
-                              color: Colors.white54,
-                              fontSize: size.width * 0.034)),
-                    ),
-                  ],
-                ),
+                      SizedBox(height: size.height * 0.015),
+                      ElevatedButton.icon(
+                        onPressed: _load,
+                        icon: const Icon(Icons.refresh_rounded),
+                        label: Text(l10n.btnRetry),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.primaryButton,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.01),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(l10n.btnCancel,
+                            style: TextStyle(
+                                color: Colors.white54,
+                                fontSize: size.width * 0.034)),
+                      ),
+                    ],
+                  );
+                }),
               ),
             ],
           ),
@@ -204,7 +207,8 @@ class _ConfigurationWizardBody extends StatelessWidget {
                     child: const _CompanyWizardContent(),
                   ),
                 ),
-                _CompanyNavigationButtons(isEditing: isEditing),
+                _CompanyNavigationButtons(
+                    isEditing: isEditing, service: CompanyService()),
               ],
             ),
           ),
@@ -354,8 +358,11 @@ class _CompanyWizardContent extends StatelessWidget {
 
 class _CompanyNavigationButtons extends StatelessWidget {
   final bool isEditing;
-  const _CompanyNavigationButtons({Key? key, required this.isEditing})
-      : super(key: key);
+  final CompanyService _service;
+  const _CompanyNavigationButtons(
+      {Key? key, required this.isEditing, required CompanyService service})
+      : _service = service,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -431,12 +438,8 @@ class _CompanyNavigationButtons extends StatelessWidget {
                           ? null
                           : () {
                               if (!provider.nextStep()) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
-                                  content: Text(l10n.msgRequiredFields),
-                                  backgroundColor: Colors.red.shade700,
-                                  behavior: SnackBarBehavior.floating,
-                                ));
+                                NotificationService.showSnackbarError(
+                                    l10n.msgRequiredFields);
                               }
                             },
                       icon: Icon(Icons.arrow_forward_rounded,
@@ -524,40 +527,27 @@ class _CompanyNavigationButtons extends StatelessWidget {
       BuildContext context, CompanyFormProvider provider) async {
     final l10n = AppLocalizations.of(context);
     if (!provider.isValidCurrentStep()) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(l10n.msgRequiredFields),
-        backgroundColor: Colors.red.shade700,
-        behavior: SnackBarBehavior.floating,
-      ));
+      NotificationService.showSnackbarError(l10n.msgRequiredFields);
       return;
     }
 
     provider.isLoading = true;
 
     try {
-      final company = provider.buildCompanyModel();
-
-      // TODO: Enviar al backend via service
-      await Future.delayed(const Duration(seconds: 1));
-
-      provider.isLoading = false;
+      final company = await _service
+          .createCompany(context, provider.buildCompanyModel())
+          .timeout(const Duration(seconds: 20000));
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(l10n.companySavedSuccess(company.businessName ?? '')),
-          backgroundColor: Colors.green.shade600,
-          behavior: SnackBarBehavior.floating,
-        ));
+        provider.isLoading = false;
+        NotificationService.showSnackbarSuccess(
+            l10n.companySavedSuccess(company.businessName ?? ''));
         Navigator.pop(context, company);
       }
     } catch (e) {
-      provider.isLoading = false;
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(l10n.saveError(e.toString())),
-          backgroundColor: Colors.red.shade700,
-          behavior: SnackBarBehavior.floating,
-        ));
+        provider.isLoading = false;
+        NotificationService.showSnackbarError(l10n.saveError(e.toString()));
       }
     }
   }

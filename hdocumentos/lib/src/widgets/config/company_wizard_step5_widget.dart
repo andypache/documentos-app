@@ -24,6 +24,9 @@ class _CompanyWizardStep5WidgetState extends State<CompanyWizardStep5Widget> {
   CompanyEmissionPointModel? _editingPoint;
   bool _isNewPoint = false;
 
+  /// Índice en la lista del punto que se está editando (-1 si es nuevo)
+  int _editingIndex = -1;
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +38,7 @@ class _CompanyWizardStep5WidgetState extends State<CompanyWizardStep5Widget> {
   void _openNewForm() {
     setState(() {
       _isNewPoint = true;
+      _editingIndex = -1;
       _editingPoint = const CompanyEmissionPointModel(
         isActive: true,
         currentSequential: 1,
@@ -42,9 +46,10 @@ class _CompanyWizardStep5WidgetState extends State<CompanyWizardStep5Widget> {
     });
   }
 
-  void _openEditForm(CompanyEmissionPointModel point) {
+  void _openEditForm(CompanyEmissionPointModel point, int index) {
     setState(() {
       _isNewPoint = false;
+      _editingIndex = index;
       _editingPoint = point;
     });
   }
@@ -53,12 +58,13 @@ class _CompanyWizardStep5WidgetState extends State<CompanyWizardStep5Widget> {
     setState(() {
       _editingPoint = null;
       _isNewPoint = false;
+      _editingIndex = -1;
     });
   }
 
   void _savePoint(BuildContext context, CompanyEmissionPointModel point) {
     final provider = context.read<CompanyFormProvider>();
-    provider.upsertEmissionPoint(point);
+    provider.upsertEmissionPoint(point, editingIndex: _editingIndex);
     if (provider.emissionPoints.length == 1 ||
         provider.selectedEmissionPointIndex == null) {
       provider.selectActiveEmissionPoint(point);
@@ -108,6 +114,11 @@ class _CompanyWizardStep5WidgetState extends State<CompanyWizardStep5Widget> {
             .toList() ??
         [];
 
+    final submitted = provider.step5Submitted;
+    final hasPoints = provider.emissionPoints.isNotEmpty;
+    final hasActivePoint = provider.emissionPoints.any((p) => p.isActive);
+    final showError = submitted && (!hasPoints || !hasActivePoint);
+
     return Form(
       key: provider.formKeyStep5,
       child: Column(
@@ -143,6 +154,28 @@ class _CompanyWizardStep5WidgetState extends State<CompanyWizardStep5Widget> {
                 ),
               ),
             ),
+          // Error: sin puntos de emisión o sin selección activa
+          if (showError && _editingPoint == null)
+            Padding(
+              padding: EdgeInsets.only(
+                  top: size.height * 0.008, left: size.width * 0.02),
+              child: Row(
+                children: [
+                  const Icon(Icons.error_outline,
+                      color: Colors.redAccent, size: 14),
+                  SizedBox(width: size.width * 0.015),
+                  Text(
+                    !hasPoints
+                        ? l10n.emissionPointRequired
+                        : l10n.emissionPointSelectRequired,
+                    style: TextStyle(
+                      color: Colors.redAccent,
+                      fontSize: size.width * 0.03,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           if (_editingPoint == null) ...[
             SizedBox(height: size.height * 0.015),
             if (provider.emissionPoints.isEmpty)
@@ -160,7 +193,7 @@ class _CompanyWizardStep5WidgetState extends State<CompanyWizardStep5Widget> {
                           size: size,
                           onSelect: () =>
                               provider.selectActiveEmissionPoint(entry.value),
-                          onEdit: () => _openEditForm(entry.value),
+                          onEdit: () => _openEditForm(entry.value, entry.key),
                           onDelete: () =>
                               _deletePoint(context, entry.value, entry.key),
                         ))

@@ -71,7 +71,7 @@ abstract class FieldValidators {
   static FormFieldValidator<String> alphanumeric(AppLocalizations l10n) {
     return (v) {
       if (v == null || v.trim().isEmpty) return null;
-      return RegExp(r'^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ]+$').hasMatch(v.trim())
+      return RegExp(r'^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ .,]+$').hasMatch(v.trim())
           ? null
           : l10n.validatorAlphanumeric;
     };

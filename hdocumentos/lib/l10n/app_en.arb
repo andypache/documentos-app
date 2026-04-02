@@ -478,5 +478,20 @@
   "@reloadDialogCancel": { "description": "Cancel reload button" },
 
   "reloadSuccess": "Parameters updated successfully",
-  "@reloadSuccess": { "description": "Success message after reload" }
+  "@reloadSuccess": { "description": "Success message after reload" },
+
+  "emissionPointRequired": "You must add at least one emission point to continue",
+  "@emissionPointRequired": { "description": "Error when no emission points exist in step 5" },
+
+  "emissionPointSelectRequired": "You must have at least one active emission point to continue",
+  "@emissionPointSelectRequired": { "description": "Error when no active emission point exists in step 5" },
+
+  "companyDataProcessError": "Error processing company data",
+  "@companyDataProcessError": { "description": "Error processing company response from API" },
+
+  "companyCreatedInvalidFormat": "Invalid data format for created company",
+  "@companyCreatedInvalidFormat": { "description": "Error when API returns invalid format when creating company" },
+
+  "couldNotLoadInfo": "Could not load information",
+  "@couldNotLoadInfo": { "description": "Generic error when information cannot be loaded from API" }
 }

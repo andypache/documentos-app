@@ -12,6 +12,7 @@ String apiCompany =
     '${Environment.protocol}://${Environment.host}${Environment.portCompany}/${Environment.prefixCompany}${Environment.baseUrl}/company-service/';
 String apiDataCompany = "${apiCompany}company/by-email";
 String apiCompanyDefault = "${apiCompany}companies/company-user/default";
+String apiCompanyCreate = "${apiCompany}companies/create";
 String apiPrintingLogoRegisterCompany =
     "${apiCompany}company/printing-logo/register";
 

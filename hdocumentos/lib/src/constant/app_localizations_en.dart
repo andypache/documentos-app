@@ -516,4 +516,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reloadSuccess => 'Parameters updated successfully';
+
+  @override
+  String get emissionPointRequired => 'You must add at least one emission point to continue';
+
+  @override
+  String get emissionPointSelectRequired => 'You must have at least one active emission point to continue';
+
+  @override
+  String get companyDataProcessError => 'Error processing company data';
+
+  @override
+  String get companyCreatedInvalidFormat => 'Invalid data format for created company';
+
+  @override
+  String get couldNotLoadInfo => 'Could not load information';
 }

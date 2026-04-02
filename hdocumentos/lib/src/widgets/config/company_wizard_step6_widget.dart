@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/common/catalog_model.dart';
+import 'package:hdocumentos/src/model/config/company_model.dart';
 import 'package:hdocumentos/src/provider/app_init_provider.dart';
 import 'package:hdocumentos/src/provider/form/company_form_provider.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
@@ -10,13 +11,18 @@ import 'package:provider/provider.dart';
 // ─── Grupos de impuesto por defecto (fallback si no hay catálogos) ────────────
 
 List<CatalogModel> get _defaultTaxGroups => [
-      CatalogModel(code: '1', description: 'IVA — Impuesto al Valor Agregado'),
       CatalogModel(
-          code: '2', description: 'ICE — Impuesto a los Consumos Especiales'),
+          code: 'TAX-GROUP-IVA',
+          description: 'IVA — Impuesto al Valor Agregado'),
       CatalogModel(
-          code: '3', description: 'IRBPNR — Imp. Redimible Botellas Plásticas'),
+          code: 'TAX-GROUP-ICE',
+          description: 'ICE — Impuesto a los Consumos Especiales'),
       CatalogModel(
-          code: '4', description: 'ISD — Impuesto a la Salida de Divisas'),
+          code: 'TAX-GROUP-IRBPNR',
+          description: 'IRBPNR — Imp. Redimible Botellas Plásticas'),
+      CatalogModel(
+          code: 'TAX-GROUP-ISD',
+          description: 'ISD — Impuesto a la Salida de Divisas'),
     ];
 
 // ─── Guía de ejemplos ─────────────────────────────────────────────────────────
@@ -37,7 +43,15 @@ const List<_TaxExample> _examples = [
 
 // ─── Widget principal ─────────────────────────────────────────────────────────
 
-/// Paso 6: Selección de grupos de impuesto habilitados para la empresa
+/// Paso 6: Selección de grupos de impuesto habilitados para la empresa.
+///
+/// Los grupos disponibles vienen de [AppInitProvider.catalogs.systemParameters]
+/// filtrando los que contengan "TAX-GROUP-" en su [CatalogModel.code].
+///
+/// El estado seleccionado se mapea sobre [CompanyModel.systemParameters]:
+/// un catálogo TAX-GROUP está "seleccionado" cuando existe un
+/// [CompanySystemParameterRefModel] cuyo [systemParameterId] == [CatalogModel.code].
+/// Al marcar/desmarcar se agrega/elimina dicho elemento de la lista.
 class CompanyWizardStep6Widget extends StatelessWidget {
   const CompanyWizardStep6Widget({Key? key}) : super(key: key);
 
@@ -48,6 +62,7 @@ class CompanyWizardStep6Widget extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final catalogs = context.watch<AppInitProvider>().catalogs;
 
+    // Grupos TAX-GROUP disponibles desde catálogos, con fallback
     final taxGroups = (catalogs?.systemParameters.isNotEmpty ?? false)
         ? catalogs!.systemParameters
             .where((e) =>
@@ -56,6 +71,16 @@ class CompanyWizardStep6Widget extends StatelessWidget {
                 true)
             .toList()
         : _defaultTaxGroups;
+
+    // IDs seleccionados = systemParameterId de los system_parameters de la empresa
+    // que coincidan con algún código TAX-GROUP del catálogo
+    final taxGroupCodes = taxGroups.map((e) => e.code).toSet();
+    final selectedCodes = provider.company.systemParameters
+        .where((sp) =>
+            sp.systemParameterId != null &&
+            taxGroupCodes.contains(sp.systemParameterId))
+        .map((sp) => sp.systemParameterId!)
+        .toList();
 
     return Form(
       key: provider.formKeyStep6,
@@ -70,10 +95,28 @@ class CompanyWizardStep6Widget extends StatelessWidget {
           SizedBox(height: size.height * 0.015),
           _TaxGroupSelector(
             taxGroups: taxGroups,
-            selectedCodes: provider.company.taxGroupCodes,
+            selectedCodes: selectedCodes,
             size: size,
             onChanged: (codes) {
-              provider.company.taxGroupCodes = codes;
+              // Conserva los system_parameters que NO son TAX-GROUP
+              final nonTaxParams = provider.company.systemParameters
+                  .where((sp) =>
+                      sp.systemParameterId == null ||
+                      !taxGroupCodes.contains(sp.systemParameterId))
+                  .toList();
+
+              // Agrega un CompanySystemParameterRefModel por cada código seleccionado
+              final taxParams = codes
+                  .map((code) => CompanySystemParameterRefModel(
+                        systemParameterId: code,
+                        state: 'A',
+                      ))
+                  .toList();
+
+              provider.company.systemParameters = [
+                ...nonTaxParams,
+                ...taxParams,
+              ];
             },
           ),
           SizedBox(height: size.height * 0.025),
@@ -234,7 +277,7 @@ class _TaxGroupTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Text(
-                tax.code,
+                tax.code.substring(tax.code.length - 6),
                 style: TextStyle(
                   color: isSelected
                       ? AppTheme.primaryButton

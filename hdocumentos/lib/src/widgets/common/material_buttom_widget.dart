@@ -22,20 +22,25 @@ class MaterialButtonWidget extends StatelessWidget {
   //Create material button widget
   @override
   Widget build(BuildContext context) {
-    Row rowIcon;
-    if (icon != null) {
-      rowIcon = Row(mainAxisSize: MainAxisSize.min, children: [
-        Icon(icon, size: 24.0, color: AppTheme.white),
-        const SizedBox(width: 5),
-        Text(textButton ?? 'Submit',
-            style: const TextStyle(color: AppTheme.white))
-      ]);
-    } else {
-      rowIcon = Row(mainAxisSize: MainAxisSize.min, children: [
-        Text(textButton ?? 'Submit',
-            style: const TextStyle(color: AppTheme.white))
-      ]);
-    }
+    final Widget label = icon != null
+        ? Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 24.0, color: AppTheme.white),
+              const SizedBox(width: 5),
+              Flexible(
+                child: Text(
+                  textButton ?? 'Submit',
+                  style: const TextStyle(color: AppTheme.white),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          )
+        : Text(textButton ?? 'Submit',
+            style: const TextStyle(color: AppTheme.white),
+            overflow: TextOverflow.ellipsis);
 
     return MaterialButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -44,8 +49,9 @@ class MaterialButtonWidget extends StatelessWidget {
         elevation: 0,
         color: type ?? AppTheme.primaryButton,
         onPressed: onPressed,
-        child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-            child: rowIcon));
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          child: label,
+        ));
   }
 }

@@ -141,9 +141,28 @@ class CompanyService extends ChangeNotifier {
       return CompanyModel.fromJson(data);
     } catch (_) {
       NotificationService.showSnackbarError(
-          NotificationService.l10n?.invalidDataFormatForCatalogs ??
+          NotificationService.l10n?.companyDataProcessError ??
               'Error al procesar los datos de la compañía');
       return null;
     }
+  }
+
+  Future<CompanyModel> createCompany(
+      BuildContext context, CompanyModel companyModel) {
+    return postFetch(
+      context: context,
+      url: apiCompanyCreate,
+      body: companyModel.toJson(),
+    ).then((response) {
+      if (response.statusHttp != 201) {
+        throw Exception(response.message);
+      }
+      final data = response.createDataResponse().response;
+      if (data is! Map<String, dynamic>) {
+        throw Exception(NotificationService.l10n?.companyCreatedInvalidFormat ??
+            'Formato de datos inválido para la compañía creada');
+      }
+      return CompanyModel.fromJson(data);
+    });
   }
 }

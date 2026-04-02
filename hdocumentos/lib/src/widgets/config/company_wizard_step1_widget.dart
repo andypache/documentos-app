@@ -121,12 +121,6 @@ class CompanyWizardStep1Widget extends StatelessWidget {
             onChanged: (v) => company.email = v,
           ),
           SizedBox(height: size.height * 0.008),
-          InputSwitchFieldWidget(
-            label: l10n.activeCompany,
-            value: company.state == null || company.state == 'ACTIVE',
-            onChanged: (v) => company.state = v ? 'ACTIVE' : 'INACTIVE',
-          ),
-          SizedBox(height: size.height * 0.025),
           // Resumen del paso
           CompanyWizardStepSummary(
             items: [

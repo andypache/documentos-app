@@ -1082,6 +1082,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Parámetros actualizados correctamente'**
   String get reloadSuccess;
+
+  /// Error cuando no hay puntos de emisión en el paso 5
+  ///
+  /// In es, this message translates to:
+  /// **'Debes agregar al menos un punto de emisión para continuar'**
+  String get emissionPointRequired;
+
+  /// Error cuando no hay ningún punto de emisión activo en el paso 5
+  ///
+  /// In es, this message translates to:
+  /// **'Debes tener al menos un punto de emisión activo para continuar'**
+  String get emissionPointSelectRequired;
+
+  /// Error al procesar la respuesta de la compañía desde el API
+  ///
+  /// In es, this message translates to:
+  /// **'Error al procesar los datos de la compañía'**
+  String get companyDataProcessError;
+
+  /// Error cuando el API devuelve un formato inválido al crear la compañía
+  ///
+  /// In es, this message translates to:
+  /// **'Formato de datos inválido para la compañía creada'**
+  String get companyCreatedInvalidFormat;
+
+  /// Error genérico cuando no se puede cargar la información desde el API
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo cargar la información'**
+  String get couldNotLoadInfo;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

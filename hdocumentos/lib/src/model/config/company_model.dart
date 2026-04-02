@@ -1,20 +1,63 @@
 import 'dart:typed_data';
 
 // ─── Sub-modelos ──────────────────────────────────────────────────────────────
+class CompanyAdditionalInformationModel {
+  final String? id;
+  final String? companyId;
+  final Uint8List? logoImage;
+  final String? website;
+  final double? maxDiscount;
+  final String? itemAddress;
+
+  const CompanyAdditionalInformationModel({
+    this.id,
+    this.companyId,
+    this.logoImage,
+    this.website,
+    this.maxDiscount,
+    this.itemAddress,
+  });
+
+  factory CompanyAdditionalInformationModel.fromJson(
+          Map<String, dynamic> json) =>
+      CompanyAdditionalInformationModel(
+        id: json['id'],
+        companyId: json['company_id'],
+        logoImage: json['logo_image'],
+        website: json['website'],
+        maxDiscount: json['max_discount'] != null
+            ? double.tryParse(json['max_discount'].toString())
+            : null,
+        itemAddress: json['item_address'],
+      );
+
+  Map<String, dynamic> toJson() {
+    final result = <String, dynamic>{};
+    if (id != null) result['id'] = id;
+    if (companyId != null) result['company_id'] = companyId;
+    if (logoImage != null) result['logo_image'] = logoImage;
+    if (website != null) result['website'] = website;
+    if (maxDiscount != null) result['max_discount'] = maxDiscount;
+    if (itemAddress != null) result['item_address'] = itemAddress;
+    return result;
+  }
+}
 
 /// Certificado digital de la empresa
 class CompanyCertificateModel {
   final String? id;
   final String? companyId;
-  final String? certificatePath;
+  final Uint8List? certificate;
   final String? certificateUser;
+  final String? certificatePassword;
   final DateTime? certificateExpirationDate;
 
   const CompanyCertificateModel({
     this.id,
     this.companyId,
-    this.certificatePath,
+    this.certificate,
     this.certificateUser,
+    this.certificatePassword,
     this.certificateExpirationDate,
   });
 
@@ -22,21 +65,29 @@ class CompanyCertificateModel {
       CompanyCertificateModel(
         id: json['id'],
         companyId: json['company_id'],
-        certificatePath: json['certificate_path'],
+        certificate: json['certificate'],
         certificateUser: json['certificate_user'],
+        certificatePassword: json['certificate_password'],
         certificateExpirationDate: json['certificate_expiration_date'] != null
             ? DateTime.tryParse(json['certificate_expiration_date'])
             : null,
       );
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'company_id': companyId,
-        'certificate_path': certificatePath,
-        'certificate_user': certificateUser,
-        'certificate_expiration_date':
-            certificateExpirationDate?.toIso8601String(),
-      };
+  Map<String, dynamic> toJson() {
+    final result = <String, dynamic>{};
+    if (id != null) result['id'] = id;
+    if (companyId != null) result['company_id'] = companyId;
+    if (certificate != null) result['certificate'] = certificate;
+    if (certificateUser != null) result['certificate_user'] = certificateUser;
+    if (certificatePassword != null) {
+      result['certificate_password'] = certificatePassword;
+    }
+    if (certificateExpirationDate != null) {
+      result['certificate_expiration_date'] =
+          certificateExpirationDate!.toIso8601String();
+    }
+    return result;
+  }
 }
 
 /// Tipo de documento habilitado para la empresa
@@ -61,12 +112,57 @@ class CompanyDocumentTypeModel {
         state: json['state'],
       );
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'company_id': companyId,
-        'document_type_id': documentTypeId,
-        'state': state,
-      };
+  Map<String, dynamic> toJson() {
+    final result = <String, dynamic>{};
+    if (id != null) result['id'] = id;
+    if (companyId != null) result['company_id'] = companyId;
+    if (documentTypeId != null) result['document_type_id'] = documentTypeId;
+    if (state != null) result['state'] = state;
+    return result;
+  }
+}
+
+class CompanyEmailConfigurationModel {
+  final String? id;
+  final String? companyId;
+  final String? mailServer;
+  final String? mailPort;
+  final String? mailAddress;
+  final String? mailUser;
+  final String? mailPassword;
+
+  const CompanyEmailConfigurationModel({
+    this.id,
+    this.companyId,
+    this.mailServer,
+    this.mailPort,
+    this.mailAddress,
+    this.mailUser,
+    this.mailPassword,
+  });
+
+  factory CompanyEmailConfigurationModel.fromJson(Map<String, dynamic> json) =>
+      CompanyEmailConfigurationModel(
+        id: json['id'],
+        companyId: json['company_id'],
+        mailServer: json['mail_server'],
+        mailPort: json['mail_port'],
+        mailAddress: json['mail_address'],
+        mailUser: json['mail_user'],
+        mailPassword: json['mail_password'],
+      );
+
+  Map<String, dynamic> toJson() {
+    final result = <String, dynamic>{};
+    if (id != null) result['id'] = id;
+    if (companyId != null) result['company_id'] = companyId;
+    if (mailServer != null) result['mail_server'] = mailServer;
+    if (mailPort != null) result['mail_port'] = mailPort;
+    if (mailAddress != null) result['mail_address'] = mailAddress;
+    if (mailUser != null) result['mail_user'] = mailUser;
+    if (mailPassword != null) result['mail_password'] = mailPassword;
+    return result;
+  }
 }
 
 /// Punto de emisión de la empresa
@@ -103,16 +199,23 @@ class CompanyEmissionPointModel {
         isActive: json['is_active'] ?? true,
       );
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'company_id': companyId,
-        'document_type_id': documentTypeId,
-        'establishment_code': establishmentCode,
-        'emission_point_code': emissionPointCode,
-        'current_sequential': currentSequential,
-        'description': description,
-        'is_active': isActive,
-      };
+  Map<String, dynamic> toJson() {
+    final result = <String, dynamic>{'is_active': isActive};
+    if (id != null) result['id'] = id;
+    if (companyId != null) result['company_id'] = companyId;
+    if (documentTypeId != null) result['document_type_id'] = documentTypeId;
+    if (establishmentCode != null) {
+      result['establishment_code'] = establishmentCode;
+    }
+    if (emissionPointCode != null) {
+      result['emission_point_code'] = emissionPointCode;
+    }
+    if (currentSequential != null) {
+      result['current_sequential'] = currentSequential;
+    }
+    if (description != null) result['description'] = description;
+    return result;
+  }
 
   CompanyEmissionPointModel copyWith({
     String? id,
@@ -161,13 +264,15 @@ class CompanyPaymentMethodModel {
         state: json['state'],
       );
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'company_id': companyId,
-        'payment_method_id': paymentMethodId,
-        'name': name,
-        'state': state,
-      };
+  Map<String, dynamic> toJson() {
+    final result = <String, dynamic>{};
+    if (id != null) result['id'] = id;
+    if (companyId != null) result['company_id'] = companyId;
+    if (paymentMethodId != null) result['payment_method_id'] = paymentMethodId;
+    if (name != null) result['name'] = name;
+    if (state != null) result['state'] = state;
+    return result;
+  }
 }
 
 /// Parámetro de venta habilitado para la empresa
@@ -192,12 +297,14 @@ class CompanySaleParameterModel {
         state: json['state'],
       );
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'company_id': companyId,
-        'sale_parameter_id': saleParameterId,
-        'state': state,
-      };
+  Map<String, dynamic> toJson() {
+    final result = <String, dynamic>{};
+    if (id != null) result['id'] = id;
+    if (companyId != null) result['company_id'] = companyId;
+    if (saleParameterId != null) result['sale_parameter_id'] = saleParameterId;
+    if (state != null) result['state'] = state;
+    return result;
+  }
 }
 
 /// Parámetro de sistema habilitado para la empresa
@@ -222,12 +329,16 @@ class CompanySystemParameterRefModel {
         state: json['state'],
       );
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'company_id': companyId,
-        'system_parameter_id': systemParameterId,
-        'state': state,
-      };
+  Map<String, dynamic> toJson() {
+    final result = <String, dynamic>{};
+    if (id != null) result['id'] = id;
+    if (companyId != null) result['company_id'] = companyId;
+    if (systemParameterId != null) {
+      result['system_parameter_id'] = systemParameterId;
+    }
+    if (state != null) result['state'] = state;
+    return result;
+  }
 }
 
 // ─── Modelo principal ─────────────────────────────────────────────────────────
@@ -238,10 +349,10 @@ enum CompanyState { A, I }
 /// Modelo de datos de la compañía.
 ///
 /// Refleja la respuesta completa del endpoint `companies/default`:
-/// campos planos (id, identification, business_name, …) más listas
-/// anidadas (certificate, document_types, emission_points, …).
+/// campos planos (id, identification, business_name, …) más sub-modelos
+/// anidados (additionalInformation, certificateData, emailConfiguration, …).
 ///
-/// Los campos de edición local (logo, certificateFile, mailPassword, …)
+/// Los campos de edición local (logoPath, certificatePath, mailPassword, …)
 /// se mantienen para el wizard de configuración.
 class CompanyModel {
   // ── Identificadores ────────────────────────────────────────────────────────
@@ -257,17 +368,20 @@ class CompanyModel {
   String? email;
   String? state;
 
-  // ── Logo y sitio web ───────────────────────────────────────────────────────
+  // ── Sub-modelo: información adicional (logo, web, descuento, dirección) ───
+  CompanyAdditionalInformationModel? additionalInformation;
+
+  /// Campos de edición local para el wizard
   Uint8List? logo;
   String? logoPath;
   String? website;
   double? maxDiscount;
   String? itemAddress;
 
-  // ── Certificado (objeto anidado del API) ───────────────────────────────────
+  // ── Sub-modelo: certificado digital ───────────────────────────────────────
   CompanyCertificateModel? certificateData;
 
-  /// Campos de edición local para el wizard (no provienen del API)
+  /// Campos de edición local para el wizard
   Uint8List? certificate;
   String? certificatePath;
   String? certificateUser;
@@ -277,7 +391,10 @@ class CompanyModel {
   /// true si el backend indica que ya tiene certificado cargado
   bool hasCertificate;
 
-  // ── Configuración de correo ────────────────────────────────────────────────
+  // ── Sub-modelo: configuración de correo ───────────────────────────────────
+  CompanyEmailConfigurationModel? emailConfiguration;
+
+  /// Campos de edición local para el wizard
   String? mailServer;
   String? mailPort;
   String? mailAddress;
@@ -304,7 +421,9 @@ class CompanyModel {
   List<String> taxGroupCodes;
 
   CompanyModel({
+    // ── Identificadores ──────────────────────────────────────────────────────
     this.companyId,
+    // ── Datos básicos ─────────────────────────────────────────────────────────
     this.identificationTypeId,
     this.identificationTypeName,
     this.identification,
@@ -313,11 +432,14 @@ class CompanyModel {
     this.phone,
     this.email,
     this.state,
+    // ── Información adicional ─────────────────────────────────────────────────
+    this.additionalInformation,
     this.logo,
     this.logoPath,
     this.website,
     this.maxDiscount,
     this.itemAddress,
+    // ── Certificado ───────────────────────────────────────────────────────────
     this.certificateData,
     this.certificate,
     this.certificatePath,
@@ -325,16 +447,20 @@ class CompanyModel {
     this.certificatePassword,
     this.certificateExpirationDate,
     this.hasCertificate = false,
+    // ── Correo ────────────────────────────────────────────────────────────────
+    this.emailConfiguration,
     this.mailServer,
     this.mailPort,
     this.mailAddress,
     this.mailUser,
     this.mailPassword,
+    // ── Listas anidadas ───────────────────────────────────────────────────────
     this.documentTypes = const [],
     this.emissionPoints = const [],
     this.paymentMethods = const [],
     this.saleParameters = const [],
     this.systemParameters = const [],
+    // ── Campos locales wizard (punto de emisión activo) ───────────────────────
     this.documentTypeId,
     this.documentTypeName,
     this.establishmentCode,
@@ -342,6 +468,7 @@ class CompanyModel {
     this.currentSequential,
     this.description,
     this.isActive,
+    // ── Grupos de impuesto ────────────────────────────────────────────────────
     this.taxGroupCodes = const [],
   });
 
@@ -382,10 +509,6 @@ class CompanyModel {
       );
 
   /// Deserializa la respuesta completa del endpoint `companies/default`.
-  ///
-  /// Mapea tanto los campos planos como las listas anidadas.
-  /// También puebla los campos de edición local con el primer
-  /// emission_point y document_type activos para el wizard.
   factory CompanyModel.fromJson(Map<String, dynamic> json) {
     // ── Listas anidadas ──────────────────────────────────────────────────────
     final docTypes = (json['document_types'] as List<dynamic>? ?? [])
@@ -413,17 +536,24 @@ class CompanyModel {
             CompanySystemParameterRefModel.fromJson(e as Map<String, dynamic>))
         .toList();
 
-    // ── Certificado anidado ──────────────────────────────────────────────────
+    // ── Sub-modelos anidados ─────────────────────────────────────────────────
+    final addInfoJson = json['additional_information'] as Map<String, dynamic>?;
+    final addInfo = addInfoJson != null
+        ? CompanyAdditionalInformationModel.fromJson(addInfoJson)
+        : null;
+
     final certJson = json['certificate'] as Map<String, dynamic>?;
     final certData =
         certJson != null ? CompanyCertificateModel.fromJson(certJson) : null;
 
+    final emailJson = json['email_configuration'] as Map<String, dynamic>?;
+    final emailConfig = emailJson != null
+        ? CompanyEmailConfigurationModel.fromJson(emailJson)
+        : null;
+
     // ── Primer punto de emisión activo (para wizard) ──────────────────────────
     final activePoint = emPoints.isNotEmpty
-        ? emPoints.firstWhere(
-            (p) => p.isActive,
-            orElse: () => emPoints.first,
-          )
+        ? emPoints.firstWhere((p) => p.isActive, orElse: () => emPoints.first)
         : null;
 
     // ── Primer tipo de documento (para wizard) ────────────────────────────────
@@ -438,22 +568,29 @@ class CompanyModel {
       phone: json['phone'],
       email: json['email'],
       state: json['state'],
-      website: json['website'],
-      maxDiscount: json['max_discount'] != null
-          ? double.tryParse(json['max_discount'].toString())
-          : null,
-      itemAddress: json['item_address'],
+      // Información adicional
+      additionalInformation: addInfo,
+      logoPath: addInfo?.id != null ? null : json['logo_path'],
+      website: addInfo?.website ?? json['website'],
+      maxDiscount: addInfo?.maxDiscount ??
+          (json['max_discount'] != null
+              ? double.tryParse(json['max_discount'].toString())
+              : null),
+      itemAddress: addInfo?.itemAddress ?? json['item_address'],
       // Certificado
       certificateData: certData,
-      certificatePath: certData?.certificatePath,
+      certificatePath: certData?.certificate != null ? 'loaded' : null,
       certificateUser: certData?.certificateUser,
+      certificatePassword: certData?.certificatePassword,
       certificateExpirationDate: certData?.certificateExpirationDate,
       hasCertificate: certData != null,
-      // Correo (puede no venir en este endpoint)
-      mailServer: json['mail_server'],
-      mailPort: json['mail_port'],
-      mailAddress: json['mail_address'],
-      mailUser: json['mail_user'],
+      // Correo
+      emailConfiguration: emailConfig,
+      mailServer: emailConfig?.mailServer ?? json['mail_server'],
+      mailPort: emailConfig?.mailPort ?? json['mail_port'],
+      mailAddress: emailConfig?.mailAddress ?? json['mail_address'],
+      mailUser: emailConfig?.mailUser ?? json['mail_user'],
+      mailPassword: emailConfig?.mailPassword ?? json['mail_password'],
       // Listas anidadas
       documentTypes: docTypes,
       emissionPoints: emPoints,
@@ -468,40 +605,90 @@ class CompanyModel {
       currentSequential: activePoint?.currentSequential ?? 1,
       description: activePoint?.description,
       isActive: activePoint?.isActive ?? true,
-      // Tax groups: extraídos de system_parameters si los hay
+      // Tax groups
       taxGroupCodes: (json['tax_group_codes'] as List<dynamic>? ?? [])
           .map((e) => e.toString())
           .toList(),
     );
   }
 
-  Map<String, dynamic> toJson() => {
-        'id': companyId,
-        'identification_type_id': identificationTypeId,
-        'identification': identification,
-        'business_name': businessName,
-        'address': address,
-        'phone': phone,
-        'email': email,
-        'state': state,
-        'website': website,
-        'max_discount': maxDiscount,
-        'item_address': itemAddress,
-        'certificate_user': certificateUser,
-        'certificate_password': certificatePassword,
-        'certificate_expiration_date':
-            certificateExpirationDate?.toIso8601String(),
-        'mail_server': mailServer,
-        'mail_port': mailPort,
-        'mail_address': mailAddress,
-        'mail_user': mailUser,
-        'mail_password': mailPassword,
-        'document_type_id': documentTypeId,
-        'establishment_code': establishmentCode,
-        'emission_point_code': emissionPointCode,
-        'current_sequential': currentSequential,
-        'description': description,
-        'is_active': isActive,
-        'tax_group_codes': taxGroupCodes,
-      };
+  Map<String, dynamic> toJson() {
+    // Helper: elimina las entradas con valor null del mapa
+    Map<String, dynamic> compact(Map<String, dynamic> m) =>
+        m..removeWhere((_, v) => v == null);
+
+    final Map<String, dynamic> result = {};
+
+    // ── Datos básicos (solo si tienen valor) ──────────────────────────────
+    if (companyId != null) result['id'] = companyId;
+    if (identificationTypeId != null) {
+      result['identification_type_id'] = identificationTypeId;
+    }
+    if (identification != null) result['identification'] = identification;
+    if (businessName != null) result['business_name'] = businessName;
+    if (address != null) result['address'] = address;
+    if (phone != null) result['phone'] = phone;
+    if (email != null) result['email'] = email;
+    if (state != null) result['state'] = state;
+
+    // ── Información adicional ─────────────────────────────────────────────
+    final addInfoMap = compact({
+      'id': additionalInformation?.id,
+      'company_id': additionalInformation?.companyId ?? companyId,
+      'logo_image': logo ?? additionalInformation?.logoImage,
+      'website': website ?? additionalInformation?.website,
+      'max_discount': maxDiscount ?? additionalInformation?.maxDiscount,
+      'item_address': itemAddress ?? additionalInformation?.itemAddress,
+    });
+    if (addInfoMap.isNotEmpty) result['additional_information'] = addInfoMap;
+
+    // ── Certificado ───────────────────────────────────────────────────────
+    final certMap = compact({
+      'id': certificateData?.id,
+      'company_id': certificateData?.companyId ?? companyId,
+      'certificate': certificate ?? certificateData?.certificate,
+      'certificate_user': certificateUser ?? certificateData?.certificateUser,
+      'certificate_password':
+          certificatePassword ?? certificateData?.certificatePassword,
+      'certificate_expiration_date': (certificateExpirationDate ??
+              certificateData?.certificateExpirationDate)
+          ?.toIso8601String(),
+    });
+    if (certMap.isNotEmpty) result['certificate'] = certMap;
+
+    // ── Configuración de correo ───────────────────────────────────────────
+    final mailMap = compact({
+      'id': emailConfiguration?.id,
+      'company_id': emailConfiguration?.companyId ?? companyId,
+      'mail_server': mailServer ?? emailConfiguration?.mailServer,
+      'mail_port': mailPort ?? emailConfiguration?.mailPort,
+      'mail_address': mailAddress ?? emailConfiguration?.mailAddress,
+      'mail_user': mailUser ?? emailConfiguration?.mailUser,
+      'mail_password': mailPassword ?? emailConfiguration?.mailPassword,
+    });
+    if (mailMap.isNotEmpty) result['email_configuration'] = mailMap;
+
+    // ── Listas anidadas ───────────────────────────────────────────────────
+    if (documentTypes.isNotEmpty) {
+      result['document_types'] = documentTypes.map((e) => e.toJson()).toList();
+    }
+    if (emissionPoints.isNotEmpty) {
+      result['emission_points'] =
+          emissionPoints.map((e) => e.toJson()).toList();
+    }
+    if (paymentMethods.isNotEmpty) {
+      result['payment_methods'] =
+          paymentMethods.map((e) => e.toJson()).toList();
+    }
+    if (saleParameters.isNotEmpty) {
+      result['sale_parameters'] =
+          saleParameters.map((e) => e.toJson()).toList();
+    }
+    if (systemParameters.isNotEmpty) {
+      result['system_parameters'] =
+          systemParameters.map((e) => e.toJson()).toList();
+    }
+
+    return result;
+  }
 }

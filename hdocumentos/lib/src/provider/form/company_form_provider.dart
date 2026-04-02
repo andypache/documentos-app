@@ -70,8 +70,35 @@ class CompanyFormProvider extends ChangeNotifier {
 
   /// Valida el paso actual antes de avanzar
   bool isValidCurrentStep() {
-    return currentFormKey.currentState?.validate() ?? false;
+    final formValid = currentFormKey.currentState?.validate() ?? false;
+    // Paso 3 (índice 2): validar también campos fuera del Form
+    if (_currentStep == 2) {
+      _step3Submitted = true;
+      notifyListeners();
+      final certOk = company.certificatePath != null;
+      final dateOk = company.certificateExpirationDate != null;
+      return formValid && certOk && dateOk;
+    }
+    // Paso 5 (índice 4): al menos un punto de emisión agregado y uno activo
+    if (_currentStep == 4) {
+      _step5Submitted = true;
+      notifyListeners();
+      final hasPoints = company.emissionPoints.isNotEmpty;
+      final hasActivePoint = company.emissionPoints.any((p) => p.isActive);
+      return formValid && hasPoints && hasActivePoint;
+    }
+    return formValid;
   }
+
+  /// Indica que el usuario intentó avanzar desde el paso 3,
+  /// usado por [CompanyWizardStep3Widget] para mostrar errores de cert/fecha.
+  bool _step3Submitted = false;
+  bool get step3Submitted => _step3Submitted;
+
+  /// Indica que el usuario intentó avanzar desde el paso 5,
+  /// usado por [CompanyWizardStep5Widget] para mostrar error de punto de emisión.
+  bool _step5Submitted = false;
+  bool get step5Submitted => _step5Submitted;
 
   /// Avanza al siguiente paso si la validación pasa
   bool nextStep() {
@@ -188,7 +215,15 @@ class CompanyFormProvider extends ChangeNotifier {
           'selected_emission_point_id': selectedEmissionPointId,
         };
       case 5:
-        return {'tax_group_codes': company.taxGroupCodes};
+        // Envía solo los system_parameters que corresponden a grupos TAX-GROUP
+        final taxGroupParams = company.systemParameters
+            .where((sp) =>
+                sp.systemParameterId != null &&
+                sp.systemParameterId!.contains('TAX-GROUP-'))
+            .toList();
+        return {
+          'system_parameters': taxGroupParams.map((e) => e.toJson()).toList(),
+        };
       default:
         return company.toJson();
     }
@@ -221,14 +256,18 @@ class CompanyFormProvider extends ChangeNotifier {
   /// Devuelve la lista actual de puntos de emisión
   List<CompanyEmissionPointModel> get emissionPoints => company.emissionPoints;
 
-  /// Agrega un nuevo punto o reemplaza uno existente (por id si lo tiene,
-  /// o por índice si aún no tiene id del backend)
-  void upsertEmissionPoint(CompanyEmissionPointModel point) {
+  /// Agrega un nuevo punto o reemplaza uno existente.
+  /// Busca por [id] si lo tiene; si no, usa [editingIndex] para reemplazar
+  /// en posición exacta (puntos locales aún sin id del backend).
+  void upsertEmissionPoint(CompanyEmissionPointModel point,
+      {int editingIndex = -1}) {
     final list = List<CompanyEmissionPointModel>.from(company.emissionPoints);
-    // Buscar por id solo si el punto tiene id
-    final idx =
+    // 1º prioridad: buscar por id (puntos guardados en backend)
+    final idxById =
         point.id != null ? list.indexWhere((p) => p.id == point.id) : -1;
-    if (idx >= 0) {
+    // 2ª prioridad: usar el índice conocido (puntos locales sin id)
+    final idx = idxById >= 0 ? idxById : editingIndex;
+    if (idx >= 0 && idx < list.length) {
       list[idx] = point;
     } else {
       list.add(point);
