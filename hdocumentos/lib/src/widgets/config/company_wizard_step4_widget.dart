@@ -6,8 +6,28 @@ import 'package:hdocumentos/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 /// Paso 4: Configuración de correo electrónico
-class CompanyWizardStep4Widget extends StatelessWidget {
+class CompanyWizardStep4Widget extends StatefulWidget {
   const CompanyWizardStep4Widget({Key? key}) : super(key: key);
+
+  @override
+  State<CompanyWizardStep4Widget> createState() =>
+      _CompanyWizardStep4WidgetState();
+}
+
+class _CompanyWizardStep4WidgetState extends State<CompanyWizardStep4Widget> {
+  /// En modo edición con correo ya configurado, el campo de contraseña
+  /// se oculta por defecto. El backend no devuelve la contraseña SMTP.
+  bool _changePassword = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final provider = Provider.of<CompanyFormProvider>(context, listen: false);
+    // En edición con configuración de correo existente, ocultar contraseña
+    final hasExistingMail =
+        provider.isEditing && provider.company.emailConfiguration != null;
+    _changePassword = !hasExistingMail;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,15 +117,35 @@ class CompanyWizardStep4Widget extends StatelessWidget {
             onChanged: (v) => company.mailUser = v,
           ),
           SizedBox(height: size.height * 0.018),
-          InputFieldWidget(
-            prefixIcon: Icons.lock_outline,
-            labelText: l10n.mailPassword,
-            hintText: l10n.mailPasswordHint,
-            obscureText: true,
-            filled: true,
-            fillColor: AppTheme.whiteGradient,
-            onChanged: (v) => company.mailPassword = v,
-          ),
+
+          // ── Contraseña SMTP ──────────────────────────────────────────────
+          // En edición con correo ya configurado se muestra un toggle.
+          // El backend nunca devuelve la contraseña SMTP por seguridad.
+          if (provider.isEditing && company.emailConfiguration != null)
+            SwitchListTile(
+              value: _changePassword,
+              contentPadding: EdgeInsets.zero,
+              activeColor: AppTheme.primaryButton,
+              title: Text(
+                l10n.mailChangePassword,
+                style: const TextStyle(color: AppTheme.white, fontSize: 14),
+              ),
+              onChanged: (v) {
+                setState(() => _changePassword = v);
+                provider.requireMailPassword = v;
+              },
+            ),
+          if (_changePassword)
+            InputFieldWidget(
+              prefixIcon: Icons.lock_outline,
+              labelText: l10n.mailPassword,
+              hintText: l10n.mailPasswordHint,
+              initialValue: null,
+              obscureText: true,
+              filled: true,
+              fillColor: AppTheme.whiteGradient,
+              onChanged: (v) => company.mailPassword = v,
+            ),
           SizedBox(height: size.height * 0.025),
           // Resumen
           CompanyWizardStepSummary(

@@ -507,6 +507,12 @@ abstract class AppLocalizations {
   /// **'Contraseña (requerido)'**
   String get certificatePasswordHint;
 
+  /// Toggle para cambiar la contraseña del certificado en edición
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar contraseña del certificado'**
+  String get certChangePassword;
+
   /// Etiqueta campo fecha expiración del certificado
   ///
   /// In es, this message translates to:
@@ -602,6 +608,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Contraseña SMTP (opcional)'**
   String get mailPasswordHint;
+
+  /// Toggle para cambiar la contraseña SMTP en edición
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar contraseña de correo'**
+  String get mailChangePassword;
 
   /// Título sección paso 5
   ///
@@ -1094,6 +1106,18 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Debes tener al menos un punto de emisión activo para continuar'**
   String get emissionPointSelectRequired;
+
+  /// Error al duplicar código de punto de emisión
+  ///
+  /// In es, this message translates to:
+  /// **'Ya existe un punto con ese código de establecimiento y emisión'**
+  String get emissionPointDuplicateCode;
+
+  /// Error al intentar activar más de un punto
+  ///
+  /// In es, this message translates to:
+  /// **'Ya hay un punto activo. Desactívalo antes de activar otro.'**
+  String get emissionPointOnlyOneActive;
 
   /// Error al procesar la respuesta de la compañía desde el API
   ///

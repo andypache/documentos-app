@@ -202,6 +202,9 @@
   "certificatePasswordHint": "Password (required)",
   "@certificatePasswordHint": { "description": "Hint for certificate password field" },
 
+  "certChangePassword": "Change certificate password",
+  "@certChangePassword": { "description": "Toggle to change certificate password in edit mode" },
+
   "certificateExpiration": "Expiration date",
   "@certificateExpiration": { "description": "Label for certificate expiration date field" },
 
@@ -255,6 +258,9 @@
 
   "mailPasswordHint": "SMTP password (optional)",
   "@mailPasswordHint": { "description": "Hint for SMTP password field" },
+
+  "mailChangePassword": "Change mail password",
+  "@mailChangePassword": { "description": "Toggle to change SMTP password in edit mode" },
 
   "step5Title": "Emission Point",
   "@step5Title": { "description": "Section title step 5" },
@@ -485,6 +491,12 @@
 
   "emissionPointSelectRequired": "You must have at least one active emission point to continue",
   "@emissionPointSelectRequired": { "description": "Error when no active emission point exists in step 5" },
+
+  "emissionPointDuplicateCode": "A point with that establishment and emission code already exists",
+  "@emissionPointDuplicateCode": { "description": "Error on duplicate emission point code" },
+
+  "emissionPointOnlyOneActive": "There is already an active point. Deactivate it before activating another.",
+  "@emissionPointOnlyOneActive": { "description": "Error when trying to activate more than one point" },
 
   "companyDataProcessError": "Error processing company data",
   "@companyDataProcessError": { "description": "Error processing company response from API" },

@@ -226,6 +226,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get certificatePasswordHint => 'Password (required)';
 
   @override
+  String get certChangePassword => 'Change certificate password';
+
+  @override
   String get certificateExpiration => 'Expiration date';
 
   @override
@@ -276,6 +279,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mailPasswordHint => 'SMTP password (optional)';
+
+  @override
+  String get mailChangePassword => 'Change mail password';
 
   @override
   String get step5Title => 'Emission Point';
@@ -522,6 +528,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get emissionPointSelectRequired => 'You must have at least one active emission point to continue';
+
+  @override
+  String get emissionPointDuplicateCode => 'A point with that establishment and emission code already exists';
+
+  @override
+  String get emissionPointOnlyOneActive => 'There is already an active point. Deactivate it before activating another.';
 
   @override
   String get companyDataProcessError => 'Error processing company data';

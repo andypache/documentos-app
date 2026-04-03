@@ -202,6 +202,9 @@
   "certificatePasswordHint": "Contraseña (requerido)",
   "@certificatePasswordHint": { "description": "Hint campo contraseña del certificado" },
 
+  "certChangePassword": "Cambiar contraseña del certificado",
+  "@certChangePassword": { "description": "Toggle para cambiar la contraseña del certificado en edición" },
+
   "certificateExpiration": "Fecha de expiración",
   "@certificateExpiration": { "description": "Etiqueta campo fecha expiración del certificado" },
 
@@ -255,6 +258,9 @@
 
   "mailPasswordHint": "Contraseña SMTP (opcional)",
   "@mailPasswordHint": { "description": "Hint campo contraseña SMTP" },
+
+  "mailChangePassword": "Cambiar contraseña de correo",
+  "@mailChangePassword": { "description": "Toggle para cambiar la contraseña SMTP en edición" },
 
   "step5Title": "Punto de Emisión",
   "@step5Title": { "description": "Título sección paso 5" },
@@ -486,6 +492,12 @@
 
   "emissionPointSelectRequired": "Debes tener al menos un punto de emisión activo para continuar",
   "@emissionPointSelectRequired": { "description": "Error cuando no hay ningún punto de emisión activo en el paso 5" },
+
+  "emissionPointDuplicateCode": "Ya existe un punto con ese código de establecimiento y emisión",
+  "@emissionPointDuplicateCode": { "description": "Error al duplicar código de punto de emisión" },
+
+  "emissionPointOnlyOneActive": "Ya hay un punto activo. Desactívalo antes de activar otro.",
+  "@emissionPointOnlyOneActive": { "description": "Error al intentar activar más de un punto" },
 
   "companyDataProcessError": "Error al procesar los datos de la compañía",
   "@companyDataProcessError": { "description": "Error al procesar la respuesta de la compañía desde el API" },

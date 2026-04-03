@@ -48,10 +48,26 @@ class CompanyFormProvider extends ChangeNotifier {
   File? certificateFile;
   Uint8List? logoBytes;
 
+  /// En edición, indica si el usuario quiere cambiar la contraseña del certificado.
+  /// Cuando es false, la validación del paso 3 no requiere el campo de contraseña.
+  bool requireCertPassword = true;
+
+  /// En edición, indica si el usuario quiere cambiar la contraseña de correo.
+  /// Cuando es false, la validación del paso 4 no requiere el campo de contraseña.
+  bool requireMailPassword = true;
+
   CompanyFormProvider(this.company, {this.isEditing = false}) {
     // Al cargar un modelo existente, sincronizar bytes locales para los widgets
     logoBytes = company.logo ?? company.additionalInformation?.logoImage;
     if (logoBytes != null) company.logo = logoBytes;
+    // En edición con certificado ya configurado, no se requiere nueva contraseña
+    if (isEditing && company.hasCertificate) {
+      requireCertPassword = false;
+    }
+    // En edición con correo ya configurado, no se requiere nueva contraseña SMTP
+    if (isEditing && company.emailConfiguration != null) {
+      requireMailPassword = false;
+    }
   }
 
   GlobalKey<FormState> get currentFormKey {
@@ -82,6 +98,13 @@ class CompanyFormProvider extends ChangeNotifier {
       notifyListeners();
       final certOk = company.certificatePath != null;
       final dateOk = company.certificateExpirationDate != null;
+      // Si no se requiere cambio de contraseña (edición con cert existente y switch OFF),
+      // solo se validan los demás campos del formulario (usuario, fecha)
+      if (!requireCertPassword) {
+        return formValid && certOk && dateOk;
+      }
+      // En creación o cuando el usuario activó el cambio de contraseña,
+      // la contraseña se valida dentro del Form normalmente
       return formValid && certOk && dateOk;
     }
     // Paso 5 (índice 4): al menos un punto de emisión agregado y uno activo

@@ -207,6 +207,8 @@ class _CompanyWizardStep5WidgetState extends State<CompanyWizardStep5Widget> {
               isNew: _isNewPoint,
               docTypes: docTypes,
               size: size,
+              existingPoints: provider.emissionPoints,
+              editingIndex: _editingIndex,
               onSave: (point) => _savePoint(context, point),
               onCancel: _closeForm,
             ),
@@ -452,6 +454,12 @@ class _EmissionPointForm extends StatefulWidget {
   final ValueChanged<CompanyEmissionPointModel> onSave;
   final VoidCallback onCancel;
 
+  /// Lista actual de puntos (para validar duplicados y punto activo único)
+  final List<CompanyEmissionPointModel> existingPoints;
+
+  /// Índice que se está editando (-1 si es nuevo)
+  final int editingIndex;
+
   const _EmissionPointForm({
     super.key,
     required this.initial,
@@ -460,6 +468,8 @@ class _EmissionPointForm extends StatefulWidget {
     required this.size,
     required this.onSave,
     required this.onCancel,
+    required this.existingPoints,
+    required this.editingIndex,
   });
 
   @override
@@ -488,6 +498,34 @@ class _EmissionPointFormState extends State<_EmissionPointForm> {
     _isActive = p.isActive;
   }
 
+  /// Devuelve true si ya existe otro punto (distinto al que se edita)
+  /// con la misma combinación tipo de documento + establecimiento + punto de emisión.
+  /// Ejemplo: factura-001-001 y factura-001-002 → permitido (distinto código)
+  ///          factura-001-001 y factura-001-001 → NO permitido (combinación idéntica)
+  ///          factura-001-001 y nota_credito-001-001 → permitido (distinto tipo)
+  bool _isDuplicateCode(String? docTypeId, String? estCode, String? epCode) {
+    if (docTypeId == null || estCode == null || epCode == null) return false;
+    for (var i = 0; i < widget.existingPoints.length; i++) {
+      if (i == widget.editingIndex) continue; // saltar el que se edita
+      final p = widget.existingPoints[i];
+      if (p.documentTypeId == docTypeId &&
+          p.establishmentCode == estCode &&
+          p.emissionPointCode == epCode) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// Devuelve true si hay otro punto activo (distinto al que se edita).
+  bool _otherPointIsActive() {
+    for (var i = 0; i < widget.existingPoints.length; i++) {
+      if (i == widget.editingIndex) continue;
+      if (widget.existingPoints[i].isActive) return true;
+    }
+    return false;
+  }
+
   void _submit() {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     widget.onSave(widget.initial.copyWith(
@@ -504,6 +542,9 @@ class _EmissionPointFormState extends State<_EmissionPointForm> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final size = widget.size;
+
+    // Pre-calcular si hay otro punto activo (para deshabilitar el switch)
+    final otherActive = _otherPointIsActive();
 
     return Container(
       padding: EdgeInsets.all(size.width * 0.04),
@@ -549,6 +590,7 @@ class _EmissionPointFormState extends State<_EmissionPointForm> {
               fillColor: AppTheme.whiteGradient,
               initialValue: _documentTypeId,
               onChanged: (v) => setState(() => _documentTypeId = v),
+              // Re-validar al cambiar el tipo para reflejar cambios en duplicados
             ),
             SizedBox(height: size.height * 0.015),
             InputFieldWidget(
@@ -561,8 +603,15 @@ class _EmissionPointFormState extends State<_EmissionPointForm> {
               validator: FieldValidators.compose([
                 FieldValidators.required(l10n),
                 FieldValidators.exactLength(l10n, 3),
+                (v) {
+                  if (_isDuplicateCode(
+                      _documentTypeId, v, _emissionPointCode)) {
+                    return l10n.emissionPointDuplicateCode;
+                  }
+                  return null;
+                },
               ]),
-              onChanged: (v) => _establishmentCode = v,
+              onChanged: (v) => setState(() => _establishmentCode = v),
             ),
             SizedBox(height: size.height * 0.015),
             InputFieldWidget(
@@ -575,8 +624,15 @@ class _EmissionPointFormState extends State<_EmissionPointForm> {
               validator: FieldValidators.compose([
                 FieldValidators.required(l10n),
                 FieldValidators.exactLength(l10n, 3),
+                (v) {
+                  if (_isDuplicateCode(
+                      _documentTypeId, _establishmentCode, v)) {
+                    return l10n.emissionPointDuplicateCode;
+                  }
+                  return null;
+                },
               ]),
-              onChanged: (v) => _emissionPointCode = v,
+              onChanged: (v) => setState(() => _emissionPointCode = v),
             ),
             SizedBox(height: size.height * 0.015),
             InputNumberFieldWidget(
@@ -601,11 +657,40 @@ class _EmissionPointFormState extends State<_EmissionPointForm> {
               onChanged: (v) => _description = v,
             ),
             SizedBox(height: size.height * 0.015),
-            InputSwitchFieldWidget(
-              label: l10n.activeEmissionPoint,
-              value: _isActive,
-              onChanged: (v) => setState(() => _isActive = v),
+            // Switch deshabilitado (opaco) si ya hay otro punto activo
+            Opacity(
+              opacity: (otherActive && !_isActive) ? 0.45 : 1.0,
+              child: IgnorePointer(
+                ignoring: otherActive && !_isActive,
+                child: InputSwitchFieldWidget(
+                  label: l10n.activeEmissionPoint,
+                  value: _isActive,
+                  onChanged: (v) => setState(() => _isActive = v),
+                ),
+              ),
             ),
+            // Aviso cuando el switch está deshabilitado por otro punto activo
+            if (otherActive && !_isActive)
+              Padding(
+                padding: EdgeInsets.only(
+                    top: size.height * 0.005, left: size.width * 0.02),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline,
+                        color: Colors.orangeAccent, size: size.width * 0.035),
+                    SizedBox(width: size.width * 0.015),
+                    Expanded(
+                      child: Text(
+                        l10n.emissionPointOnlyOneActive,
+                        style: TextStyle(
+                          color: Colors.orangeAccent,
+                          fontSize: size.width * 0.028,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             SizedBox(height: size.height * 0.02),
             Row(
               children: [

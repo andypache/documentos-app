@@ -17,6 +17,21 @@ class CompanyWizardStep3Widget extends StatefulWidget {
 }
 
 class _CompanyWizardStep3WidgetState extends State<CompanyWizardStep3Widget> {
+  /// En modo edición con contraseña existente, el campo se oculta por defecto.
+  /// El usuario activa este flag para ingresar una nueva contraseña.
+  bool _changePassword = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final provider = Provider.of<CompanyFormProvider>(context, listen: false);
+    // En edición con certificado ya configurado, ocultar el campo de contraseña
+    // por defecto. El backend no devuelve la contraseña por seguridad.
+    final hasExistingCert =
+        provider.isEditing && provider.company.hasCertificate;
+    _changePassword = !hasExistingCert;
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -24,6 +39,10 @@ class _CompanyWizardStep3WidgetState extends State<CompanyWizardStep3Widget> {
     final provider = Provider.of<CompanyFormProvider>(context);
     final company = provider.company;
     final submitted = provider.step3Submitted;
+
+    /// En edición con contraseña guardada y sin cambio activo, la contraseña
+    /// ya está en el modelo: se considera válida sin requerir el campo.
+    final bool passwordFieldRequired = _changePassword;
 
     final certMissing = submitted && company.certificatePath == null;
     final dateMissing = submitted && company.certificateExpirationDate == null;
@@ -91,19 +110,37 @@ class _CompanyWizardStep3WidgetState extends State<CompanyWizardStep3Widget> {
           SizedBox(height: size.height * 0.018),
 
           // ── Contraseña ───────────────────────────────────────────────────
-          InputFieldWidget(
-            prefixIcon: Icons.lock_outline,
-            labelText: l10n.certificatePassword,
-            hintText: l10n.certificatePasswordHint,
-            initialValue: company.certificatePassword,
-            obscureText: true,
-            filled: true,
-            fillColor: AppTheme.whiteGradient,
-            validator: FieldValidators.compose([
-              FieldValidators.required(l10n),
-            ]),
-            onChanged: (v) => company.certificatePassword = v,
-          ),
+          // En edición con certificado existente se muestra un toggle.
+          // El campo de texto solo aparece cuando el usuario quiere cambiar la contraseña.
+          // Nota: el backend nunca devuelve la contraseña por seguridad.
+          if (provider.isEditing && company.hasCertificate)
+            SwitchListTile(
+              value: _changePassword,
+              contentPadding: EdgeInsets.zero,
+              activeColor: AppTheme.primaryButton,
+              title: Text(
+                l10n.certChangePassword,
+                style: const TextStyle(color: AppTheme.white, fontSize: 14),
+              ),
+              onChanged: (v) {
+                setState(() => _changePassword = v);
+                provider.requireCertPassword = v;
+              },
+            ),
+          if (passwordFieldRequired)
+            InputFieldWidget(
+              prefixIcon: Icons.lock_outline,
+              labelText: l10n.certificatePassword,
+              hintText: l10n.certificatePasswordHint,
+              initialValue: null,
+              obscureText: true,
+              filled: true,
+              fillColor: AppTheme.whiteGradient,
+              validator: FieldValidators.compose([
+                FieldValidators.required(l10n),
+              ]),
+              onChanged: (v) => company.certificatePassword = v,
+            ),
           SizedBox(height: size.height * 0.018),
 
           // ── Fecha de expiración ──────────────────────────────────────────
