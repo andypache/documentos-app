@@ -153,9 +153,9 @@ class CompanyService extends ChangeNotifier {
       context: context,
       url: apiCompanyCreate,
       body: companyModel.toJson(),
-    ).then((response) {
+    ).then((response) async {
       if (response.statusHttp != 201) {
-        throw Exception(response.message);
+        throw Exception(await _parseResponseError(response));
       }
       final data = response.createDataResponse().response;
       if (data is! Map<String, dynamic>) {
@@ -164,5 +164,19 @@ class CompanyService extends ChangeNotifier {
       }
       return CompanyModel.fromJson(data);
     });
+  }
+
+  Future<String> _parseResponseError(ServiceResponseModel response) async {
+    try {
+      final responseModel = response.createDataResponse();
+      final data = responseModel.response;
+      if (data is Map<String, dynamic> && data.containsKey('error')) {
+        return data['error'] as String;
+      }
+    } catch (_) {
+      // Ignorar errores de parsing y retornar mensaje genérico
+    }
+    return NotificationService.l10n?.companyDataProcessError ??
+        'Error al procesar la operación de compañía';
   }
 }

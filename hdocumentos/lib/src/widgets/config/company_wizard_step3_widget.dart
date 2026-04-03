@@ -58,7 +58,7 @@ class _CompanyWizardStep3WidgetState extends State<CompanyWizardStep3Widget> {
               );
               if (result == null) return;
               if (!mounted) return;
-              provider.updateCertificate(result.files.single.path!);
+              await provider.updateCertificate(result.files.single.path!);
             },
           ),
           if (certMissing)
@@ -95,6 +95,7 @@ class _CompanyWizardStep3WidgetState extends State<CompanyWizardStep3Widget> {
             prefixIcon: Icons.lock_outline,
             labelText: l10n.certificatePassword,
             hintText: l10n.certificatePasswordHint,
+            initialValue: company.certificatePassword,
             obscureText: true,
             filled: true,
             fillColor: AppTheme.whiteGradient,
@@ -109,6 +110,7 @@ class _CompanyWizardStep3WidgetState extends State<CompanyWizardStep3Widget> {
           InputDateFieldWidget(
             labelText: l10n.certificateExpiration,
             hintText: l10n.certificateExpirationHint,
+            initialDate: company.certificateExpirationDate,
             filled: true,
             fillColor: AppTheme.whiteGradient,
             validator: FieldValidators.compose([

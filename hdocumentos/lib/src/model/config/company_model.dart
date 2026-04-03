@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 // ─── Sub-modelos ──────────────────────────────────────────────────────────────
@@ -23,7 +24,9 @@ class CompanyAdditionalInformationModel {
       CompanyAdditionalInformationModel(
         id: json['id'],
         companyId: json['company_id'],
-        logoImage: json['logo_image'],
+        logoImage: json['logo_image'] != null
+            ? base64Decode(json['logo_image'] as String)
+            : null,
         website: json['website'],
         maxDiscount: json['max_discount'] != null
             ? double.tryParse(json['max_discount'].toString())
@@ -35,7 +38,7 @@ class CompanyAdditionalInformationModel {
     final result = <String, dynamic>{};
     if (id != null) result['id'] = id;
     if (companyId != null) result['company_id'] = companyId;
-    if (logoImage != null) result['logo_image'] = logoImage;
+    if (logoImage != null) result['logo_image'] = base64Encode(logoImage!);
     if (website != null) result['website'] = website;
     if (maxDiscount != null) result['max_discount'] = maxDiscount;
     if (itemAddress != null) result['item_address'] = itemAddress;
@@ -65,7 +68,9 @@ class CompanyCertificateModel {
       CompanyCertificateModel(
         id: json['id'],
         companyId: json['company_id'],
-        certificate: json['certificate'],
+        certificate: json['certificate'] != null
+            ? base64Decode(json['certificate'] as String)
+            : null,
         certificateUser: json['certificate_user'],
         certificatePassword: json['certificate_password'],
         certificateExpirationDate: json['certificate_expiration_date'] != null
@@ -77,7 +82,7 @@ class CompanyCertificateModel {
     final result = <String, dynamic>{};
     if (id != null) result['id'] = id;
     if (companyId != null) result['company_id'] = companyId;
-    if (certificate != null) result['certificate'] = certificate;
+    if (certificate != null) result['certificate'] = base64Encode(certificate!);
     if (certificateUser != null) result['certificate_user'] = certificateUser;
     if (certificatePassword != null) {
       result['certificate_password'] = certificatePassword;
@@ -570,6 +575,7 @@ class CompanyModel {
       state: json['state'],
       // Información adicional
       additionalInformation: addInfo,
+      logo: addInfo?.logoImage,
       logoPath: addInfo?.id != null ? null : json['logo_path'],
       website: addInfo?.website ?? json['website'],
       maxDiscount: addInfo?.maxDiscount ??
@@ -579,6 +585,7 @@ class CompanyModel {
       itemAddress: addInfo?.itemAddress ?? json['item_address'],
       // Certificado
       certificateData: certData,
+      certificate: certData?.certificate,
       certificatePath: certData?.certificate != null ? 'loaded' : null,
       certificateUser: certData?.certificateUser,
       certificatePassword: certData?.certificatePassword,
@@ -632,10 +639,11 @@ class CompanyModel {
     if (state != null) result['state'] = state;
 
     // ── Información adicional ─────────────────────────────────────────────
+    final rawLogo = logo ?? additionalInformation?.logoImage;
     final addInfoMap = compact({
       'id': additionalInformation?.id,
       'company_id': additionalInformation?.companyId ?? companyId,
-      'logo_image': logo ?? additionalInformation?.logoImage,
+      'logo_image': rawLogo != null ? base64Encode(rawLogo) : null,
       'website': website ?? additionalInformation?.website,
       'max_discount': maxDiscount ?? additionalInformation?.maxDiscount,
       'item_address': itemAddress ?? additionalInformation?.itemAddress,
@@ -643,10 +651,11 @@ class CompanyModel {
     if (addInfoMap.isNotEmpty) result['additional_information'] = addInfoMap;
 
     // ── Certificado ───────────────────────────────────────────────────────
+    final rawCert = certificate ?? certificateData?.certificate;
     final certMap = compact({
       'id': certificateData?.id,
       'company_id': certificateData?.companyId ?? companyId,
-      'certificate': certificate ?? certificateData?.certificate,
+      'certificate': rawCert != null ? base64Encode(rawCert) : null,
       'certificate_user': certificateUser ?? certificateData?.certificateUser,
       'certificate_password':
           certificatePassword ?? certificateData?.certificatePassword,

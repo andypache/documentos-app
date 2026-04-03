@@ -15,6 +15,9 @@ class InputDateFieldWidget extends StatefulWidget {
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
 
+  /// Fecha inicial para precargar el campo al editar un registro existente.
+  final DateTime? initialDate;
+
   //Constructor class
   const InputDateFieldWidget(
       {Key? key,
@@ -27,7 +30,8 @@ class InputDateFieldWidget extends StatefulWidget {
       this.validator,
       this.onChanged,
       this.filled,
-      this.fillColor})
+      this.fillColor,
+      this.initialDate})
       : super(key: key);
 
   @override
@@ -38,6 +42,14 @@ class InputDateFieldWidget extends StatefulWidget {
 class _InputDateFieldWidgetState extends State<InputDateFieldWidget> {
   //Create widget
   final TextEditingController _date = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialDate != null) {
+      _date.text = DateFormat('dd/MM/yyyy').format(widget.initialDate!);
+    }
+  }
 
   @override
   void dispose() {

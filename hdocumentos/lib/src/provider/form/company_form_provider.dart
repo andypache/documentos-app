@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
@@ -47,7 +48,11 @@ class CompanyFormProvider extends ChangeNotifier {
   File? certificateFile;
   Uint8List? logoBytes;
 
-  CompanyFormProvider(this.company, {this.isEditing = false});
+  CompanyFormProvider(this.company, {this.isEditing = false}) {
+    // Al cargar un modelo existente, sincronizar bytes locales para los widgets
+    logoBytes = company.logo ?? company.additionalInformation?.logoImage;
+    if (logoBytes != null) company.logo = logoBytes;
+  }
 
   GlobalKey<FormState> get currentFormKey {
     switch (_currentStep) {
@@ -126,9 +131,10 @@ class CompanyFormProvider extends ChangeNotifier {
     }
   }
 
-  /// Actualiza el logo (bytes + file)
+  /// Actualiza el logo: guarda los bytes en [company.logo] para serializar a Base64.
   void updateLogo(Uint8List? bytes, String? path) {
     logoBytes = bytes;
+    company.logo = bytes;
     if (path != null) {
       logoFile = File(path);
       company.logoPath = path;
@@ -136,10 +142,14 @@ class CompanyFormProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Actualiza el certificado
-  void updateCertificate(String path) {
+  /// Actualiza el certificado: lee los bytes del archivo y los guarda
+  /// en [company.certificate] como [Uint8List] para serializar a Base64.
+  Future<void> updateCertificate(String path) async {
+    final file = File(path);
+    final bytes = await file.readAsBytes();
+    certificateFile = file;
     company.certificatePath = path;
-    certificateFile = File(path);
+    company.certificate = bytes;
     notifyListeners();
   }
 
@@ -193,12 +203,20 @@ class CompanyFormProvider extends ChangeNotifier {
           'website': company.website,
         };
       case 1:
-        return {'logo_path': company.logoPath};
+        return {
+          if (company.logo != null) 'logo_image': base64Encode(company.logo!),
+        };
       case 2:
         return {
-          'certificate_path': company.certificatePath,
-          'certificate_password': company.certificatePassword,
-          'certificate_user': company.certificateUser,
+          if (company.certificate != null)
+            'certificate': base64Encode(company.certificate!),
+          if (company.certificatePassword != null)
+            'certificate_password': company.certificatePassword,
+          if (company.certificateUser != null)
+            'certificate_user': company.certificateUser,
+          if (company.certificateExpirationDate != null)
+            'certificate_expiration_date':
+                company.certificateExpirationDate!.toIso8601String(),
         };
       case 3:
         return {
@@ -232,9 +250,12 @@ class CompanyFormProvider extends ChangeNotifier {
   /// Construye el CompanyModel final
   CompanyModel buildCompanyModel() => company;
 
-  /// Carga los datos de la compañia desde el modelo
+  /// Carga los datos de la compañia desde el modelo y sincroniza
+  /// los campos locales del wizard (logoBytes, etc.).
   void loadFromModel(CompanyModel model) {
     company = model;
+    logoBytes = model.logo ?? model.additionalInformation?.logoImage;
+    if (logoBytes != null) company.logo = logoBytes;
     notifyListeners();
   }
 
