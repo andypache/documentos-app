@@ -141,6 +141,8 @@ class AppInitProvider extends ChangeNotifier {
 
     await _authService.updateCompanySession(result);
 
+    await _authService.updateCompanyPaymentMethods(result?.paymentMethods);
+
     if (_hasCompany) {
       // ignore: use_build_context_synchronously
       await _loadLastSales(context);

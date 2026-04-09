@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hdocumentos/src/model/model.dart';
 
 ///Provider for management customer form wizard
@@ -10,11 +12,44 @@ class CustomerFormProvider extends ChangeNotifier {
   int _currentStep = 0;
   bool _isLoading = false;
   CustomerModel _customer = CustomerModel.createEmpty();
+  List<IdentificationTypeModel> _identificationTypes = [];
 
   // Getters
   int get currentStep => _currentStep;
   bool get isLoading => _isLoading;
   CustomerModel get customer => _customer;
+  List<IdentificationTypeModel> get identificationTypes => _identificationTypes;
+
+  CustomerFormProvider() {
+    _loadIdentificationTypes();
+  }
+
+  /// Carga los tipos de identificación desde [FlutterSecureStorage]
+  /// (clave `'catalogs'`), sin llamar a ninguna API.
+  Future<void> _loadIdentificationTypes() async {
+    const storage = FlutterSecureStorage();
+    try {
+      final raw = await storage.read(key: 'catalogs');
+      if (raw != null && raw.isNotEmpty) {
+        final catalogList =
+            CatalogModelList.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+        _identificationTypes = catalogList.identificationTypes
+            .asMap()
+            .entries
+            .map((e) => IdentificationTypeModel(
+                  identificationTypeId: e.value.code,
+                  name: e.value.description,
+                  description: e.value.description,
+                  sriCode: e.value.code,
+                  status: 'A',
+                ))
+            .toList();
+        notifyListeners();
+      }
+    } catch (_) {
+      // Si el storage falla, la lista queda vacía
+    }
+  }
 
   // Step 1 - Tipo de Identificación y Datos Personales/Empresa
   String? identificationTypeId;

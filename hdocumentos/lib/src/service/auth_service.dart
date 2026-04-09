@@ -75,6 +75,16 @@ class AuthService extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateCompanyPaymentMethods(
+      List<CompanyPaymentMethodModel>? paymentMethods) async {
+    final session = Preferences.userSession;
+    if (session.company != null) {
+      session.company!.paymentMethods = paymentMethods ?? [];
+      Preferences.userSession = session;
+      notifyListeners();
+    }
+  }
+
   //Detele session user
   Future logout() async {
     await storage.delete(key: 'access_token');

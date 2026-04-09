@@ -19,7 +19,7 @@ class _BillScreenState extends State<BillScreen> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => BillFormProvider()..initialize(context),
+      create: (_) => BillFormProvider()..initialize(),
       child: Scaffold(
         body: Stack(
           children: [

@@ -19,37 +19,6 @@ class _CustomerWizardStep1WidgetState extends State<CustomerWizardStep1Widget> {
   late TextEditingController _lastNameController;
   late TextEditingController _businessNameController;
 
-  // Tipos de identificación comunes en Ecuador
-  final List<IdentificationTypeModel> _identificationTypes = [
-    IdentificationTypeModel(
-      identificationTypeId: "1",
-      name: "Cédula",
-      description: "Cédula de Ciudadanía",
-      inicials: "CED",
-      sriCode: "05",
-      length: 10,
-      status: "A",
-    ),
-    IdentificationTypeModel(
-      identificationTypeId: "2",
-      name: "RUC",
-      description: "Registro Único de Contribuyentes",
-      inicials: "RUC",
-      sriCode: "04",
-      length: 13,
-      status: "A",
-    ),
-    IdentificationTypeModel(
-      identificationTypeId: "3",
-      name: "Pasaporte",
-      description: "Pasaporte",
-      inicials: "PAS",
-      sriCode: "06",
-      length: 20,
-      status: "A",
-    ),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -122,13 +91,14 @@ class _CustomerWizardStep1WidgetState extends State<CustomerWizardStep1Widget> {
 
               // Tipo de Identificación
               DropdownButtonFormField<IdentificationTypeModel>(
-                value: customerForm.identificationType != null
-                    ? _identificationTypes.firstWhere(
+                value: customerForm.identificationType != null &&
+                        customerForm.identificationTypes.isNotEmpty
+                    ? customerForm.identificationTypes.firstWhere(
                         (type) =>
                             type.identificationTypeId ==
                             customerForm
                                 .identificationType?.identificationTypeId,
-                        orElse: () => _identificationTypes.first,
+                        orElse: () => customerForm.identificationTypes.first,
                       )
                     : null,
                 dropdownColor: const Color(0xff2a2d3e),
@@ -141,10 +111,10 @@ class _CustomerWizardStep1WidgetState extends State<CustomerWizardStep1Widget> {
                       TextStyle(color: Colors.white.withOpacity(0.8)),
                   hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
                 ),
-                items: _identificationTypes.map((type) {
+                items: customerForm.identificationTypes.map((type) {
                   return DropdownMenuItem<IdentificationTypeModel>(
                     value: type,
-                    child: Text('${type.name} (${type.inicials})'),
+                    child: Text('${type.name}'),
                   );
                 }).toList(),
                 onChanged: (value) {

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/service/service.dart';
+import 'package:hdocumentos/src/share/preference.dart';
 
 /// Provider para gestionar el estado del formulario de facturación
 class BillFormProvider extends ChangeNotifier {
@@ -76,14 +77,22 @@ class BillFormProvider extends ChangeNotifier {
     return _itemCalculations[itemId];
   }
 
-  /// Inicializar provider - cargar métodos de pago
-  Future<void> initialize(BuildContext context) async {
-    _isLoading = true;
-    notifyListeners();
+  /// Inicializar provider - carga los métodos de pago desde
+  /// [Preferences.userSession.company.paymentMethods], sin llamar
+  /// a ninguna API ni acceder al storage.
+  void initialize() {
+    final company = Preferences.userSession.company;
+    if (company == null) return;
 
-    _paymentMethods = await BillService.getPaymentMethods(context: context);
-
-    _isLoading = false;
+    _paymentMethods = company.paymentMethods
+        .asMap()
+        .entries
+        .map((e) => PaymentMethodModel(
+              id: int.tryParse(e.value.paymentMethodId ?? '') ?? (e.key + 1),
+              name: e.value.name ?? '',
+            ))
+        .where((m) => m.name.isNotEmpty)
+        .toList();
     notifyListeners();
   }
 
