@@ -21,17 +21,20 @@ class LastSalesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Título solo cuando hay ventas reales
+    final hasSales = sales != null && sales!.isNotEmpty;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(title: title, itemCount: sales?.length),
-        const SizedBox(height: 10),
-        if (sales == null)
-          const _LoadingCards()
-        else if (sales!.isEmpty)
-          const _EmptyState()
-        else
+        if (hasSales) ...[
+          _SectionHeader(title: title, itemCount: sales!.length),
+          const SizedBox(height: 10),
           _SalesCarousel(sales: sales!),
+        ] else if (sales == null)
+          const _LoadingCards()
+        else
+          const _EmptyState(),
       ],
     );
   }
@@ -141,58 +144,37 @@ class _EmptyState extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 20),
-        decoration: BoxDecoration(
-          color: AppTheme.cardBackground.withOpacity(0.55),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: AppTheme.primaryButton.withOpacity(0.18),
-            width: 1,
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(height: 24),
+          Icon(
+            Icons.receipt_long_outlined,
+            size: 64,
+            color: AppTheme.primaryButton.withOpacity(0.5),
           ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Icono con halo
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppTheme.primaryButton.withOpacity(0.1),
-                border: Border.all(
-                    color: AppTheme.primaryButton.withOpacity(0.3), width: 1.5),
-              ),
-              child: const Icon(
-                Icons.receipt_long_outlined,
-                color: AppTheme.primaryButton,
-                size: 28,
-              ),
+          const SizedBox(height: 16),
+          Text(
+            l10n.homeSalesEmpty,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: AppTheme.textSecondary,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
             ),
-            const SizedBox(height: 14),
-            Text(
-              l10n.homeSalesEmpty,
-              style: const TextStyle(
-                color: AppTheme.textPrimary,
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-              ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            l10n.homeSalesEmptyDesc,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: AppTheme.textSecondary,
+              fontSize: 14,
             ),
-            const SizedBox(height: 6),
-            Text(
-              l10n.homeSalesEmptyDesc,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
-                fontSize: 12,
-                height: 1.5,
-              ),
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 24),
+        ],
       ),
     );
   }

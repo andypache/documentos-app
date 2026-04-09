@@ -191,7 +191,7 @@ class _HomeScreenBodyState extends State<_HomeScreenBody> {
           child: SingleChildScrollView(
             child: Column(children: [
               CardSwiperWidget(menus: menus),
-              const SizedBox(height: 20),
+              const SizedBox(height: 36),
               if (initProvider.hasCompany)
                 LastSalesWidget(
                   sales: initProvider.lastSales,
