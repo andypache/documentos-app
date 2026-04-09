@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/provider/item_list_provider.dart';
 import 'package:hdocumentos/src/screen/item/item_wizard_screen.dart';
@@ -36,8 +37,10 @@ class _ItemScreenContent extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _navigateToCreateItem(context),
         backgroundColor: AppTheme.primaryButton,
-        icon: const Icon(Icons.add),
-        label: const Text('Nuevo Producto'),
+        foregroundColor: AppTheme.secondary,
+        elevation: 2,
+        icon: const Icon(Icons.add_rounded),
+        label: Text(AppLocalizations.of(context).btnNewProduct),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
@@ -83,7 +86,7 @@ class _ItemScreenBody extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Expanded(
-                child: PageTitleWidget(title: 'Productos'),
+                child: PageTitleWidget(title: ''), // sobreescrito abajo
               ),
               IconButton(
                 icon: Icon(Icons.close,
@@ -152,7 +155,7 @@ class _SearchSectionState extends State<_SearchSection> {
               controller: _searchController,
               style: TextStyle(color: Colors.white, fontSize: fontSize),
               decoration: InputDecoration(
-                hintText: 'Buscar por nombre, clave o código de barras',
+                hintText: AppLocalizations.of(context).searchItemsHint,
                 hintStyle: TextStyle(
                     color: Colors.white.withOpacity(0.5), fontSize: fontSize),
                 prefixIcon: Icon(Icons.search,
@@ -197,9 +200,12 @@ class _SearchSectionState extends State<_SearchSection> {
                     }
                   },
                   icon: Icon(Icons.search, size: size.width * 0.045),
-                  label: Text('Buscar', style: TextStyle(fontSize: fontSize)),
+                  label: Text(AppLocalizations.of(context).btnSearch,
+                      style: TextStyle(fontSize: fontSize)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryButton,
+                    foregroundColor: AppTheme.secondary,
+                    elevation: 0,
                     padding:
                         EdgeInsets.symmetric(vertical: size.height * 0.018),
                     shape: RoundedRectangleBorder(
@@ -213,10 +219,12 @@ class _SearchSectionState extends State<_SearchSection> {
                 child: ElevatedButton.icon(
                   onPressed: () => provider.loadAllItems(),
                   icon: Icon(Icons.list, size: size.width * 0.045),
-                  label:
-                      Text('Ver Todos', style: TextStyle(fontSize: fontSize)),
+                  label: Text(AppLocalizations.of(context).btnLoadAll,
+                      style: TextStyle(fontSize: fontSize)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.secondaryButton,
+                    foregroundColor: AppTheme.secondary,
+                    elevation: 0,
                     padding:
                         EdgeInsets.symmetric(vertical: size.height * 0.018),
                     shape: RoundedRectangleBorder(
@@ -245,11 +253,12 @@ class _ItemListSection extends StatelessWidget {
 
     // Estado inicial
     if (!provider.hasSearched) {
-      return const _EmptyStateWidget(
-        icon: Icons.search,
-        title: 'Buscar Productos',
-        message:
-            'Usa el buscador para encontrar productos\no visualiza todos los productos disponibles',
+      return Builder(
+        builder: (ctx) => _EmptyStateWidget(
+          icon: Icons.search_rounded,
+          title: AppLocalizations.of(ctx).searchItemsTitle,
+          message: AppLocalizations.of(ctx).searchItemsMsg,
+        ),
       );
     }
 
@@ -260,10 +269,12 @@ class _ItemListSection extends StatelessWidget {
 
     // Sin resultados
     if (!provider.hasResults) {
-      return const _EmptyStateWidget(
-        icon: Icons.inventory_2_outlined,
-        title: 'Sin Resultados',
-        message: 'No se encontraron productos con ese criterio de búsqueda',
+      return Builder(
+        builder: (ctx) => _EmptyStateWidget(
+          icon: Icons.inventory_2_outlined,
+          title: AppLocalizations.of(ctx).noItemsFound,
+          message: AppLocalizations.of(ctx).noItemsFoundMsg,
+        ),
       );
     }
 
@@ -274,7 +285,7 @@ class _ItemListSection extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
           child: Text(
-            '${provider.items.length} producto(s) encontrado(s)',
+            AppLocalizations.of(context).itemsFound(provider.items.length),
             style: TextStyle(
               color: Colors.white70,
               fontSize: size.width * 0.032,
@@ -303,9 +314,10 @@ class _ItemListSection extends StatelessWidget {
   void _showItemDetail(BuildContext context, ItemModel item) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppTheme.primary,
+      backgroundColor: AppTheme.dialogBackground,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        side: BorderSide(color: AppTheme.dialogBorder, width: 1),
       ),
       builder: (context) => _ItemDetailSheet(item: item),
     );
@@ -332,20 +344,86 @@ class _ItemListSection extends StatelessWidget {
       BuildContext context, ItemListProvider provider, ItemModel item) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirmar Eliminación'),
-        content: Text('¿Está seguro de eliminar el producto "${item.name}"?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar'),
+      builder: (ctx) => Dialog(
+        backgroundColor: AppTheme.dialogBackground,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: AppTheme.dialogBorder, width: 1),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: AppTheme.actionDelete.withOpacity(0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.delete_outline_rounded,
+                  color: AppTheme.actionDelete,
+                  size: 32,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                AppLocalizations.of(ctx).deleteItemTitle,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: AppTheme.textPrimary,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                AppLocalizations.of(ctx).deleteItemConfirm(item.name),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: AppTheme.textSecondary,
+                  fontSize: 13.5,
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 28),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(ctx, false),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppTheme.textSecondary,
+                        side: const BorderSide(color: AppTheme.dialogBorder),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.symmetric(vertical: 13),
+                      ),
+                      child: Text(AppLocalizations.of(ctx).btnCancel),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => Navigator.pop(ctx, true),
+                      icon: const Icon(Icons.delete_rounded, size: 18),
+                      label: Text(AppLocalizations.of(ctx).btnDelete),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.actionDelete,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.symmetric(vertical: 13),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Eliminar'),
-          ),
-        ],
+        ),
       ),
     );
 
@@ -356,10 +434,16 @@ class _ItemListSection extends StatelessWidget {
           SnackBar(
             content: Text(
               success
-                  ? 'Producto eliminado exitosamente'
-                  : 'Error al eliminar el producto',
+                  ? AppLocalizations.of(context).itemDeletedSuccess
+                  : AppLocalizations.of(context).itemDeletedError,
+              style: const TextStyle(color: Colors.white),
             ),
-            backgroundColor: success ? Colors.green : Colors.red,
+            backgroundColor:
+                success ? AppTheme.actionSave : AppTheme.actionDanger,
+            behavior: SnackBarBehavior.floating,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           ),
         );
       }
@@ -453,35 +537,37 @@ class _ItemDetailSheet extends StatelessWidget {
           ),
           SizedBox(height: size.height * 0.018),
           _DetailRow(
-            icon: Icons.label,
-            label: 'Clave de búsqueda',
+            icon: Icons.label_rounded,
+            label: AppLocalizations.of(context).labelSearchKey,
             value: item.searchKey ?? 'N/A',
           ),
           _DetailRow(
-            icon: Icons.description,
-            label: 'Descripción',
-            value: item.description ?? 'Sin descripción',
+            icon: Icons.description_rounded,
+            label: AppLocalizations.of(context).labelDescription,
+            value:
+                item.description ?? AppLocalizations.of(context).noDescription,
           ),
           _DetailRow(
-            icon: Icons.attach_money,
-            label: 'Precio',
+            icon: Icons.attach_money_rounded,
+            label: AppLocalizations.of(context).labelPrice,
             value: '\$${item.price?.toStringAsFixed(2) ?? "0.00"}',
           ),
           _DetailRow(
-            icon: Icons.money_off,
-            label: 'Costo',
+            icon: Icons.money_off_rounded,
+            label: AppLocalizations.of(context).labelCost,
             value: '\$${item.cost?.toStringAsFixed(2) ?? "0.00"}',
           ),
           if (item.isService == 'N')
             _DetailRow(
-              icon: Icons.inventory,
-              label: 'Stock',
-              value: '${item.stock ?? 0} unidades',
+              icon: Icons.inventory_rounded,
+              label: AppLocalizations.of(context).labelStock,
+              value:
+                  AppLocalizations.of(context).labelStockUnits(item.stock ?? 0),
             ),
           if (item.barCode != null && item.barCode!.isNotEmpty)
             _DetailRow(
-              icon: Icons.qr_code,
-              label: 'Código de barras',
+              icon: Icons.qr_code_rounded,
+              label: AppLocalizations.of(context).labelBarCode,
               value: item.barCode!,
             ),
           SizedBox(height: size.height * 0.025),

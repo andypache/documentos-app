@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/provider/provider.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
@@ -36,10 +37,12 @@ class _BillScreenState extends State<BillScreen> {
                       isCalculating: provider.isCalculating,
                       canSave: provider.canSave,
                       onSave: () => _saveBill(context, provider),
-                      customerDiscountLabel: provider.customerDiscountInfo !=
-                              null
-                          ? 'Descuento ${provider.customerDiscountInfo!.percentage.toStringAsFixed(0)}%'
-                          : null,
+                      customerDiscountLabel:
+                          provider.customerDiscountInfo != null
+                              ? AppLocalizations.of(context).labelDiscountValue(
+                                  provider.customerDiscountInfo!.percentage
+                                      .toStringAsFixed(0))
+                              : null,
                     );
                   },
                 ),
@@ -56,50 +59,72 @@ class _BillScreenState extends State<BillScreen> {
     // Mostrar diálogo de confirmación
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.primary,
-        title: const Text(
-          '¿Guardar Factura?',
-          style: TextStyle(color: Colors.white),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Cliente: ${provider.selectedCustomer?.getDisplayName() ?? 'N/A'}',
-              style: const TextStyle(color: Colors.white70),
+      builder: (ctx) {
+        final l10n = AppLocalizations.of(ctx);
+        return AlertDialog(
+          backgroundColor: AppTheme.primary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Text(
+            l10n.billConfirmTitle,
+            style: const TextStyle(color: Colors.white),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.billConfirmCustomer(
+                    provider.selectedCustomer?.getDisplayName() ?? 'N/A'),
+                style: const TextStyle(color: AppTheme.textSecondary),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                l10n.billConfirmProducts(provider.itemCount),
+                style: const TextStyle(color: AppTheme.textSecondary),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                l10n.billConfirmTotal(provider.total.toStringAsFixed(2)),
+                style: const TextStyle(
+                  color: AppTheme.primaryButton,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            OutlinedButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppTheme.textSecondary,
+                side: const BorderSide(color: AppTheme.dialogBorder),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              ),
+              child: Text(l10n.btnCancel),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Productos: ${provider.itemCount}',
-              style: const TextStyle(color: Colors.white70),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Total: \$${provider.total.toStringAsFixed(2)}',
-              style: const TextStyle(
-                color: Colors.greenAccent,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+            ElevatedButton.icon(
+              onPressed: () => Navigator.pop(ctx, true),
+              icon: const Icon(Icons.save_rounded, size: 18),
+              label: Text(l10n.btnSave),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.actionSave,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               ),
             ),
           ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.primaryButton,
-            ),
-            child: const Text('Guardar'),
-          ),
-        ],
-      ),
+        );
+      },
     );
 
     if (confirmed != true) return;
@@ -140,78 +165,76 @@ class _BillScreenState extends State<BillScreen> {
       // Mostrar diálogo de éxito con animación
       await showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          backgroundColor: AppTheme.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.2),
-                  shape: BoxShape.circle,
+        builder: (ctx) {
+          final l10n = AppLocalizations.of(ctx);
+          return AlertDialog(
+            backgroundColor: AppTheme.primary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppTheme.actionSave.withOpacity(0.18),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.check_circle,
+                    color: AppTheme.actionSave,
+                    size: 64,
+                  ),
                 ),
-                child: const Icon(
-                  Icons.check_circle,
-                  color: Colors.greenAccent,
-                  size: 64,
+                const SizedBox(height: 20),
+                Text(
+                  l10n.billSavedTitle,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                '¡Factura Guardada!',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+                const SizedBox(height: 12),
+                Text(
+                  l10n.billSavedMsg,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: AppTheme.textSecondary,
+                    fontSize: 15,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'La factura se guardó',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.8),
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'exitosamente',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.8),
-                  fontSize: 16,
+              ],
+            ),
+            actions: [
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.primaryButton,
+                    foregroundColor: AppTheme.secondary,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 40,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text(
+                    l10n.btnAccept,
+                    style: const TextStyle(fontSize: 16),
+                  ),
                 ),
               ),
             ],
-          ),
-          actions: [
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context); // Cerrar diálogo
-                  Navigator.pop(context); // Cerrar pantalla de factura
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primaryButton,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 40,
-                    vertical: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text(
-                  'Aceptar',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       );
     }
   }
@@ -224,93 +247,98 @@ class _BillScreenBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final l10n = AppLocalizations.of(context);
 
-    return Column(
-      children: [
-        // Widget de información del usuario
-        const UserSessionTitle(),
-        // Header con título y botón de cerrar
-        Container(
-          padding: EdgeInsets.only(
-            top: 0,
-            left: size.width * 0.05,
-            right: size.width * 0.05,
-            bottom: 0,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Expanded(
-                child: PageTitleWidget(title: 'Facturar'),
-              ),
-              IconButton(
-                icon: Icon(Icons.close,
-                    color: Colors.white, size: size.width * 0.07),
-                onPressed: () => _confirmExit(context),
-                tooltip: 'Cerrar',
-              ),
-            ],
-          ),
-        ),
-        // Resto del contenido
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
+    return SafeArea(
+      bottom: false,
+      child: Column(
+        children: [
+          // Widget de información del usuario
+          const UserSessionTitle(),
+          // Header con título y botón de cerrar
+          Container(
+            padding: EdgeInsets.only(
+              top: 0,
+              left: size.width * 0.05,
+              right: size.width * 0.05,
+              bottom: 0,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(height: size.height * 0.01),
-                Consumer<BillFormProvider>(
-                  builder: (context, provider, _) {
-                    return Column(
-                      children: [
-                        // Selección de cliente
-                        CustomerSelectionWidget(
-                          selectedCustomer: provider.selectedCustomer,
-                          onSelectCustomer: () => _showCustomerSearch(context),
-                          onCreateCustomer: () => _createNewCustomer(context),
-                          onRemoveCustomer: () => provider.removeCustomer(),
-                          onAssignConsumerFinal: () =>
-                              provider.assignConsumerFinal(),
-                        ),
-                        SizedBox(height: size.height * 0.02),
-
-                        // Lista de productos
-                        ProductListWidget(
-                          billItems: provider.billItems,
-                          onRemoveItem: (index) => provider.removeItem(index),
-                          onUpdateItem: (index, updatedItem) {
-                            provider.updateItem(
-                              index,
-                              quantity: updatedItem.quantity,
-                              unitPrice: updatedItem.unitPrice,
-                              discount: updatedItem.discount,
-                            );
-                          },
-                          onAddProduct: () => _showProductSearch(context),
-                        ),
-                        SizedBox(height: size.height * 0.02),
-
-                        // Método de pago
-                        PaymentMethodWidget(
-                          paymentMethods: provider.paymentMethods,
-                          selectedMethod: provider.selectedPaymentMethod,
-                          onMethodSelected: (method) {
-                            provider.selectPaymentMethod(method);
-                          },
-                          isLoading: provider.isLoading,
-                        ),
-
-                        // Espacio para el panel de totales
-                        SizedBox(height: size.height * 0.35),
-                      ],
-                    );
-                  },
+                Expanded(
+                  child: PageTitleWidget(title: l10n.billTitle),
+                ),
+                IconButton(
+                  icon: Icon(Icons.close,
+                      color: Colors.white, size: size.width * 0.07),
+                  onPressed: () => _confirmExit(context),
+                  tooltip: 'Cerrar',
                 ),
               ],
             ),
           ),
-        ),
-      ],
-    );
+          // Resto del contenido
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: size.height * 0.01),
+                  Consumer<BillFormProvider>(
+                    builder: (context, provider, _) {
+                      return Column(
+                        children: [
+                          // Selección de cliente
+                          CustomerSelectionWidget(
+                            selectedCustomer: provider.selectedCustomer,
+                            onSelectCustomer: () =>
+                                _showCustomerSearch(context),
+                            onCreateCustomer: () => _createNewCustomer(context),
+                            onRemoveCustomer: () => provider.removeCustomer(),
+                            onAssignConsumerFinal: () =>
+                                provider.assignConsumerFinal(),
+                          ),
+                          SizedBox(height: size.height * 0.02),
+
+                          // Lista de productos
+                          ProductListWidget(
+                            billItems: provider.billItems,
+                            onRemoveItem: (index) => provider.removeItem(index),
+                            onUpdateItem: (index, updatedItem) {
+                              provider.updateItem(
+                                index,
+                                quantity: updatedItem.quantity,
+                                unitPrice: updatedItem.unitPrice,
+                                discount: updatedItem.discount,
+                              );
+                            },
+                            onAddProduct: () => _showProductSearch(context),
+                          ),
+                          SizedBox(height: size.height * 0.02),
+
+                          // Método de pago
+                          PaymentMethodWidget(
+                            paymentMethods: provider.paymentMethods,
+                            selectedMethod: provider.selectedPaymentMethod,
+                            onMethodSelected: (method) {
+                              provider.selectPaymentMethod(method);
+                            },
+                            isLoading: provider.isLoading,
+                          ),
+
+                          // Espacio para el panel de totales
+                          SizedBox(height: size.height * 0.35),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ), // Column
+    ); // SafeArea
   }
 
   Future<void> _confirmExit(BuildContext context) async {
@@ -325,30 +353,50 @@ class _BillScreenBody extends StatelessWidget {
     // Confirmar si hay datos sin guardar
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.primary,
-        title: const Text(
-          '¿Salir sin guardar?',
-          style: TextStyle(color: Colors.white),
-        ),
-        content: const Text(
-          'Hay datos sin guardar que se perderán.',
-          style: TextStyle(color: Colors.white70),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar'),
+      builder: (ctx) {
+        final l10n = AppLocalizations.of(ctx);
+        return AlertDialog(
+          backgroundColor: AppTheme.primary,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text(
+            l10n.billExitTitle,
+            style: const TextStyle(color: Colors.white),
           ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
+          content: Text(
+            l10n.billExitMsg,
+            style: const TextStyle(color: AppTheme.textSecondary),
+          ),
+          actions: [
+            OutlinedButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppTheme.textSecondary,
+                side: const BorderSide(color: AppTheme.dialogBorder),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              ),
+              child: Text(l10n.btnCancel),
             ),
-            child: const Text('Salir'),
-          ),
-        ],
-      ),
+            ElevatedButton.icon(
+              onPressed: () => Navigator.pop(ctx, true),
+              icon: const Icon(Icons.exit_to_app_rounded, size: 18),
+              label: Text(l10n.btnExit),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.actionDanger,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              ),
+            ),
+          ],
+        );
+      },
     );
 
     if (confirmed == true && context.mounted) {

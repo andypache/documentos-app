@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/item/company_system_parameter_model.dart';
 import 'package:hdocumentos/src/model/item/item_tax_model.dart';
 import 'package:hdocumentos/src/provider/form/item_form_provider.dart';
@@ -13,15 +14,16 @@ class ItemWizardStep4Widget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final itemForm = Provider.of<ItemFormProvider>(context);
+    final l10n = AppLocalizations.of(context);
 
     return Form(
       key: itemForm.formKeyStep4,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Impuestos',
-            style: TextStyle(
+          Text(
+            l10n.labelTaxes,
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -35,10 +37,10 @@ class ItemWizardStep4Widget extends StatelessWidget {
                 color: AppTheme.white.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Center(
+              child: Center(
                 child: Text(
-                  'No hay impuestos agregados',
-                  style: TextStyle(
+                  l10n.noTaxesAdded,
+                  style: const TextStyle(
                     color: Colors.white70,
                     fontSize: 16,
                   ),
@@ -76,7 +78,8 @@ class ItemWizardStep4Widget extends StatelessWidget {
                       style: const TextStyle(color: Colors.white70),
                     ),
                     trailing: IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
+                      icon: const Icon(Icons.delete_rounded,
+                          color: AppTheme.actionDelete),
                       onPressed: () => itemForm.removeTax(index),
                     ),
                   ),
@@ -87,12 +90,17 @@ class ItemWizardStep4Widget extends StatelessWidget {
           Center(
             child: ElevatedButton.icon(
               onPressed: () => _showAddTaxDialog(context, itemForm),
-              icon: const Icon(Icons.add),
-              label: const Text('Agregar Impuesto'),
+              icon: const Icon(Icons.add_rounded),
+              label: Text(l10n.btnAddTax),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primaryButton,
+                foregroundColor: AppTheme.secondary,
+                elevation: 0,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             ),
           ),
@@ -104,14 +112,14 @@ class ItemWizardStep4Widget extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: AppTheme.primaryButton, width: 1),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.info_outline, color: AppTheme.primaryButton),
-                SizedBox(width: 10),
+                const Icon(Icons.info_outline, color: AppTheme.primaryButton),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    'Los impuestos son opcionales. Puede agregarlos ahora o más tarde.',
-                    style: TextStyle(color: Colors.white70, fontSize: 14),
+                    l10n.taxInfoNote,
+                    style: const TextStyle(color: Colors.white70, fontSize: 14),
                   ),
                 ),
               ],

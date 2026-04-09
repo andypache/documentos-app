@@ -164,7 +164,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get btnSaveStep => 'Save this step';
 
   @override
+  String get stepBasic => 'Basic';
+
+  @override
+  String get stepPrices => 'Prices';
+
+  @override
+  String get stepCodes => 'Codes';
+
+  @override
   String get stepTaxes => 'Taxes';
+
+  @override
+  String get stepCustomerData => 'Data';
+
+  @override
+  String get stepCustomerContact => 'Contact';
 
   @override
   String get step2Title => 'Logo & Web Settings';
@@ -543,4 +558,368 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get couldNotLoadInfo => 'Could not load information';
+
+  @override
+  String get btnAccept => 'Accept';
+
+  @override
+  String get btnExit => 'Exit';
+
+  @override
+  String get btnAdd => 'Add';
+
+  @override
+  String get btnSearch => 'Search';
+
+  @override
+  String get btnShowAll => 'View all';
+
+  @override
+  String get btnNewCustomer => 'New';
+
+  @override
+  String get btnConsumerFinal => 'C. Final';
+
+  @override
+  String get btnAddTax => 'Add Tax';
+
+  @override
+  String get btnSaveInvoice => 'Save Invoice';
+
+  @override
+  String get billTitle => 'Invoice';
+
+  @override
+  String get billSummaryTitle => 'Invoice Summary';
+
+  @override
+  String get billConfirmTitle => 'Save Invoice?';
+
+  @override
+  String billConfirmCustomer(String name) {
+    return 'Customer: $name';
+  }
+
+  @override
+  String billConfirmProducts(int count) {
+    return 'Products: $count';
+  }
+
+  @override
+  String billConfirmTotal(String amount) {
+    return 'Total: \$$amount';
+  }
+
+  @override
+  String get billSavedTitle => 'Invoice Saved!';
+
+  @override
+  String get billSavedMsg => 'The invoice was saved successfully';
+
+  @override
+  String get billExitTitle => 'Exit without saving?';
+
+  @override
+  String get billExitMsg => 'There is unsaved data that will be lost.';
+
+  @override
+  String get itemCreateTitle => 'Create Product';
+
+  @override
+  String get itemEditTitle => 'Edit Product';
+
+  @override
+  String get customerCreateTitle => 'New Customer';
+
+  @override
+  String get customerEditTitle => 'Edit Customer';
+
+  @override
+  String get itemCreatedSuccess => 'Product saved successfully';
+
+  @override
+  String get itemUpdatedSuccess => 'Product updated successfully';
+
+  @override
+  String get customerCreatedSuccess => 'Customer created successfully';
+
+  @override
+  String get customerUpdatedSuccess => 'Customer updated successfully';
+
+  @override
+  String get labelProducts => 'Products';
+
+  @override
+  String get labelTaxes => 'Taxes';
+
+  @override
+  String get labelQuantity => 'Quantity';
+
+  @override
+  String get labelUnitPrice => 'Unit Price';
+
+  @override
+  String get labelDiscount => 'Discount';
+
+  @override
+  String get labelSubtotal => 'Subtotal';
+
+  @override
+  String get labelTotal => 'TOTAL';
+
+  @override
+  String get labelTotalTaxes => 'Total taxes';
+
+  @override
+  String get labelDiscountApplied => 'Applied discount';
+
+  @override
+  String get labelDiscountAvailable => 'DISCOUNT AVAILABLE!';
+
+  @override
+  String labelDiscountValue(String value) {
+    return '$value% discount';
+  }
+
+  @override
+  String labelDiscountValid(String date) {
+    return 'Valid until: $date';
+  }
+
+  @override
+  String get labelSelectCustomer => 'Select Customer';
+
+  @override
+  String get labelEditProduct => 'Edit Product';
+
+  @override
+  String get searchProductHint => 'Name, code or barcode';
+
+  @override
+  String get searchCustomerHint => 'Name or identification';
+
+  @override
+  String get searchProductTitle => 'Search Product';
+
+  @override
+  String get searchCustomerTitle => 'Search Customer';
+
+  @override
+  String get noProductsAdded => 'No products added';
+
+  @override
+  String get noProductsAddedHint => 'Tap \"Add\" to search for products';
+
+  @override
+  String get noTaxesAdded => 'No taxes added';
+
+  @override
+  String get taxInfoNote => 'Taxes are optional. You can add them now or later.';
+
+  @override
+  String get registerTitle => 'Register User';
+
+  @override
+  String get registerHaveAccount => 'Already have an account? Sign in';
+
+  @override
+  String get registerFieldUser => 'Username';
+
+  @override
+  String get registerFieldUserHint => 'Username';
+
+  @override
+  String get registerFieldPassword => 'Password';
+
+  @override
+  String get registerFieldPasswordHint => 'User password';
+
+  @override
+  String get registerBtn => 'Register';
+
+  @override
+  String get billRequiredFieldsHint => 'Complete all required fields';
+
+  @override
+  String get btnDelete => 'Delete';
+
+  @override
+  String get btnLoadAll => 'View All';
+
+  @override
+  String get btnLoadLast => 'View Latest';
+
+  @override
+  String get btnNewProduct => 'New Product';
+
+  @override
+  String get deleteItemTitle => 'Delete Product';
+
+  @override
+  String deleteItemConfirm(String name) {
+    return 'Are you sure you want to delete the product \"$name\"?';
+  }
+
+  @override
+  String get deleteCustomerTitle => 'Delete Customer';
+
+  @override
+  String deleteCustomerConfirm(String name) {
+    return 'Are you sure you want to delete \"$name\"?';
+  }
+
+  @override
+  String get deleteSuccess => 'Deleted successfully';
+
+  @override
+  String get deleteError => 'Error deleting';
+
+  @override
+  String get itemDeletedSuccess => 'Product deleted successfully';
+
+  @override
+  String get itemDeletedError => 'Error deleting the product';
+
+  @override
+  String get customerDeletedSuccess => 'Customer deleted successfully';
+
+  @override
+  String itemsFound(int count) {
+    return '$count product(s) found';
+  }
+
+  @override
+  String customersFound(int count) {
+    return '$count customer(s) found';
+  }
+
+  @override
+  String get noItemsFound => 'No Results';
+
+  @override
+  String get noItemsFoundMsg => 'No products found matching that criteria';
+
+  @override
+  String get noCustomersFound => 'No Results';
+
+  @override
+  String get noCustomersFoundMsg => 'No customers found matching that criteria';
+
+  @override
+  String get searchItemsTitle => 'Search Products';
+
+  @override
+  String get searchItemsMsg => 'Use the search bar to find products\nor view all available products';
+
+  @override
+  String get searchCustomersTitle => 'Search Customers';
+
+  @override
+  String get searchCustomersMsg => 'Use the search bar to find customers\nor view the latest registered customers';
+
+  @override
+  String discountBadge(String pct) {
+    return 'Discount $pct%';
+  }
+
+  @override
+  String get selectTaxTitle => 'Select Tax';
+
+  @override
+  String get selectTaxSubtitle => 'You can only add one tax per group';
+
+  @override
+  String get taxGroupIVA => 'VAT (Value Added Tax)';
+
+  @override
+  String get taxGroupICE => 'ICE (Special Consumption Tax)';
+
+  @override
+  String get taxGroupOther => 'Other Taxes';
+
+  @override
+  String get taxAssigned => 'Already assigned';
+
+  @override
+  String get labelSearchKey => 'Search key';
+
+  @override
+  String get labelBarCode => 'Barcode';
+
+  @override
+  String get labelPrice => 'Price';
+
+  @override
+  String get labelCost => 'Cost';
+
+  @override
+  String get labelStock => 'Stock';
+
+  @override
+  String labelStockUnits(int qty) {
+    return '$qty units';
+  }
+
+  @override
+  String get labelService => 'Service';
+
+  @override
+  String get labelIdentificationType => 'Identification type';
+
+  @override
+  String get labelIdentification => 'Identification';
+
+  @override
+  String get labelEmailAddress => 'Email address';
+
+  @override
+  String get labelPhoneNumber => 'Phone';
+
+  @override
+  String get labelAddress => 'Address';
+
+  @override
+  String get labelDescription => 'Description';
+
+  @override
+  String get noDescription => 'No description';
+
+  @override
+  String get pageProductsTitle => 'Products';
+
+  @override
+  String get pageClientsTitle => 'Customers';
+
+  @override
+  String get searchItemsHint => 'Search by name, key or barcode';
+
+  @override
+  String get searchCustomersHint => 'Search by name or identification';
+
+  @override
+  String get dialogSearchHint => 'Name or identification';
+
+  @override
+  String get dialogSearchProductHint => 'Name, code or barcode';
+
+  @override
+  String get noSearchYetCustomers => 'Enter name or identification\nto search for a customer';
+
+  @override
+  String get noSearchYetProducts => 'Search products by name,\ncode or barcode';
+
+  @override
+  String get noDialogCustomersFound => 'No customers found';
+
+  @override
+  String get noDialogProductsFound => 'No products found';
+
+  @override
+  String get alertDemoTitle => 'Alert Center';
+
+  @override
+  String get alertDemoContent => 'This is a system demo alert';
+
+  @override
+  String get alertDemoButton => 'Show Alert';
 }

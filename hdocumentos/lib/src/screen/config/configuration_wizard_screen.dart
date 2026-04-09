@@ -411,8 +411,11 @@ class _CompanyNavigationButtons extends StatelessWidget {
                   style: TextStyle(fontSize: size.width * 0.034),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      provider.currentStep > 0 ? AppTheme.grey : Colors.red,
+                  backgroundColor: provider.currentStep > 0
+                      ? AppTheme.grey
+                      : AppTheme.actionDanger,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
                   padding: EdgeInsets.symmetric(
                     horizontal: size.width * 0.05,
                     vertical: size.height * 0.012,
@@ -450,6 +453,8 @@ class _CompanyNavigationButtons extends StatelessWidget {
                               fontWeight: FontWeight.bold)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.primaryButton,
+                        foregroundColor: AppTheme.secondary,
+                        elevation: 0,
                         padding: EdgeInsets.symmetric(
                           horizontal: size.width * 0.05,
                           vertical: size.height * 0.012,
@@ -478,6 +483,8 @@ class _CompanyNavigationButtons extends StatelessWidget {
                           ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppTheme.actionSave,
+                            foregroundColor: Colors.white,
+                            elevation: 0,
                             padding: EdgeInsets.symmetric(
                               horizontal: size.width * 0.05,
                               vertical: size.height * 0.012,
@@ -511,6 +518,8 @@ class _CompanyNavigationButtons extends StatelessWidget {
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.actionSaveDark,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
                   padding: EdgeInsets.symmetric(vertical: size.height * 0.013),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),

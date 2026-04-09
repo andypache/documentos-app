@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/common/loading_widget.dart';
@@ -224,9 +225,10 @@ class _ProductSearchDialogState extends State<ProductSearchDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: AppTheme.primary,
+      backgroundColor: AppTheme.dialogBackground,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
+        side: const BorderSide(color: AppTheme.dialogBorder, width: 1),
       ),
       child: Container(
         constraints: const BoxConstraints(maxHeight: 650, maxWidth: 500),
@@ -245,20 +247,21 @@ class _ProductSearchDialogState extends State<ProductSearchDialog> {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.search, color: Colors.white, size: 28),
+                  const Icon(Icons.manage_search_rounded,
+                      color: Colors.white, size: 28),
                   const SizedBox(width: 12),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      'Buscar Producto',
-                      style: TextStyle(
-                        color: Colors.white,
+                      AppLocalizations.of(context).searchProductTitle,
+                      style: const TextStyle(
+                        color: AppTheme.textPrimary,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white),
+                    icon: const Icon(Icons.close_rounded, color: Colors.white),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -283,7 +286,8 @@ class _ProductSearchDialogState extends State<ProductSearchDialog> {
                         autofocus: true,
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          hintText: 'Nombre, código o barras',
+                          hintText: AppLocalizations.of(context)
+                              .dialogSearchProductHint,
                           hintStyle:
                               TextStyle(color: Colors.white.withOpacity(0.5)),
                           prefixIcon: const Icon(Icons.search,
@@ -368,13 +372,13 @@ class _ProductSearchDialogState extends State<ProductSearchDialog> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.inventory_2_outlined,
-                size: 64, color: Colors.white.withOpacity(0.3)),
+                size: 64, color: AppTheme.textSecondary.withOpacity(0.5)),
             const SizedBox(height: 16),
             Text(
-              'Busca productos por nombre,\ncódigo o código de barras',
+              AppLocalizations.of(context).noSearchYetProducts,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.6),
+              style: const TextStyle(
+                color: AppTheme.textSecondary,
                 fontSize: 14,
               ),
             ),
@@ -392,13 +396,13 @@ class _ProductSearchDialogState extends State<ProductSearchDialog> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.inventory,
-                size: 64, color: Colors.white.withOpacity(0.3)),
+            Icon(Icons.inventory_2_rounded,
+                size: 64, color: AppTheme.textSecondary.withOpacity(0.5)),
             const SizedBox(height: 16),
             Text(
-              'No se encontraron productos',
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.6),
+              AppLocalizations.of(context).noDialogProductsFound,
+              style: const TextStyle(
+                color: AppTheme.textSecondary,
                 fontSize: 14,
               ),
             ),
@@ -462,7 +466,7 @@ class _ProductSearchDialogState extends State<ProductSearchDialog> {
                     Text(
                       '\$${item.price?.toStringAsFixed(2) ?? '0.00'}',
                       style: const TextStyle(
-                        color: Colors.greenAccent,
+                        color: AppTheme.primaryButton,
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                       ),
@@ -489,14 +493,15 @@ class _ProductSearchDialogState extends State<ProductSearchDialog> {
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.blue.withOpacity(0.3),
+                              color: AppTheme.primaryButton.withOpacity(0.15),
                               borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: Colors.blue, width: 1),
+                              border: Border.all(
+                                  color: AppTheme.primaryButton, width: 1),
                             ),
                             child: Text(
                               '${tax.name} ${tax.percentage.toStringAsFixed(0)}%',
                               style: const TextStyle(
-                                color: Colors.lightBlueAccent,
+                                color: AppTheme.primaryButton,
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
                               ),

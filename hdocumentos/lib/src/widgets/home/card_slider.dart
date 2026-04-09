@@ -43,8 +43,9 @@ class _CardSliderState extends State<CardSlider> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final containerHeight = size.height * 0.28;
-    final titleFontSize = size.width * 0.045;
+    final shortest = size.shortestSide;
+    final containerHeight = shortest * 0.52;
+    final titleFontSize = shortest * 0.055;
 
     return SizedBox(
         width: double.infinity,
@@ -58,7 +59,7 @@ class _CardSliderState extends State<CardSlider> {
                         fontSize: titleFontSize,
                         color: AppTheme.white,
                         fontWeight: FontWeight.bold))),
-          SizedBox(height: size.height * 0.006),
+          SizedBox(height: shortest * 0.008),
           Expanded(
               child: ListView.builder(
                   controller: scrollController,
@@ -91,15 +92,16 @@ class _BillPoster extends StatelessWidget {
   Widget build(BuildContext context) {
     bill.resume = resume;
     final size = MediaQuery.of(context).size;
+    final shortest = size.shortestSide;
 
-    // Calcular dimensiones responsivas
-    final cardWidth = size.width * 0.25;
-    final cardHeight = size.height * 0.22;
-    final dateFontSize = size.width * 0.028;
-    final itemFontSize = size.width * 0.026;
-    final totalLabelFontSize = size.width * 0.026;
-    final totalValueFontSize = size.width * 0.028;
-    final clientFontSize = size.width * 0.025;
+    // Calcular dimensiones responsivas basadas en shortestSide
+    final cardWidth = shortest * 0.32;
+    final cardHeight = shortest * 0.42;
+    final dateFontSize = shortest * 0.034;
+    final itemFontSize = shortest * 0.03;
+    final totalLabelFontSize = shortest * 0.03;
+    final totalValueFontSize = shortest * 0.034;
+    final clientFontSize = shortest * 0.028;
     final horizontalMargin = size.width * 0.02;
 
     return Container(
@@ -120,8 +122,8 @@ class _BillPoster extends StatelessWidget {
                         height: cardHeight * 0.82,
                         child: Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: size.width * 0.01,
-                            vertical: size.height * 0.008,
+                            horizontal: shortest * 0.012,
+                            vertical: shortest * 0.01,
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -158,28 +160,37 @@ class _BillPoster extends StatelessWidget {
                                 ),
                               ),
                               // Total
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text("TOTAL",
-                                      style: TextStyle(
-                                          color: Colors.redAccent,
-                                          fontSize: totalLabelFontSize,
-                                          fontWeight: FontWeight.bold)),
-                                  Text("\$ ${bill.total}",
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          color: Colors.redAccent,
-                                          fontSize: totalValueFontSize,
-                                          fontWeight: FontWeight.bold))
-                                ],
+                              Padding(
+                                padding: EdgeInsets.only(top: shortest * 0.008),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Divider(
+                                      color: Colors.white.withOpacity(0.25),
+                                      thickness: 0.8,
+                                      height: shortest * 0.02,
+                                    ),
+                                    Text("TOTAL",
+                                        style: TextStyle(
+                                            color: Colors.redAccent,
+                                            fontSize: totalLabelFontSize,
+                                            fontWeight: FontWeight.bold)),
+                                    SizedBox(height: shortest * 0.006),
+                                    Text("\$ ${bill.total}",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            color: Colors.redAccent,
+                                            fontSize: totalValueFontSize,
+                                            fontWeight: FontWeight.bold))
+                                  ],
+                                ),
                               ),
                             ],
                           ),
                         ),
                       )))),
-          SizedBox(height: size.height * 0.005),
+          SizedBox(height: shortest * 0.007),
           Flexible(
             child: Text(
               bill.client.completeName ?? "",

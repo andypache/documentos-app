@@ -213,6 +213,6 @@ class _HomeTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UserSessionTitle(onReload: onReload);
+    return const UserSessionTitle();
   }
 }

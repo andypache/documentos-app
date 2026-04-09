@@ -387,11 +387,41 @@ abstract class AppLocalizations {
   /// **'Guardar este paso'**
   String get btnSaveStep;
 
-  /// Etiqueta paso 6 del wizard
+  /// Etiqueta paso 1 del wizard de producto
+  ///
+  /// In es, this message translates to:
+  /// **'Básica'**
+  String get stepBasic;
+
+  /// Etiqueta paso 2 del wizard de producto
+  ///
+  /// In es, this message translates to:
+  /// **'Precios'**
+  String get stepPrices;
+
+  /// Etiqueta paso 3 del wizard de producto
+  ///
+  /// In es, this message translates to:
+  /// **'Códigos'**
+  String get stepCodes;
+
+  /// Etiqueta paso 4 del wizard de producto
   ///
   /// In es, this message translates to:
   /// **'Impuestos'**
   String get stepTaxes;
+
+  /// Etiqueta paso 1 del wizard de cliente
+  ///
+  /// In es, this message translates to:
+  /// **'Datos'**
+  String get stepCustomerData;
+
+  /// Etiqueta paso 2 del wizard de cliente
+  ///
+  /// In es, this message translates to:
+  /// **'Contacto'**
+  String get stepCustomerContact;
 
   /// Título sección paso 2
   ///
@@ -1136,6 +1166,690 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No se pudo cargar la información'**
   String get couldNotLoadInfo;
+
+  /// Botón aceptar / confirmar
+  ///
+  /// In es, this message translates to:
+  /// **'Aceptar'**
+  String get btnAccept;
+
+  /// Botón salir sin guardar
+  ///
+  /// In es, this message translates to:
+  /// **'Salir'**
+  String get btnExit;
+
+  /// Botón agregar elemento
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar'**
+  String get btnAdd;
+
+  /// Botón buscar
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar'**
+  String get btnSearch;
+
+  /// Botón ver todos los registros
+  ///
+  /// In es, this message translates to:
+  /// **'Ver todos'**
+  String get btnShowAll;
+
+  /// Botón crear nuevo cliente
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo'**
+  String get btnNewCustomer;
+
+  /// Botón asignar consumidor final
+  ///
+  /// In es, this message translates to:
+  /// **'C. Final'**
+  String get btnConsumerFinal;
+
+  /// Botón agregar impuesto al producto
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar Impuesto'**
+  String get btnAddTax;
+
+  /// Botón guardar / emitir factura
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar Factura'**
+  String get btnSaveInvoice;
+
+  /// Título pantalla de facturación
+  ///
+  /// In es, this message translates to:
+  /// **'Facturar'**
+  String get billTitle;
+
+  /// Título del panel resumen de factura
+  ///
+  /// In es, this message translates to:
+  /// **'Resumen de Factura'**
+  String get billSummaryTitle;
+
+  /// Título diálogo confirmación guardar factura
+  ///
+  /// In es, this message translates to:
+  /// **'¿Guardar Factura?'**
+  String get billConfirmTitle;
+
+  /// Línea cliente en diálogo confirmación
+  ///
+  /// In es, this message translates to:
+  /// **'Cliente: {name}'**
+  String billConfirmCustomer(String name);
+
+  /// Línea productos en diálogo confirmación
+  ///
+  /// In es, this message translates to:
+  /// **'Productos: {count}'**
+  String billConfirmProducts(int count);
+
+  /// Línea total en diálogo confirmación
+  ///
+  /// In es, this message translates to:
+  /// **'Total: \${amount}'**
+  String billConfirmTotal(String amount);
+
+  /// Título diálogo éxito factura guardada
+  ///
+  /// In es, this message translates to:
+  /// **'¡Factura Guardada!'**
+  String get billSavedTitle;
+
+  /// Mensaje diálogo éxito factura guardada
+  ///
+  /// In es, this message translates to:
+  /// **'La factura se guardó exitosamente'**
+  String get billSavedMsg;
+
+  /// Título diálogo confirmar salida sin guardar
+  ///
+  /// In es, this message translates to:
+  /// **'¿Salir sin guardar?'**
+  String get billExitTitle;
+
+  /// Cuerpo diálogo confirmar salida sin guardar
+  ///
+  /// In es, this message translates to:
+  /// **'Hay datos sin guardar que se perderán.'**
+  String get billExitMsg;
+
+  /// Título wizard crear producto
+  ///
+  /// In es, this message translates to:
+  /// **'Crear Producto'**
+  String get itemCreateTitle;
+
+  /// Título wizard editar producto
+  ///
+  /// In es, this message translates to:
+  /// **'Editar Producto'**
+  String get itemEditTitle;
+
+  /// Título wizard crear cliente
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo Cliente'**
+  String get customerCreateTitle;
+
+  /// Título wizard editar cliente
+  ///
+  /// In es, this message translates to:
+  /// **'Editar Cliente'**
+  String get customerEditTitle;
+
+  /// Mensaje éxito al crear producto
+  ///
+  /// In es, this message translates to:
+  /// **'Producto guardado exitosamente'**
+  String get itemCreatedSuccess;
+
+  /// Mensaje éxito al actualizar producto
+  ///
+  /// In es, this message translates to:
+  /// **'Producto actualizado exitosamente'**
+  String get itemUpdatedSuccess;
+
+  /// Mensaje éxito al crear cliente
+  ///
+  /// In es, this message translates to:
+  /// **'Cliente creado exitosamente'**
+  String get customerCreatedSuccess;
+
+  /// Mensaje éxito al actualizar cliente
+  ///
+  /// In es, this message translates to:
+  /// **'Cliente actualizado exitosamente'**
+  String get customerUpdatedSuccess;
+
+  /// Etiqueta sección productos en factura
+  ///
+  /// In es, this message translates to:
+  /// **'Productos'**
+  String get labelProducts;
+
+  /// Etiqueta sección impuestos
+  ///
+  /// In es, this message translates to:
+  /// **'Impuestos'**
+  String get labelTaxes;
+
+  /// Etiqueta campo cantidad
+  ///
+  /// In es, this message translates to:
+  /// **'Cantidad'**
+  String get labelQuantity;
+
+  /// Etiqueta campo precio unitario
+  ///
+  /// In es, this message translates to:
+  /// **'Precio Unitario'**
+  String get labelUnitPrice;
+
+  /// Etiqueta campo descuento
+  ///
+  /// In es, this message translates to:
+  /// **'Descuento'**
+  String get labelDiscount;
+
+  /// Etiqueta subtotal en cálculos
+  ///
+  /// In es, this message translates to:
+  /// **'Subtotal'**
+  String get labelSubtotal;
+
+  /// Etiqueta total en cálculos
+  ///
+  /// In es, this message translates to:
+  /// **'TOTAL'**
+  String get labelTotal;
+
+  /// Etiqueta total de impuestos
+  ///
+  /// In es, this message translates to:
+  /// **'Total impuestos'**
+  String get labelTotalTaxes;
+
+  /// Etiqueta descuento aplicado en resumen
+  ///
+  /// In es, this message translates to:
+  /// **'Descuento aplicado'**
+  String get labelDiscountApplied;
+
+  /// Chip descuento disponible en tarjeta cliente
+  ///
+  /// In es, this message translates to:
+  /// **'¡DESCUENTO DISPONIBLE!'**
+  String get labelDiscountAvailable;
+
+  /// Texto valor descuento del cliente
+  ///
+  /// In es, this message translates to:
+  /// **'{value}% de descuento'**
+  String labelDiscountValue(String value);
+
+  /// Texto validez descuento del cliente
+  ///
+  /// In es, this message translates to:
+  /// **'Válido hasta: {date}'**
+  String labelDiscountValid(String date);
+
+  /// Etiqueta sección selección de cliente en factura
+  ///
+  /// In es, this message translates to:
+  /// **'Seleccionar Cliente'**
+  String get labelSelectCustomer;
+
+  /// Título diálogo editar producto en factura
+  ///
+  /// In es, this message translates to:
+  /// **'Editar Producto'**
+  String get labelEditProduct;
+
+  /// Hint búsqueda de productos
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre, código o barras'**
+  String get searchProductHint;
+
+  /// Hint búsqueda de clientes
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre o identificación'**
+  String get searchCustomerHint;
+
+  /// Título diálogo buscar producto
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar Producto'**
+  String get searchProductTitle;
+
+  /// Título diálogo buscar cliente
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar Cliente'**
+  String get searchCustomerTitle;
+
+  /// Mensaje cuando no hay productos en factura
+  ///
+  /// In es, this message translates to:
+  /// **'No hay productos agregados'**
+  String get noProductsAdded;
+
+  /// Hint para agregar productos
+  ///
+  /// In es, this message translates to:
+  /// **'Toca \"Agregar\" para buscar productos'**
+  String get noProductsAddedHint;
+
+  /// Mensaje cuando no hay impuestos en producto
+  ///
+  /// In es, this message translates to:
+  /// **'No hay impuestos agregados'**
+  String get noTaxesAdded;
+
+  /// Nota informativa sobre impuestos en producto
+  ///
+  /// In es, this message translates to:
+  /// **'Los impuestos son opcionales. Puede agregarlos ahora o más tarde.'**
+  String get taxInfoNote;
+
+  /// Título pantalla de registro
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar Usuario'**
+  String get registerTitle;
+
+  /// Enlace a login desde la pantalla de registro
+  ///
+  /// In es, this message translates to:
+  /// **'¿Ya tienes una cuenta? Inicia sesión'**
+  String get registerHaveAccount;
+
+  /// Etiqueta campo usuario en registro
+  ///
+  /// In es, this message translates to:
+  /// **'Usuario'**
+  String get registerFieldUser;
+
+  /// Hint campo usuario en registro
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre del usuario'**
+  String get registerFieldUserHint;
+
+  /// Etiqueta campo contraseña en registro
+  ///
+  /// In es, this message translates to:
+  /// **'Contraseña'**
+  String get registerFieldPassword;
+
+  /// Hint campo contraseña en registro
+  ///
+  /// In es, this message translates to:
+  /// **'Contraseña de usuario'**
+  String get registerFieldPasswordHint;
+
+  /// Botón de registro
+  ///
+  /// In es, this message translates to:
+  /// **'Registrarse'**
+  String get registerBtn;
+
+  /// Hint cuando no se puede guardar la factura
+  ///
+  /// In es, this message translates to:
+  /// **'Completa todos los campos requeridos'**
+  String get billRequiredFieldsHint;
+
+  /// Botón eliminar
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar'**
+  String get btnDelete;
+
+  /// Botón cargar todos los registros
+  ///
+  /// In es, this message translates to:
+  /// **'Ver Todos'**
+  String get btnLoadAll;
+
+  /// Botón cargar últimos registros
+  ///
+  /// In es, this message translates to:
+  /// **'Ver Últimos'**
+  String get btnLoadLast;
+
+  /// Botón crear nuevo producto
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo Producto'**
+  String get btnNewProduct;
+
+  /// Título diálogo eliminar producto
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar Producto'**
+  String get deleteItemTitle;
+
+  /// Confirmación eliminar producto
+  ///
+  /// In es, this message translates to:
+  /// **'¿Está seguro de eliminar el producto \"{name}\"?'**
+  String deleteItemConfirm(String name);
+
+  /// Título diálogo eliminar cliente
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar Cliente'**
+  String get deleteCustomerTitle;
+
+  /// Confirmación eliminar cliente
+  ///
+  /// In es, this message translates to:
+  /// **'¿Está seguro de eliminar a \"{name}\"?'**
+  String deleteCustomerConfirm(String name);
+
+  /// Mensaje éxito al eliminar
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminado exitosamente'**
+  String get deleteSuccess;
+
+  /// Mensaje error al eliminar
+  ///
+  /// In es, this message translates to:
+  /// **'Error al eliminar'**
+  String get deleteError;
+
+  /// Mensaje éxito al eliminar producto
+  ///
+  /// In es, this message translates to:
+  /// **'Producto eliminado exitosamente'**
+  String get itemDeletedSuccess;
+
+  /// Mensaje error al eliminar producto
+  ///
+  /// In es, this message translates to:
+  /// **'Error al eliminar el producto'**
+  String get itemDeletedError;
+
+  /// Mensaje éxito al eliminar cliente
+  ///
+  /// In es, this message translates to:
+  /// **'Cliente eliminado exitosamente'**
+  String get customerDeletedSuccess;
+
+  /// Conteo de productos encontrados
+  ///
+  /// In es, this message translates to:
+  /// **'{count} producto(s) encontrado(s)'**
+  String itemsFound(int count);
+
+  /// Conteo de clientes encontrados
+  ///
+  /// In es, this message translates to:
+  /// **'{count} cliente(s) encontrado(s)'**
+  String customersFound(int count);
+
+  /// Sin productos encontrados
+  ///
+  /// In es, this message translates to:
+  /// **'Sin Resultados'**
+  String get noItemsFound;
+
+  /// Mensaje detallado sin productos
+  ///
+  /// In es, this message translates to:
+  /// **'No se encontraron productos con ese criterio'**
+  String get noItemsFoundMsg;
+
+  /// Sin clientes encontrados
+  ///
+  /// In es, this message translates to:
+  /// **'Sin Resultados'**
+  String get noCustomersFound;
+
+  /// Mensaje detallado sin clientes
+  ///
+  /// In es, this message translates to:
+  /// **'No se encontraron clientes con ese criterio'**
+  String get noCustomersFoundMsg;
+
+  /// Estado inicial búsqueda de productos
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar Productos'**
+  String get searchItemsTitle;
+
+  /// Mensaje estado inicial productos
+  ///
+  /// In es, this message translates to:
+  /// **'Usa el buscador para encontrar productos\no visualiza todos los productos disponibles'**
+  String get searchItemsMsg;
+
+  /// Estado inicial búsqueda de clientes
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar Clientes'**
+  String get searchCustomersTitle;
+
+  /// Mensaje estado inicial clientes
+  ///
+  /// In es, this message translates to:
+  /// **'Usa el buscador para encontrar clientes\no visualiza los últimos clientes registrados'**
+  String get searchCustomersMsg;
+
+  /// Badge de descuento en tarjeta de cliente
+  ///
+  /// In es, this message translates to:
+  /// **'Descuento {pct}%'**
+  String discountBadge(String pct);
+
+  /// Título diálogo selección de impuesto
+  ///
+  /// In es, this message translates to:
+  /// **'Seleccionar Impuesto'**
+  String get selectTaxTitle;
+
+  /// Subtítulo diálogo selección de impuesto
+  ///
+  /// In es, this message translates to:
+  /// **'Solo puede agregar un impuesto por grupo'**
+  String get selectTaxSubtitle;
+
+  /// Nombre grupo IVA
+  ///
+  /// In es, this message translates to:
+  /// **'IVA (Impuesto al Valor Agregado)'**
+  String get taxGroupIVA;
+
+  /// Nombre grupo ICE
+  ///
+  /// In es, this message translates to:
+  /// **'ICE (Impuesto a Consumos Especiales)'**
+  String get taxGroupICE;
+
+  /// Nombre otros grupos de impuestos
+  ///
+  /// In es, this message translates to:
+  /// **'Otros Impuestos'**
+  String get taxGroupOther;
+
+  /// Etiqueta grupo de impuesto ya asignado
+  ///
+  /// In es, this message translates to:
+  /// **'Ya asignado'**
+  String get taxAssigned;
+
+  /// Etiqueta campo clave de búsqueda
+  ///
+  /// In es, this message translates to:
+  /// **'Clave de búsqueda'**
+  String get labelSearchKey;
+
+  /// Etiqueta código de barras
+  ///
+  /// In es, this message translates to:
+  /// **'Código de barras'**
+  String get labelBarCode;
+
+  /// Etiqueta precio
+  ///
+  /// In es, this message translates to:
+  /// **'Precio'**
+  String get labelPrice;
+
+  /// Etiqueta costo
+  ///
+  /// In es, this message translates to:
+  /// **'Costo'**
+  String get labelCost;
+
+  /// Etiqueta stock
+  ///
+  /// In es, this message translates to:
+  /// **'Stock'**
+  String get labelStock;
+
+  /// Stock con unidades
+  ///
+  /// In es, this message translates to:
+  /// **'{qty} unidades'**
+  String labelStockUnits(int qty);
+
+  /// Etiqueta tipo servicio
+  ///
+  /// In es, this message translates to:
+  /// **'Servicio'**
+  String get labelService;
+
+  /// Etiqueta tipo de identificación
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo de identificación'**
+  String get labelIdentificationType;
+
+  /// Etiqueta identificación
+  ///
+  /// In es, this message translates to:
+  /// **'Identificación'**
+  String get labelIdentification;
+
+  /// Etiqueta correo electrónico
+  ///
+  /// In es, this message translates to:
+  /// **'Correo electrónico'**
+  String get labelEmailAddress;
+
+  /// Etiqueta teléfono
+  ///
+  /// In es, this message translates to:
+  /// **'Teléfono'**
+  String get labelPhoneNumber;
+
+  /// Etiqueta dirección
+  ///
+  /// In es, this message translates to:
+  /// **'Dirección'**
+  String get labelAddress;
+
+  /// Etiqueta descripción
+  ///
+  /// In es, this message translates to:
+  /// **'Descripción'**
+  String get labelDescription;
+
+  /// Valor por defecto sin descripción
+  ///
+  /// In es, this message translates to:
+  /// **'Sin descripción'**
+  String get noDescription;
+
+  /// Título página de productos
+  ///
+  /// In es, this message translates to:
+  /// **'Productos'**
+  String get pageProductsTitle;
+
+  /// Título página de clientes
+  ///
+  /// In es, this message translates to:
+  /// **'Clientes'**
+  String get pageClientsTitle;
+
+  /// Hint búsqueda de productos
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar por nombre, clave o código de barras'**
+  String get searchItemsHint;
+
+  /// Hint búsqueda de clientes
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar por nombre o identificación'**
+  String get searchCustomersHint;
+
+  /// Hint campo búsqueda en diálogo cliente
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre o identificación'**
+  String get dialogSearchHint;
+
+  /// Hint campo búsqueda en diálogo producto
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre, código o barras'**
+  String get dialogSearchProductHint;
+
+  /// Mensaje sin búsqueda aún para clientes
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa el nombre o identificación\npara buscar un cliente'**
+  String get noSearchYetCustomers;
+
+  /// Mensaje sin búsqueda aún para productos
+  ///
+  /// In es, this message translates to:
+  /// **'Busca productos por nombre,\ncódigo o código de barras'**
+  String get noSearchYetProducts;
+
+  /// Sin clientes en diálogo
+  ///
+  /// In es, this message translates to:
+  /// **'No se encontraron clientes'**
+  String get noDialogCustomersFound;
+
+  /// Sin productos en diálogo
+  ///
+  /// In es, this message translates to:
+  /// **'No se encontraron productos'**
+  String get noDialogProductsFound;
+
+  /// Título pantalla demo de alertas
+  ///
+  /// In es, this message translates to:
+  /// **'Centro de Alertas'**
+  String get alertDemoTitle;
+
+  /// Contenido demo de alerta
+  ///
+  /// In es, this message translates to:
+  /// **'Esta es una alerta de demostración del sistema'**
+  String get alertDemoContent;
+
+  /// Botón mostrar alerta demo
+  ///
+  /// In es, this message translates to:
+  /// **'Mostrar Alerta'**
+  String get alertDemoButton;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

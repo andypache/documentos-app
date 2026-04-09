@@ -139,8 +139,23 @@
   "btnSaveStep": "Save this step",
   "@btnSaveStep": { "description": "Button to save the current step in edit mode" },
 
+  "stepBasic": "Basic",
+  "@stepBasic": { "description": "Step 1 label for product wizard" },
+
+  "stepPrices": "Prices",
+  "@stepPrices": { "description": "Step 2 label for product wizard" },
+
+  "stepCodes": "Codes",
+  "@stepCodes": { "description": "Step 3 label for product wizard" },
+
   "stepTaxes": "Taxes",
-  "@stepTaxes": { "description": "Step 6 label" },
+  "@stepTaxes": { "description": "Step 4 label for product wizard" },
+
+  "stepCustomerData": "Data",
+  "@stepCustomerData": { "description": "Step 1 label for customer wizard" },
+
+  "stepCustomerContact": "Contact",
+  "@stepCustomerContact": { "description": "Step 2 label for customer wizard" },
 
   "step2Title": "Logo & Web Settings",
   "@step2Title": { "description": "Section title step 2" },
@@ -505,5 +520,380 @@
   "@companyCreatedInvalidFormat": { "description": "Error when API returns invalid format when creating company" },
 
   "couldNotLoadInfo": "Could not load information",
-  "@couldNotLoadInfo": { "description": "Generic error when information cannot be loaded from API" }
+  "@couldNotLoadInfo": { "description": "Generic error when information cannot be loaded from API" },
+
+  "btnAccept": "Accept",
+  "@btnAccept": { "description": "Button accept / confirm" },
+
+  "btnExit": "Exit",
+  "@btnExit": { "description": "Button exit without saving" },
+
+  "btnAdd": "Add",
+  "@btnAdd": { "description": "Button add element" },
+
+  "btnSearch": "Search",
+  "@btnSearch": { "description": "Button search" },
+
+  "btnShowAll": "View all",
+  "@btnShowAll": { "description": "Button view all records" },
+
+  "btnNewCustomer": "New",
+  "@btnNewCustomer": { "description": "Button create new customer" },
+
+  "btnConsumerFinal": "C. Final",
+  "@btnConsumerFinal": { "description": "Button assign final consumer" },
+
+  "btnAddTax": "Add Tax",
+  "@btnAddTax": { "description": "Button add tax to product" },
+
+  "btnSaveInvoice": "Save Invoice",
+  "@btnSaveInvoice": { "description": "Button save / issue invoice" },
+
+  "billTitle": "Invoice",
+  "@billTitle": { "description": "Title for billing screen" },
+
+  "billSummaryTitle": "Invoice Summary",
+  "@billSummaryTitle": { "description": "Title for invoice summary panel" },
+
+  "billConfirmTitle": "Save Invoice?",
+  "@billConfirmTitle": { "description": "Title of save invoice confirmation dialog" },
+
+  "billConfirmCustomer": "Customer: {name}",
+  "@billConfirmCustomer": {
+    "description": "Customer line in confirmation dialog",
+    "placeholders": { "name": { "type": "String" } }
+  },
+
+  "billConfirmProducts": "Products: {count}",
+  "@billConfirmProducts": {
+    "description": "Products line in confirmation dialog",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "billConfirmTotal": "Total: ${amount}",
+  "@billConfirmTotal": {
+    "description": "Total line in confirmation dialog",
+    "placeholders": { "amount": { "type": "String" } }
+  },
+
+  "billSavedTitle": "Invoice Saved!",
+  "@billSavedTitle": { "description": "Title of invoice saved success dialog" },
+
+  "billSavedMsg": "The invoice was saved successfully",
+  "@billSavedMsg": { "description": "Message in invoice saved success dialog" },
+
+  "billExitTitle": "Exit without saving?",
+  "@billExitTitle": { "description": "Title of exit without saving dialog" },
+
+  "billExitMsg": "There is unsaved data that will be lost.",
+  "@billExitMsg": { "description": "Body of exit without saving dialog" },
+
+  "itemCreateTitle": "Create Product",
+  "@itemCreateTitle": { "description": "Title for create product wizard" },
+
+  "itemEditTitle": "Edit Product",
+  "@itemEditTitle": { "description": "Title for edit product wizard" },
+
+  "customerCreateTitle": "New Customer",
+  "@customerCreateTitle": { "description": "Title for create customer wizard" },
+
+  "customerEditTitle": "Edit Customer",
+  "@customerEditTitle": { "description": "Title for edit customer wizard" },
+
+  "itemCreatedSuccess": "Product saved successfully",
+  "@itemCreatedSuccess": { "description": "Success message when creating product" },
+
+  "itemUpdatedSuccess": "Product updated successfully",
+  "@itemUpdatedSuccess": { "description": "Success message when updating product" },
+
+  "customerCreatedSuccess": "Customer created successfully",
+  "@customerCreatedSuccess": { "description": "Success message when creating customer" },
+
+  "customerUpdatedSuccess": "Customer updated successfully",
+  "@customerUpdatedSuccess": { "description": "Success message when updating customer" },
+
+  "labelProducts": "Products",
+  "@labelProducts": { "description": "Products section label in invoice" },
+
+  "labelTaxes": "Taxes",
+  "@labelTaxes": { "description": "Taxes section label" },
+
+  "labelQuantity": "Quantity",
+  "@labelQuantity": { "description": "Quantity field label" },
+
+  "labelUnitPrice": "Unit Price",
+  "@labelUnitPrice": { "description": "Unit price field label" },
+
+  "labelDiscount": "Discount",
+  "@labelDiscount": { "description": "Discount field label" },
+
+  "labelSubtotal": "Subtotal",
+  "@labelSubtotal": { "description": "Subtotal label in calculations" },
+
+  "labelTotal": "TOTAL",
+  "@labelTotal": { "description": "Total label in calculations" },
+
+  "labelTotalTaxes": "Total taxes",
+  "@labelTotalTaxes": { "description": "Total taxes label" },
+
+  "labelDiscountApplied": "Applied discount",
+  "@labelDiscountApplied": { "description": "Applied discount label in summary" },
+
+  "labelDiscountAvailable": "DISCOUNT AVAILABLE!",
+  "@labelDiscountAvailable": { "description": "Discount available chip in customer card" },
+
+  "labelDiscountValue": "{value}% discount",
+  "@labelDiscountValue": {
+    "description": "Customer discount value text",
+    "placeholders": { "value": { "type": "String" } }
+  },
+
+  "labelDiscountValid": "Valid until: {date}",
+  "@labelDiscountValid": {
+    "description": "Customer discount validity text",
+    "placeholders": { "date": { "type": "String" } }
+  },
+
+  "labelSelectCustomer": "Select Customer",
+  "@labelSelectCustomer": { "description": "Customer selection section label in invoice" },
+
+  "labelEditProduct": "Edit Product",
+  "@labelEditProduct": { "description": "Title of edit product dialog in invoice" },
+
+  "searchProductHint": "Name, code or barcode",
+  "@searchProductHint": { "description": "Product search hint" },
+
+  "searchCustomerHint": "Name or identification",
+  "@searchCustomerHint": { "description": "Customer search hint" },
+
+  "searchProductTitle": "Search Product",
+  "@searchProductTitle": { "description": "Title of search product dialog" },
+
+  "searchCustomerTitle": "Search Customer",
+  "@searchCustomerTitle": { "description": "Title of search customer dialog" },
+
+  "noProductsAdded": "No products added",
+  "@noProductsAdded": { "description": "Message when no products in invoice" },
+
+  "noProductsAddedHint": "Tap \"Add\" to search for products",
+  "@noProductsAddedHint": { "description": "Hint to add products" },
+
+  "noTaxesAdded": "No taxes added",
+  "@noTaxesAdded": { "description": "Message when no taxes on product" },
+
+  "taxInfoNote": "Taxes are optional. You can add them now or later.",
+  "@taxInfoNote": { "description": "Tax info note on product" },
+
+  "registerTitle": "Register User",
+  "@registerTitle": { "description": "Title for register screen" },
+
+  "registerHaveAccount": "Already have an account? Sign in",
+  "@registerHaveAccount": { "description": "Link to login from register screen" },
+
+  "registerFieldUser": "Username",
+  "@registerFieldUser": { "description": "Username field label on register" },
+
+  "registerFieldUserHint": "Username",
+  "@registerFieldUserHint": { "description": "Username field hint on register" },
+
+  "registerFieldPassword": "Password",
+  "@registerFieldPassword": { "description": "Password field label on register" },
+
+  "registerFieldPasswordHint": "User password",
+  "@registerFieldPasswordHint": { "description": "Password field hint on register" },
+
+  "registerBtn": "Register",
+  "@registerBtn": { "description": "Register button" },
+
+  "billRequiredFieldsHint": "Complete all required fields",
+  "@billRequiredFieldsHint": { "description": "Hint when invoice cannot be saved" },
+
+  "btnDelete": "Delete",
+  "@btnDelete": { "description": "Delete button" },
+
+  "btnLoadAll": "View All",
+  "@btnLoadAll": { "description": "Button to load all records" },
+
+  "btnLoadLast": "View Latest",
+  "@btnLoadLast": { "description": "Button to load latest records" },
+
+  "btnNewProduct": "New Product",
+  "@btnNewProduct": { "description": "Button to create new product" },
+
+  "deleteItemTitle": "Delete Product",
+  "@deleteItemTitle": { "description": "Title of delete product dialog" },
+
+  "deleteItemConfirm": "Are you sure you want to delete the product \"{name}\"?",
+  "@deleteItemConfirm": {
+    "description": "Delete product confirmation",
+    "placeholders": { "name": { "type": "String" } }
+  },
+
+  "deleteCustomerTitle": "Delete Customer",
+  "@deleteCustomerTitle": { "description": "Title of delete customer dialog" },
+
+  "deleteCustomerConfirm": "Are you sure you want to delete \"{name}\"?",
+  "@deleteCustomerConfirm": {
+    "description": "Delete customer confirmation",
+    "placeholders": { "name": { "type": "String" } }
+  },
+
+  "deleteSuccess": "Deleted successfully",
+  "@deleteSuccess": { "description": "Success message on delete" },
+
+  "deleteError": "Error deleting",
+  "@deleteError": { "description": "Error message on delete" },
+
+  "itemDeletedSuccess": "Product deleted successfully",
+  "@itemDeletedSuccess": { "description": "Success message on product delete" },
+
+  "itemDeletedError": "Error deleting the product",
+  "@itemDeletedError": { "description": "Error message on product delete" },
+
+  "customerDeletedSuccess": "Customer deleted successfully",
+  "@customerDeletedSuccess": { "description": "Success message on customer delete" },
+
+  "itemsFound": "{count} product(s) found",
+  "@itemsFound": {
+    "description": "Count of products found",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "customersFound": "{count} customer(s) found",
+  "@customersFound": {
+    "description": "Count of customers found",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "noItemsFound": "No Results",
+  "@noItemsFound": { "description": "No products found" },
+
+  "noItemsFoundMsg": "No products found matching that criteria",
+  "@noItemsFoundMsg": { "description": "Detailed no products message" },
+
+  "noCustomersFound": "No Results",
+  "@noCustomersFound": { "description": "No customers found" },
+
+  "noCustomersFoundMsg": "No customers found matching that criteria",
+  "@noCustomersFoundMsg": { "description": "Detailed no customers message" },
+
+  "searchItemsTitle": "Search Products",
+  "@searchItemsTitle": { "description": "Initial state for product search" },
+
+  "searchItemsMsg": "Use the search bar to find products\nor view all available products",
+  "@searchItemsMsg": { "description": "Initial state message for products" },
+
+  "searchCustomersTitle": "Search Customers",
+  "@searchCustomersTitle": { "description": "Initial state for customer search" },
+
+  "searchCustomersMsg": "Use the search bar to find customers\nor view the latest registered customers",
+  "@searchCustomersMsg": { "description": "Initial state message for customers" },
+
+  "discountBadge": "Discount {pct}%",
+  "@discountBadge": {
+    "description": "Discount badge on customer card",
+    "placeholders": { "pct": { "type": "String" } }
+  },
+
+  "selectTaxTitle": "Select Tax",
+  "@selectTaxTitle": { "description": "Title of tax selection dialog" },
+
+  "selectTaxSubtitle": "You can only add one tax per group",
+  "@selectTaxSubtitle": { "description": "Subtitle of tax selection dialog" },
+
+  "taxGroupIVA": "VAT (Value Added Tax)",
+  "@taxGroupIVA": { "description": "IVA group name" },
+
+  "taxGroupICE": "ICE (Special Consumption Tax)",
+  "@taxGroupICE": { "description": "ICE group name" },
+
+  "taxGroupOther": "Other Taxes",
+  "@taxGroupOther": { "description": "Other tax group name" },
+
+  "taxAssigned": "Already assigned",
+  "@taxAssigned": { "description": "Label for already assigned tax group" },
+
+  "labelSearchKey": "Search key",
+  "@labelSearchKey": { "description": "Search key field label" },
+
+  "labelBarCode": "Barcode",
+  "@labelBarCode": { "description": "Barcode label" },
+
+  "labelPrice": "Price",
+  "@labelPrice": { "description": "Price label" },
+
+  "labelCost": "Cost",
+  "@labelCost": { "description": "Cost label" },
+
+  "labelStock": "Stock",
+  "@labelStock": { "description": "Stock label" },
+
+  "labelStockUnits": "{qty} units",
+  "@labelStockUnits": {
+    "description": "Stock with units",
+    "placeholders": { "qty": { "type": "int" } }
+  },
+
+  "labelService": "Service",
+  "@labelService": { "description": "Service type label" },
+
+  "labelIdentificationType": "Identification type",
+  "@labelIdentificationType": { "description": "ID type label" },
+
+  "labelIdentification": "Identification",
+  "@labelIdentification": { "description": "Identification label" },
+
+  "labelEmailAddress": "Email address",
+  "@labelEmailAddress": { "description": "Email label" },
+
+  "labelPhoneNumber": "Phone",
+  "@labelPhoneNumber": { "description": "Phone label" },
+
+  "labelAddress": "Address",
+  "@labelAddress": { "description": "Address label" },
+
+  "labelDescription": "Description",
+  "@labelDescription": { "description": "Description label" },
+
+  "noDescription": "No description",
+  "@noDescription": { "description": "Default value when no description" },
+
+  "pageProductsTitle": "Products",
+  "@pageProductsTitle": { "description": "Products page title" },
+
+  "pageClientsTitle": "Customers",
+  "@pageClientsTitle": { "description": "Customers page title" },
+
+  "searchItemsHint": "Search by name, key or barcode",
+  "@searchItemsHint": { "description": "Search hint for products" },
+
+  "searchCustomersHint": "Search by name or identification",
+  "@searchCustomersHint": { "description": "Search hint for customers" },
+
+  "dialogSearchHint": "Name or identification",
+  "@dialogSearchHint": { "description": "Search hint in customer dialog" },
+
+  "dialogSearchProductHint": "Name, code or barcode",
+  "@dialogSearchProductHint": { "description": "Search hint in product dialog" },
+
+  "noSearchYetCustomers": "Enter name or identification\nto search for a customer",
+  "@noSearchYetCustomers": { "description": "No search yet message for customers" },
+
+  "noSearchYetProducts": "Search products by name,\ncode or barcode",
+  "@noSearchYetProducts": { "description": "No search yet message for products" },
+
+  "noDialogCustomersFound": "No customers found",
+  "@noDialogCustomersFound": { "description": "No customers in dialog" },
+
+  "noDialogProductsFound": "No products found",
+  "@noDialogProductsFound": { "description": "No products in dialog" },
+
+  "alertDemoTitle": "Alert Center",
+  "@alertDemoTitle": { "description": "Title of alert demo screen" },
+
+  "alertDemoContent": "This is a system demo alert",
+  "@alertDemoContent": { "description": "Demo alert content" },
+
+  "alertDemoButton": "Show Alert",
+  "@alertDemoButton": { "description": "Button to show demo alert" }
 }

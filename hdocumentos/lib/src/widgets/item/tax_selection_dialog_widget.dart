@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/item/item_tax_model.dart';
 import 'package:hdocumentos/src/model/item/system_parameter_model.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
@@ -202,14 +203,15 @@ class _TaxSelectionDialogWidgetState extends State<TaxSelectionDialogWidget> {
     return grouped;
   }
 
-  String _getTaxGroupName(String taxCode) {
+  String _getTaxGroupName(BuildContext context, String taxCode) {
+    final l10n = AppLocalizations.of(context);
     switch (taxCode) {
       case '2':
-        return 'IVA (Impuesto al Valor Agregado)';
+        return l10n.taxGroupIVA;
       case '3':
-        return 'ICE (Impuesto a Consumos Especiales)';
+        return l10n.taxGroupICE;
       default:
-        return 'Otros Impuestos';
+        return l10n.taxGroupOther;
     }
   }
 
@@ -219,9 +221,10 @@ class _TaxSelectionDialogWidgetState extends State<TaxSelectionDialogWidget> {
     final usedTaxCodes = _getUsedTaxCodes();
 
     return Dialog(
-      backgroundColor: AppTheme.secondary,
+      backgroundColor: AppTheme.dialogBackground,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
+        side: const BorderSide(color: AppTheme.dialogBorder, width: 1),
       ),
       child: Container(
         constraints: const BoxConstraints(maxHeight: 600, maxWidth: 500),
@@ -239,34 +242,36 @@ class _TaxSelectionDialogWidgetState extends State<TaxSelectionDialogWidget> {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.percent,
+                  const Icon(Icons.percent_rounded,
                       color: AppTheme.primaryButton, size: 30),
                   const SizedBox(width: 15),
-                  const Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Seleccionar Impuesto',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Builder(
+                      builder: (ctx) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            AppLocalizations.of(ctx).selectTaxTitle,
+                            style: const TextStyle(
+                              color: AppTheme.textPrimary,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          'Solo puede agregar un impuesto por grupo',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 14,
+                          const SizedBox(height: 5),
+                          Text(
+                            AppLocalizations.of(ctx).selectTaxSubtitle,
+                            style: const TextStyle(
+                              color: AppTheme.textSecondary,
+                              fontSize: 14,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white),
+                    icon: const Icon(Icons.close_rounded, color: Colors.white),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -295,7 +300,7 @@ class _TaxSelectionDialogWidgetState extends State<TaxSelectionDialogWidget> {
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      _getTaxGroupName(taxCode),
+                                      _getTaxGroupName(context, taxCode),
                                       style: TextStyle(
                                         color: isGroupDisabled
                                             ? Colors.white38
@@ -306,36 +311,43 @@ class _TaxSelectionDialogWidgetState extends State<TaxSelectionDialogWidget> {
                                     ),
                                   ),
                                   if (isGroupDisabled)
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: Colors.orange.withOpacity(0.2),
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                          color: Colors.orange,
-                                          width: 1,
+                                    Builder(
+                                      builder: (ctx) => Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
                                         ),
-                                      ),
-                                      child: const Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(
-                                            Icons.lock_outline,
-                                            color: Colors.orange,
-                                            size: 14,
+                                        decoration: BoxDecoration(
+                                          color: AppTheme.notificationWarning
+                                              .withOpacity(0.2),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          border: Border.all(
+                                            color: AppTheme.notificationWarning,
+                                            width: 1,
                                           ),
-                                          SizedBox(width: 4),
-                                          Text(
-                                            'Ya asignado',
-                                            style: TextStyle(
-                                              color: Colors.orange,
-                                              fontSize: 12,
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Icon(
+                                              Icons.lock_outline_rounded,
+                                              color:
+                                                  AppTheme.notificationWarning,
+                                              size: 14,
                                             ),
-                                          ),
-                                        ],
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              AppLocalizations.of(ctx)
+                                                  .taxAssigned,
+                                              style: const TextStyle(
+                                                color: AppTheme
+                                                    .notificationWarning,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                 ],

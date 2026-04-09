@@ -139,8 +139,23 @@
   "btnSaveStep": "Guardar este paso",
   "@btnSaveStep": { "description": "Botón guardar el paso actual en modo edición" },
 
+  "stepBasic": "Básica",
+  "@stepBasic": { "description": "Etiqueta paso 1 del wizard de producto" },
+
+  "stepPrices": "Precios",
+  "@stepPrices": { "description": "Etiqueta paso 2 del wizard de producto" },
+
+  "stepCodes": "Códigos",
+  "@stepCodes": { "description": "Etiqueta paso 3 del wizard de producto" },
+
   "stepTaxes": "Impuestos",
-  "@stepTaxes": { "description": "Etiqueta paso 6 del wizard" },
+  "@stepTaxes": { "description": "Etiqueta paso 4 del wizard de producto" },
+
+  "stepCustomerData": "Datos",
+  "@stepCustomerData": { "description": "Etiqueta paso 1 del wizard de cliente" },
+
+  "stepCustomerContact": "Contacto",
+  "@stepCustomerContact": { "description": "Etiqueta paso 2 del wizard de cliente" },
 
   "step2Title": "Logo y Configuración Web",
   "@step2Title": { "description": "Título sección paso 2" },
@@ -506,5 +521,380 @@
   "@companyCreatedInvalidFormat": { "description": "Error cuando el API devuelve un formato inválido al crear la compañía" },
 
   "couldNotLoadInfo": "No se pudo cargar la información",
-  "@couldNotLoadInfo": { "description": "Error genérico cuando no se puede cargar la información desde el API" }
+  "@couldNotLoadInfo": { "description": "Error genérico cuando no se puede cargar la información desde el API" },
+
+  "btnAccept": "Aceptar",
+  "@btnAccept": { "description": "Botón aceptar / confirmar" },
+
+  "btnExit": "Salir",
+  "@btnExit": { "description": "Botón salir sin guardar" },
+
+  "btnAdd": "Agregar",
+  "@btnAdd": { "description": "Botón agregar elemento" },
+
+  "btnSearch": "Buscar",
+  "@btnSearch": { "description": "Botón buscar" },
+
+  "btnShowAll": "Ver todos",
+  "@btnShowAll": { "description": "Botón ver todos los registros" },
+
+  "btnNewCustomer": "Nuevo",
+  "@btnNewCustomer": { "description": "Botón crear nuevo cliente" },
+
+  "btnConsumerFinal": "C. Final",
+  "@btnConsumerFinal": { "description": "Botón asignar consumidor final" },
+
+  "btnAddTax": "Agregar Impuesto",
+  "@btnAddTax": { "description": "Botón agregar impuesto al producto" },
+
+  "btnSaveInvoice": "Guardar Factura",
+  "@btnSaveInvoice": { "description": "Botón guardar / emitir factura" },
+
+  "billTitle": "Facturar",
+  "@billTitle": { "description": "Título pantalla de facturación" },
+
+  "billSummaryTitle": "Resumen de Factura",
+  "@billSummaryTitle": { "description": "Título del panel resumen de factura" },
+
+  "billConfirmTitle": "¿Guardar Factura?",
+  "@billConfirmTitle": { "description": "Título diálogo confirmación guardar factura" },
+
+  "billConfirmCustomer": "Cliente: {name}",
+  "@billConfirmCustomer": {
+    "description": "Línea cliente en diálogo confirmación",
+    "placeholders": { "name": { "type": "String" } }
+  },
+
+  "billConfirmProducts": "Productos: {count}",
+  "@billConfirmProducts": {
+    "description": "Línea productos en diálogo confirmación",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "billConfirmTotal": "Total: ${amount}",
+  "@billConfirmTotal": {
+    "description": "Línea total en diálogo confirmación",
+    "placeholders": { "amount": { "type": "String" } }
+  },
+
+  "billSavedTitle": "¡Factura Guardada!",
+  "@billSavedTitle": { "description": "Título diálogo éxito factura guardada" },
+
+  "billSavedMsg": "La factura se guardó exitosamente",
+  "@billSavedMsg": { "description": "Mensaje diálogo éxito factura guardada" },
+
+  "billExitTitle": "¿Salir sin guardar?",
+  "@billExitTitle": { "description": "Título diálogo confirmar salida sin guardar" },
+
+  "billExitMsg": "Hay datos sin guardar que se perderán.",
+  "@billExitMsg": { "description": "Cuerpo diálogo confirmar salida sin guardar" },
+
+  "itemCreateTitle": "Crear Producto",
+  "@itemCreateTitle": { "description": "Título wizard crear producto" },
+
+  "itemEditTitle": "Editar Producto",
+  "@itemEditTitle": { "description": "Título wizard editar producto" },
+
+  "customerCreateTitle": "Nuevo Cliente",
+  "@customerCreateTitle": { "description": "Título wizard crear cliente" },
+
+  "customerEditTitle": "Editar Cliente",
+  "@customerEditTitle": { "description": "Título wizard editar cliente" },
+
+  "itemCreatedSuccess": "Producto guardado exitosamente",
+  "@itemCreatedSuccess": { "description": "Mensaje éxito al crear producto" },
+
+  "itemUpdatedSuccess": "Producto actualizado exitosamente",
+  "@itemUpdatedSuccess": { "description": "Mensaje éxito al actualizar producto" },
+
+  "customerCreatedSuccess": "Cliente creado exitosamente",
+  "@customerCreatedSuccess": { "description": "Mensaje éxito al crear cliente" },
+
+  "customerUpdatedSuccess": "Cliente actualizado exitosamente",
+  "@customerUpdatedSuccess": { "description": "Mensaje éxito al actualizar cliente" },
+
+  "labelProducts": "Productos",
+  "@labelProducts": { "description": "Etiqueta sección productos en factura" },
+
+  "labelTaxes": "Impuestos",
+  "@labelTaxes": { "description": "Etiqueta sección impuestos" },
+
+  "labelQuantity": "Cantidad",
+  "@labelQuantity": { "description": "Etiqueta campo cantidad" },
+
+  "labelUnitPrice": "Precio Unitario",
+  "@labelUnitPrice": { "description": "Etiqueta campo precio unitario" },
+
+  "labelDiscount": "Descuento",
+  "@labelDiscount": { "description": "Etiqueta campo descuento" },
+
+  "labelSubtotal": "Subtotal",
+  "@labelSubtotal": { "description": "Etiqueta subtotal en cálculos" },
+
+  "labelTotal": "TOTAL",
+  "@labelTotal": { "description": "Etiqueta total en cálculos" },
+
+  "labelTotalTaxes": "Total impuestos",
+  "@labelTotalTaxes": { "description": "Etiqueta total de impuestos" },
+
+  "labelDiscountApplied": "Descuento aplicado",
+  "@labelDiscountApplied": { "description": "Etiqueta descuento aplicado en resumen" },
+
+  "labelDiscountAvailable": "¡DESCUENTO DISPONIBLE!",
+  "@labelDiscountAvailable": { "description": "Chip descuento disponible en tarjeta cliente" },
+
+  "labelDiscountValue": "{value}% de descuento",
+  "@labelDiscountValue": {
+    "description": "Texto valor descuento del cliente",
+    "placeholders": { "value": { "type": "String" } }
+  },
+
+  "labelDiscountValid": "Válido hasta: {date}",
+  "@labelDiscountValid": {
+    "description": "Texto validez descuento del cliente",
+    "placeholders": { "date": { "type": "String" } }
+  },
+
+  "labelSelectCustomer": "Seleccionar Cliente",
+  "@labelSelectCustomer": { "description": "Etiqueta sección selección de cliente en factura" },
+
+  "labelEditProduct": "Editar Producto",
+  "@labelEditProduct": { "description": "Título diálogo editar producto en factura" },
+
+  "searchProductHint": "Nombre, código o barras",
+  "@searchProductHint": { "description": "Hint búsqueda de productos" },
+
+  "searchCustomerHint": "Nombre o identificación",
+  "@searchCustomerHint": { "description": "Hint búsqueda de clientes" },
+
+  "searchProductTitle": "Buscar Producto",
+  "@searchProductTitle": { "description": "Título diálogo buscar producto" },
+
+  "searchCustomerTitle": "Buscar Cliente",
+  "@searchCustomerTitle": { "description": "Título diálogo buscar cliente" },
+
+  "noProductsAdded": "No hay productos agregados",
+  "@noProductsAdded": { "description": "Mensaje cuando no hay productos en factura" },
+
+  "noProductsAddedHint": "Toca \"Agregar\" para buscar productos",
+  "@noProductsAddedHint": { "description": "Hint para agregar productos" },
+
+  "noTaxesAdded": "No hay impuestos agregados",
+  "@noTaxesAdded": { "description": "Mensaje cuando no hay impuestos en producto" },
+
+  "taxInfoNote": "Los impuestos son opcionales. Puede agregarlos ahora o más tarde.",
+  "@taxInfoNote": { "description": "Nota informativa sobre impuestos en producto" },
+
+  "registerTitle": "Registrar Usuario",
+  "@registerTitle": { "description": "Título pantalla de registro" },
+
+  "registerHaveAccount": "¿Ya tienes una cuenta? Inicia sesión",
+  "@registerHaveAccount": { "description": "Enlace a login desde la pantalla de registro" },
+
+  "registerFieldUser": "Usuario",
+  "@registerFieldUser": { "description": "Etiqueta campo usuario en registro" },
+
+  "registerFieldUserHint": "Nombre del usuario",
+  "@registerFieldUserHint": { "description": "Hint campo usuario en registro" },
+
+  "registerFieldPassword": "Contraseña",
+  "@registerFieldPassword": { "description": "Etiqueta campo contraseña en registro" },
+
+  "registerFieldPasswordHint": "Contraseña de usuario",
+  "@registerFieldPasswordHint": { "description": "Hint campo contraseña en registro" },
+
+  "registerBtn": "Registrarse",
+  "@registerBtn": { "description": "Botón de registro" },
+
+  "billRequiredFieldsHint": "Completa todos los campos requeridos",
+  "@billRequiredFieldsHint": { "description": "Hint cuando no se puede guardar la factura" },
+
+  "btnDelete": "Eliminar",
+  "@btnDelete": { "description": "Botón eliminar" },
+
+  "btnLoadAll": "Ver Todos",
+  "@btnLoadAll": { "description": "Botón cargar todos los registros" },
+
+  "btnLoadLast": "Ver Últimos",
+  "@btnLoadLast": { "description": "Botón cargar últimos registros" },
+
+  "btnNewProduct": "Nuevo Producto",
+  "@btnNewProduct": { "description": "Botón crear nuevo producto" },
+
+  "deleteItemTitle": "Eliminar Producto",
+  "@deleteItemTitle": { "description": "Título diálogo eliminar producto" },
+
+  "deleteItemConfirm": "¿Está seguro de eliminar el producto \"{name}\"?",
+  "@deleteItemConfirm": {
+    "description": "Confirmación eliminar producto",
+    "placeholders": { "name": { "type": "String" } }
+  },
+
+  "deleteCustomerTitle": "Eliminar Cliente",
+  "@deleteCustomerTitle": { "description": "Título diálogo eliminar cliente" },
+
+  "deleteCustomerConfirm": "¿Está seguro de eliminar a \"{name}\"?",
+  "@deleteCustomerConfirm": {
+    "description": "Confirmación eliminar cliente",
+    "placeholders": { "name": { "type": "String" } }
+  },
+
+  "deleteSuccess": "Eliminado exitosamente",
+  "@deleteSuccess": { "description": "Mensaje éxito al eliminar" },
+
+  "deleteError": "Error al eliminar",
+  "@deleteError": { "description": "Mensaje error al eliminar" },
+
+  "itemDeletedSuccess": "Producto eliminado exitosamente",
+  "@itemDeletedSuccess": { "description": "Mensaje éxito al eliminar producto" },
+
+  "itemDeletedError": "Error al eliminar el producto",
+  "@itemDeletedError": { "description": "Mensaje error al eliminar producto" },
+
+  "customerDeletedSuccess": "Cliente eliminado exitosamente",
+  "@customerDeletedSuccess": { "description": "Mensaje éxito al eliminar cliente" },
+
+  "itemsFound": "{count} producto(s) encontrado(s)",
+  "@itemsFound": {
+    "description": "Conteo de productos encontrados",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "customersFound": "{count} cliente(s) encontrado(s)",
+  "@customersFound": {
+    "description": "Conteo de clientes encontrados",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "noItemsFound": "Sin Resultados",
+  "@noItemsFound": { "description": "Sin productos encontrados" },
+
+  "noItemsFoundMsg": "No se encontraron productos con ese criterio",
+  "@noItemsFoundMsg": { "description": "Mensaje detallado sin productos" },
+
+  "noCustomersFound": "Sin Resultados",
+  "@noCustomersFound": { "description": "Sin clientes encontrados" },
+
+  "noCustomersFoundMsg": "No se encontraron clientes con ese criterio",
+  "@noCustomersFoundMsg": { "description": "Mensaje detallado sin clientes" },
+
+  "searchItemsTitle": "Buscar Productos",
+  "@searchItemsTitle": { "description": "Estado inicial búsqueda de productos" },
+
+  "searchItemsMsg": "Usa el buscador para encontrar productos\no visualiza todos los productos disponibles",
+  "@searchItemsMsg": { "description": "Mensaje estado inicial productos" },
+
+  "searchCustomersTitle": "Buscar Clientes",
+  "@searchCustomersTitle": { "description": "Estado inicial búsqueda de clientes" },
+
+  "searchCustomersMsg": "Usa el buscador para encontrar clientes\no visualiza los últimos clientes registrados",
+  "@searchCustomersMsg": { "description": "Mensaje estado inicial clientes" },
+
+  "discountBadge": "Descuento {pct}%",
+  "@discountBadge": {
+    "description": "Badge de descuento en tarjeta de cliente",
+    "placeholders": { "pct": { "type": "String" } }
+  },
+
+  "selectTaxTitle": "Seleccionar Impuesto",
+  "@selectTaxTitle": { "description": "Título diálogo selección de impuesto" },
+
+  "selectTaxSubtitle": "Solo puede agregar un impuesto por grupo",
+  "@selectTaxSubtitle": { "description": "Subtítulo diálogo selección de impuesto" },
+
+  "taxGroupIVA": "IVA (Impuesto al Valor Agregado)",
+  "@taxGroupIVA": { "description": "Nombre grupo IVA" },
+
+  "taxGroupICE": "ICE (Impuesto a Consumos Especiales)",
+  "@taxGroupICE": { "description": "Nombre grupo ICE" },
+
+  "taxGroupOther": "Otros Impuestos",
+  "@taxGroupOther": { "description": "Nombre otros grupos de impuestos" },
+
+  "taxAssigned": "Ya asignado",
+  "@taxAssigned": { "description": "Etiqueta grupo de impuesto ya asignado" },
+
+  "labelSearchKey": "Clave de búsqueda",
+  "@labelSearchKey": { "description": "Etiqueta campo clave de búsqueda" },
+
+  "labelBarCode": "Código de barras",
+  "@labelBarCode": { "description": "Etiqueta código de barras" },
+
+  "labelPrice": "Precio",
+  "@labelPrice": { "description": "Etiqueta precio" },
+
+  "labelCost": "Costo",
+  "@labelCost": { "description": "Etiqueta costo" },
+
+  "labelStock": "Stock",
+  "@labelStock": { "description": "Etiqueta stock" },
+
+  "labelStockUnits": "{qty} unidades",
+  "@labelStockUnits": {
+    "description": "Stock con unidades",
+    "placeholders": { "qty": { "type": "int" } }
+  },
+
+  "labelService": "Servicio",
+  "@labelService": { "description": "Etiqueta tipo servicio" },
+
+  "labelIdentificationType": "Tipo de identificación",
+  "@labelIdentificationType": { "description": "Etiqueta tipo de identificación" },
+
+  "labelIdentification": "Identificación",
+  "@labelIdentification": { "description": "Etiqueta identificación" },
+
+  "labelEmailAddress": "Correo electrónico",
+  "@labelEmailAddress": { "description": "Etiqueta correo electrónico" },
+
+  "labelPhoneNumber": "Teléfono",
+  "@labelPhoneNumber": { "description": "Etiqueta teléfono" },
+
+  "labelAddress": "Dirección",
+  "@labelAddress": { "description": "Etiqueta dirección" },
+
+  "labelDescription": "Descripción",
+  "@labelDescription": { "description": "Etiqueta descripción" },
+
+  "noDescription": "Sin descripción",
+  "@noDescription": { "description": "Valor por defecto sin descripción" },
+
+  "pageProductsTitle": "Productos",
+  "@pageProductsTitle": { "description": "Título página de productos" },
+
+  "pageClientsTitle": "Clientes",
+  "@pageClientsTitle": { "description": "Título página de clientes" },
+
+  "searchItemsHint": "Buscar por nombre, clave o código de barras",
+  "@searchItemsHint": { "description": "Hint búsqueda de productos" },
+
+  "searchCustomersHint": "Buscar por nombre o identificación",
+  "@searchCustomersHint": { "description": "Hint búsqueda de clientes" },
+
+  "dialogSearchHint": "Nombre o identificación",
+  "@dialogSearchHint": { "description": "Hint campo búsqueda en diálogo cliente" },
+
+  "dialogSearchProductHint": "Nombre, código o barras",
+  "@dialogSearchProductHint": { "description": "Hint campo búsqueda en diálogo producto" },
+
+  "noSearchYetCustomers": "Ingresa el nombre o identificación\npara buscar un cliente",
+  "@noSearchYetCustomers": { "description": "Mensaje sin búsqueda aún para clientes" },
+
+  "noSearchYetProducts": "Busca productos por nombre,\ncódigo o código de barras",
+  "@noSearchYetProducts": { "description": "Mensaje sin búsqueda aún para productos" },
+
+  "noDialogCustomersFound": "No se encontraron clientes",
+  "@noDialogCustomersFound": { "description": "Sin clientes en diálogo" },
+
+  "noDialogProductsFound": "No se encontraron productos",
+  "@noDialogProductsFound": { "description": "Sin productos en diálogo" },
+
+  "alertDemoTitle": "Centro de Alertas",
+  "@alertDemoTitle": { "description": "Título pantalla demo de alertas" },
+
+  "alertDemoContent": "Esta es una alerta de demostración del sistema",
+  "@alertDemoContent": { "description": "Contenido demo de alerta" },
+
+  "alertDemoButton": "Mostrar Alerta",
+  "@alertDemoButton": { "description": "Botón mostrar alerta demo" }
 }

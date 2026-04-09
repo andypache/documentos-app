@@ -13,6 +13,13 @@ import 'package:provider/provider.dart';
 //Create main function
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Permitir portrait y landscape para todos los tamaños de pantalla
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
   //load preferences
   await Preferences.init();
   //load enviroment

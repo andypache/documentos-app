@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/common/loading_widget.dart';
@@ -150,9 +151,10 @@ class _CustomerSearchDialogState extends State<CustomerSearchDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: AppTheme.primary,
+      backgroundColor: AppTheme.dialogBackground,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
+        side: const BorderSide(color: AppTheme.dialogBorder, width: 1),
       ),
       child: Container(
         constraints: const BoxConstraints(maxHeight: 600, maxWidth: 500),
@@ -171,21 +173,21 @@ class _CustomerSearchDialogState extends State<CustomerSearchDialog> {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.person_search,
+                  const Icon(Icons.person_search_rounded,
                       color: Colors.white, size: 28),
                   const SizedBox(width: 12),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      'Buscar Cliente',
-                      style: TextStyle(
-                        color: Colors.white,
+                      AppLocalizations.of(context).searchCustomerTitle,
+                      style: const TextStyle(
+                        color: AppTheme.textPrimary,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white),
+                    icon: const Icon(Icons.close_rounded, color: Colors.white),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -210,7 +212,8 @@ class _CustomerSearchDialogState extends State<CustomerSearchDialog> {
                         autofocus: true,
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          hintText: 'Nombre o identificación',
+                          hintText:
+                              AppLocalizations.of(context).dialogSearchHint,
                           hintStyle:
                               TextStyle(color: Colors.white.withOpacity(0.5)),
                           prefixIcon: const Icon(Icons.search,
@@ -300,13 +303,14 @@ class _CustomerSearchDialogState extends State<CustomerSearchDialog> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.search, size: 64, color: Colors.white.withOpacity(0.3)),
+            Icon(Icons.search_rounded,
+                size: 64, color: AppTheme.textSecondary.withOpacity(0.5)),
             const SizedBox(height: 16),
             Text(
-              'Ingresa el nombre o identificación\npara buscar un cliente',
+              AppLocalizations.of(context).noSearchYetCustomers,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.6),
+              style: const TextStyle(
+                color: AppTheme.textSecondary,
                 fontSize: 14,
               ),
             ),
@@ -324,13 +328,13 @@ class _CustomerSearchDialogState extends State<CustomerSearchDialog> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.person_off,
-                size: 64, color: Colors.white.withOpacity(0.3)),
+            Icon(Icons.person_off_rounded,
+                size: 64, color: AppTheme.textSecondary.withOpacity(0.5)),
             const SizedBox(height: 16),
             Text(
-              'No se encontraron clientes',
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.6),
+              AppLocalizations.of(context).noDialogCustomersFound,
+              style: const TextStyle(
+                color: AppTheme.textSecondary,
                 fontSize: 14,
               ),
             ),
@@ -410,14 +414,16 @@ class _CustomerSearchDialogState extends State<CustomerSearchDialog> {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.3),
+                          color: AppTheme.actionSave.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: Colors.green, width: 1),
+                          border:
+                              Border.all(color: AppTheme.actionSave, width: 1),
                         ),
                         child: Text(
-                          'Descuento ${customer['discountValue']}%',
+                          AppLocalizations.of(context).discountBadge(
+                              customer['discountValue'].toString()),
                           style: const TextStyle(
-                            color: Colors.greenAccent,
+                            color: AppTheme.actionSave,
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
                           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 
@@ -123,15 +124,17 @@ class _ProductEditDialogState extends State<ProductEditDialog> {
                   children: [
                     const Icon(Icons.edit, color: Colors.white, size: 28),
                     const SizedBox(width: 12),
-                    const Expanded(
-                      child: Text(
-                        'Editar Producto',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                    Expanded(
+                      child: Builder(builder: (ctx) {
+                        return Text(
+                          AppLocalizations.of(ctx).labelEditProduct,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      }),
                     ),
                     IconButton(
                       icon: const Icon(Icons.close, color: Colors.white),
@@ -158,202 +161,219 @@ class _ProductEditDialogState extends State<ProductEditDialog> {
                     const SizedBox(height: 20),
 
                     // Campo de cantidad
-                    _buildTextField(
-                      label: 'Cantidad',
-                      controller: _quantityController,
-                      icon: Icons.inventory_2,
-                      keyboardType: TextInputType.number,
-                      onChanged: _updateQuantity,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                    ),
+                    Builder(builder: (ctx) {
+                      final l10n = AppLocalizations.of(ctx);
+                      return _buildTextField(
+                        label: l10n.labelQuantity,
+                        controller: _quantityController,
+                        icon: Icons.inventory_2,
+                        keyboardType: TextInputType.number,
+                        onChanged: _updateQuantity,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                      );
+                    }),
                     const SizedBox(height: 16),
 
                     // Campo de precio unitario
-                    _buildTextField(
-                      label: 'Precio Unitario',
-                      controller: _priceController,
-                      icon: Icons.attach_money,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      onChanged: _updatePrice,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp(r'^\d+\.?\d{0,2}')),
-                      ],
-                    ),
+                    Builder(builder: (ctx) {
+                      final l10n = AppLocalizations.of(ctx);
+                      return _buildTextField(
+                        label: l10n.labelUnitPrice,
+                        controller: _priceController,
+                        icon: Icons.attach_money,
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        onChanged: _updatePrice,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d+\.?\d{0,2}')),
+                        ],
+                      );
+                    }),
                     const SizedBox(height: 16),
 
                     // Campo de descuento
-                    _buildTextField(
-                      label: 'Descuento',
-                      controller: _discountController,
-                      icon: Icons.local_offer,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      onChanged: _updateDiscount,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp(r'^\d+\.?\d{0,2}')),
-                      ],
-                    ),
+                    Builder(builder: (ctx) {
+                      final l10n = AppLocalizations.of(ctx);
+                      return _buildTextField(
+                        label: l10n.labelDiscount,
+                        controller: _discountController,
+                        icon: Icons.local_offer,
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        onChanged: _updateDiscount,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d+\.?\d{0,2}')),
+                        ],
+                      );
+                    }),
 
-                    // Impuestos (si existen)
                     if (hasTaxes) ...[
                       const SizedBox(height: 20),
-                      Container(
-                        padding: const EdgeInsets.all(12),
+                      Builder(builder: (ctx) {
+                        final l10n = AppLocalizations.of(ctx);
+                        return Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: Colors.blue.withOpacity(0.3),
+                              width: 1,
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.receipt_long,
+                                    color: Colors.lightBlueAccent,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    l10n.labelTaxes,
+                                    style: const TextStyle(
+                                      color: Colors.lightBlueAccent,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              ...item.itemTaxList!.map((tax) {
+                                final taxAmount = _calculateSubtotal() *
+                                    (tax.percentage / 100);
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 4),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '${tax.name} (${tax.percentage.toStringAsFixed(0)}%)',
+                                        style: TextStyle(
+                                          color: Colors.white.withOpacity(0.8),
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                      Text(
+                                        '\$${taxAmount.toStringAsFixed(2)}',
+                                        style: const TextStyle(
+                                          color: Colors.lightBlueAccent,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ],
+                          ),
+                        );
+                      }),
+                    ],
+                    // Resumen de cálculos
+                    const SizedBox(height: 20),
+                    Builder(builder: (ctx) {
+                      final l10n = AppLocalizations.of(ctx);
+                      return Container(
+                        padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.blue.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
+                          color: AppTheme.secondary.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: Colors.blue.withOpacity(0.3),
-                            width: 1,
+                            color: AppTheme.primaryButton.withOpacity(0.5),
+                            width: 1.5,
                           ),
                         ),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Row(
-                              children: [
-                                Icon(
-                                  Icons.receipt_long,
-                                  color: Colors.lightBlueAccent,
-                                  size: 20,
-                                ),
-                                SizedBox(width: 8),
-                                Text(
-                                  'Impuestos',
-                                  style: TextStyle(
-                                    color: Colors.lightBlueAccent,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
+                            _buildSummaryRow(
+                              l10n.labelSubtotal,
+                              '\$${_calculateSubtotal().toStringAsFixed(2)}',
                             ),
-                            const SizedBox(height: 8),
-                            ...item.itemTaxList!.map((tax) {
-                              final taxAmount =
-                                  _calculateSubtotal() * (tax.percentage / 100);
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 4),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      '${tax.name} (${tax.percentage.toStringAsFixed(0)}%)',
-                                      style: TextStyle(
-                                        color: Colors.white.withOpacity(0.8),
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                    Text(
-                                      '\$${taxAmount.toStringAsFixed(2)}',
-                                      style: const TextStyle(
-                                        color: Colors.lightBlueAccent,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
+                            if (_discount > 0) ...[
+                              const SizedBox(height: 8),
+                              _buildSummaryRow(
+                                l10n.labelDiscountApplied,
+                                '-\$${_discount.toStringAsFixed(2)}',
+                                color: Colors.orangeAccent,
+                              ),
+                            ],
+                            if (hasTaxes) ...[
+                              const SizedBox(height: 8),
+                              _buildSummaryRow(
+                                l10n.labelTotalTaxes,
+                                '\$${_calculateTotalTax().toStringAsFixed(2)}',
+                                color: Colors.lightBlueAccent,
+                              ),
+                            ],
+                            const SizedBox(height: 12),
+                            const Divider(color: Colors.white30, height: 1),
+                            const SizedBox(height: 12),
+                            _buildSummaryRow(
+                              l10n.labelTotal,
+                              '\$${_calculateTotal().toStringAsFixed(2)}',
+                              isBold: true,
+                              color: AppTheme.primaryButton,
+                              fontSize: 18,
+                            ),
                           ],
                         ),
-                      ),
-                    ],
-
-                    // Resumen de cálculos
-                    const SizedBox(height: 20),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppTheme.secondary.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: AppTheme.primaryButton.withOpacity(0.5),
-                          width: 1.5,
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          _buildSummaryRow(
-                            'Subtotal',
-                            '\$${_calculateSubtotal().toStringAsFixed(2)}',
-                          ),
-                          if (_discount > 0) ...[
-                            const SizedBox(height: 8),
-                            _buildSummaryRow(
-                              'Descuento aplicado',
-                              '-\$${_discount.toStringAsFixed(2)}',
-                              color: Colors.orangeAccent,
-                            ),
-                          ],
-                          if (hasTaxes) ...[
-                            const SizedBox(height: 8),
-                            _buildSummaryRow(
-                              'Total impuestos',
-                              '\$${_calculateTotalTax().toStringAsFixed(2)}',
-                              color: Colors.lightBlueAccent,
-                            ),
-                          ],
-                          const SizedBox(height: 12),
-                          const Divider(
-                            color: Colors.white30,
-                            height: 1,
-                          ),
-                          const SizedBox(height: 12),
-                          _buildSummaryRow(
-                            'TOTAL',
-                            '\$${_calculateTotal().toStringAsFixed(2)}',
-                            isBold: true,
-                            color: Colors.greenAccent,
-                            fontSize: 18,
-                          ),
-                        ],
-                      ),
-                    ),
+                      );
+                    }),
 
                     // Botones de acción
                     const SizedBox(height: 24),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () => Navigator.pop(context),
-                            style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              side: const BorderSide(color: Colors.white54),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                    Builder(builder: (ctx) {
+                      final l10n = AppLocalizations.of(ctx);
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () => Navigator.pop(context),
+                              style: OutlinedButton.styleFrom(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                foregroundColor: AppTheme.textSecondary,
+                                side: const BorderSide(
+                                    color: AppTheme.dialogBorder),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
-                            ),
-                            child: const Text(
-                              'Cancelar',
-                              style: TextStyle(color: Colors.white70),
+                              child: Text(l10n.btnCancel),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: _save,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppTheme.primaryButton,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: _save,
+                              icon: const Icon(Icons.save_rounded, size: 18),
+                              label: Text(l10n.btnSave),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppTheme.actionSave,
+                                foregroundColor: Colors.white,
+                                elevation: 0,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
                             ),
-                            child: const Text('Guardar'),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      );
+                    }),
                   ],
                 ),
               ),

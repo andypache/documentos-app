@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 
 /// Panel de totales que permanece visible en la parte inferior
@@ -28,6 +29,7 @@ class TotalsPanelWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final l10n = AppLocalizations.of(context);
 
     return Container(
       decoration: BoxDecoration(
@@ -80,7 +82,7 @@ class TotalsPanelWidget extends StatelessWidget {
                     ),
                     SizedBox(width: size.width * 0.02),
                     Text(
-                      'Resumen de Factura',
+                      l10n.billSummaryTitle,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: size.width * 0.036,
@@ -116,7 +118,7 @@ class TotalsPanelWidget extends StatelessWidget {
                     children: [
                       // Subtotal
                       _buildTotalRow(
-                        'Subtotal',
+                        l10n.labelSubtotal,
                         subtotal,
                         icon: Icons.shopping_cart_outlined,
                         size: size,
@@ -126,7 +128,7 @@ class TotalsPanelWidget extends StatelessWidget {
                       if (customerDiscount > 0) ...[
                         SizedBox(height: size.height * 0.005),
                         _buildTotalRow(
-                          customerDiscountLabel ?? 'Descuento Cliente',
+                          customerDiscountLabel ?? l10n.labelDiscount,
                           -customerDiscount,
                           icon: Icons.local_offer,
                           color: Colors.orangeAccent,
@@ -139,7 +141,7 @@ class TotalsPanelWidget extends StatelessWidget {
                       if (totalTax > 0) ...[
                         SizedBox(height: size.height * 0.005),
                         _buildTotalRow(
-                          'Impuestos',
+                          l10n.labelTaxes,
                           totalTax,
                           icon: Icons.receipt_long,
                           color: Colors.lightBlueAccent,
@@ -166,18 +168,18 @@ class TotalsPanelWidget extends StatelessWidget {
                               Container(
                                 padding: EdgeInsets.all(size.width * 0.012),
                                 decoration: BoxDecoration(
-                                  color: Colors.greenAccent.withOpacity(0.2),
+                                  color: AppTheme.actionSave.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Icon(
                                   Icons.attach_money,
-                                  color: Colors.greenAccent,
+                                  color: AppTheme.actionSave,
                                   size: size.width * 0.048,
                                 ),
                               ),
                               SizedBox(width: size.width * 0.02),
                               Text(
-                                'TOTAL',
+                                l10n.labelTotal,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: size.width * 0.04,
@@ -218,18 +220,18 @@ class TotalsPanelWidget extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     onPressed: canSave ? onSave : null,
-                    icon: Icon(Icons.save, size: size.width * 0.048),
+                    icon: Icon(Icons.save_rounded, size: size.width * 0.048),
                     label: Text(
-                      'Guardar Factura',
+                      l10n.btnSaveInvoice,
                       style: TextStyle(
                         fontSize: size.width * 0.036,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: canSave
-                          ? AppTheme.primaryButton
-                          : Colors.grey.shade700,
+                      backgroundColor:
+                          canSave ? AppTheme.actionSave : Colors.grey.shade700,
+                      foregroundColor: Colors.white,
                       padding:
                           EdgeInsets.symmetric(vertical: size.height * 0.01),
                       shape: RoundedRectangleBorder(
@@ -253,7 +255,7 @@ class TotalsPanelWidget extends StatelessWidget {
                       ),
                       SizedBox(width: size.width * 0.015),
                       Text(
-                        'Completa todos los campos requeridos',
+                        l10n.billRequiredFieldsHint,
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.5),
                           fontSize: size.width * 0.028,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/screen/customer/customer_wizard_screen.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
@@ -14,10 +15,11 @@ class ClientScreen extends StatelessWidget {
     return Scaffold(
       body: const Stack(children: [BrackgroundWidget(), _ClientScreenBody()]),
       floatingActionButton: FloatingActionButton.extended(
-        elevation: 20,
+        elevation: 4,
         backgroundColor: AppTheme.primaryButton,
-        icon: const Icon(Icons.person_add),
-        label: const Text('Nuevo Cliente'),
+        foregroundColor: AppTheme.secondary,
+        icon: const Icon(Icons.person_add_rounded),
+        label: Text(AppLocalizations.of(context).customerCreateTitle),
         onPressed: () => _navigateToCreateCustomer(context),
       ),
     );
@@ -32,9 +34,16 @@ class ClientScreen extends StatelessWidget {
     // Si se guardó un cliente, mostrar mensaje
     if (result == true && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Cliente guardado exitosamente'),
-          backgroundColor: Colors.green,
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context).customerCreatedSuccess,
+            style: const TextStyle(color: Colors.white),
+          ),
+          backgroundColor: AppTheme.actionSave,
+          behavior: SnackBarBehavior.floating,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         ),
       );
     }
@@ -69,8 +78,11 @@ class _ClientScreenBodyState extends State<_ClientScreenBody> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Expanded(
-                child: PageTitleWidget(title: 'Clientes'),
+              Expanded(
+                child: Builder(
+                  builder: (ctx) => PageTitleWidget(
+                      title: AppLocalizations.of(ctx).pageClientsTitle),
+                ),
               ),
               IconButton(
                 icon: Icon(Icons.close,
@@ -280,7 +292,7 @@ class _SearchSectionState extends State<_SearchSection> {
               controller: _searchController,
               style: TextStyle(color: Colors.white, fontSize: fontSize),
               decoration: InputDecoration(
-                hintText: 'Buscar por nombre, clave o código de barras',
+                hintText: AppLocalizations.of(context).searchCustomersHint,
                 hintStyle: TextStyle(
                     color: Colors.white.withOpacity(0.5), fontSize: fontSize),
                 prefixIcon: Icon(Icons.search,
@@ -325,9 +337,12 @@ class _SearchSectionState extends State<_SearchSection> {
                     }
                   },
                   icon: Icon(Icons.search, size: size.width * 0.045),
-                  label: Text('Buscar', style: TextStyle(fontSize: fontSize)),
+                  label: Text(AppLocalizations.of(context).btnSearch,
+                      style: TextStyle(fontSize: fontSize)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryButton,
+                    foregroundColor: AppTheme.secondary,
+                    elevation: 0,
                     padding:
                         EdgeInsets.symmetric(vertical: size.height * 0.018),
                     shape: RoundedRectangleBorder(
@@ -341,10 +356,12 @@ class _SearchSectionState extends State<_SearchSection> {
                 child: ElevatedButton.icon(
                   onPressed: _loadAllCustomers,
                   icon: Icon(Icons.list, size: size.width * 0.045),
-                  label:
-                      Text('Ver Últimos', style: TextStyle(fontSize: fontSize)),
+                  label: Text(AppLocalizations.of(context).btnLoadLast,
+                      style: TextStyle(fontSize: fontSize)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.secondaryButton,
+                    foregroundColor: AppTheme.secondary,
+                    elevation: 0,
                     padding:
                         EdgeInsets.symmetric(vertical: size.height * 0.018),
                     shape: RoundedRectangleBorder(
@@ -401,11 +418,12 @@ class _CustomerListContent extends StatelessWidget {
 
     // Estado inicial
     if (!hasSearched) {
-      return const _EmptyStateWidget(
-        icon: Icons.search,
-        title: 'Buscar Clientes',
-        message:
-            'Usa el buscador para encontrar clientes\no visualiza los últimos clientes registrados',
+      return Builder(
+        builder: (ctx) => _EmptyStateWidget(
+          icon: Icons.search_rounded,
+          title: AppLocalizations.of(ctx).searchCustomersTitle,
+          message: AppLocalizations.of(ctx).searchCustomersMsg,
+        ),
       );
     }
 
@@ -416,10 +434,12 @@ class _CustomerListContent extends StatelessWidget {
 
     // Sin resultados
     if (customers.isEmpty) {
-      return const _EmptyStateWidget(
-        icon: Icons.people_outline,
-        title: 'Sin Resultados',
-        message: 'No se encontraron clientes con ese criterio de búsqueda',
+      return Builder(
+        builder: (ctx) => _EmptyStateWidget(
+          icon: Icons.people_outline_rounded,
+          title: AppLocalizations.of(ctx).noCustomersFound,
+          message: AppLocalizations.of(ctx).noCustomersFoundMsg,
+        ),
       );
     }
 
@@ -431,7 +451,7 @@ class _CustomerListContent extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
           child: Text(
-            '${customers.length} cliente(s) encontrado(s)',
+            AppLocalizations.of(context).customersFound(customers.length),
             style: TextStyle(
               color: Colors.white70,
               fontSize: size.width * 0.032,
@@ -463,9 +483,10 @@ class _CustomerListContent extends StatelessWidget {
       BuildContext context, Map<String, dynamic> customer) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppTheme.primary,
+      backgroundColor: AppTheme.dialogBackground,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        side: BorderSide(color: AppTheme.dialogBorder, width: 1),
       ),
       builder: (context) => _CustomerDetailSheet(customer: customer),
     );
@@ -520,29 +541,102 @@ class _CustomerListContent extends StatelessWidget {
 
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Eliminar Cliente'),
-        content: Text('¿Está seguro que desea eliminar a $displayName?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar'),
+      builder: (ctx) => Dialog(
+        backgroundColor: AppTheme.dialogBackground,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: AppTheme.dialogBorder, width: 1),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: AppTheme.actionDelete.withOpacity(0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.person_remove_rounded,
+                  color: AppTheme.actionDelete,
+                  size: 32,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                AppLocalizations.of(ctx).deleteCustomerTitle,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: AppTheme.textPrimary,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                AppLocalizations.of(ctx).deleteCustomerConfirm(displayName),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: AppTheme.textSecondary,
+                  fontSize: 13.5,
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 28),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(ctx, false),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppTheme.textSecondary,
+                        side: const BorderSide(color: AppTheme.dialogBorder),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.symmetric(vertical: 13),
+                      ),
+                      child: Text(AppLocalizations.of(ctx).btnCancel),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => Navigator.pop(ctx, true),
+                      icon: const Icon(Icons.person_remove_rounded, size: 18),
+                      label: Text(AppLocalizations.of(ctx).btnDelete),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.actionDelete,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.symmetric(vertical: 13),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Eliminar'),
-          ),
-        ],
+        ),
       ),
     );
 
     if (confirmed == true && context.mounted) {
       // TODO: Implementar eliminación en el servicio
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Cliente eliminado exitosamente'),
-          backgroundColor: Colors.green,
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context).customerDeletedSuccess,
+            style: const TextStyle(color: Colors.white),
+          ),
+          backgroundColor: AppTheme.actionSave,
+          behavior: SnackBarBehavior.floating,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         ),
       );
       onRefresh();
@@ -639,34 +733,34 @@ class _CustomerDetailSheet extends StatelessWidget {
           ),
           SizedBox(height: size.height * 0.018),
           _DetailRow(
-            icon: Icons.badge,
-            label: 'Tipo de identificación',
+            icon: Icons.badge_rounded,
+            label: AppLocalizations.of(context).labelIdentificationType,
             value: customer['type'] ?? 'N/A',
           ),
           _DetailRow(
-            icon: Icons.credit_card,
-            label: 'Clave de búsqueda',
+            icon: Icons.credit_card_rounded,
+            label: AppLocalizations.of(context).labelIdentification,
             value: customer['identification'] ?? 'N/A',
           ),
           if (customer['email'] != null &&
               customer['email'].toString().isNotEmpty)
             _DetailRow(
-              icon: Icons.email,
-              label: 'Correo electrónico',
+              icon: Icons.email_rounded,
+              label: AppLocalizations.of(context).labelEmailAddress,
               value: customer['email'],
             ),
           if (customer['phone'] != null &&
               customer['phone'].toString().isNotEmpty)
             _DetailRow(
-              icon: Icons.phone,
-              label: 'Teléfono',
+              icon: Icons.phone_rounded,
+              label: AppLocalizations.of(context).labelPhoneNumber,
               value: customer['phone'],
             ),
           if (customer['address'] != null &&
               customer['address'].toString().isNotEmpty)
             _DetailRow(
-              icon: Icons.location_on,
-              label: 'Dirección',
+              icon: Icons.location_on_rounded,
+              label: AppLocalizations.of(context).labelAddress,
               value: customer['address'],
             ),
           SizedBox(height: size.height * 0.025),
@@ -856,7 +950,8 @@ class _CustomerCard extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: onEdit,
-                    icon: const Icon(Icons.edit, color: Colors.blue, size: 20),
+                    icon: const Icon(Icons.edit_rounded,
+                        color: AppTheme.primaryButton, size: 20),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
                     tooltip: 'Editar',
@@ -864,7 +959,8 @@ class _CustomerCard extends StatelessWidget {
                   const SizedBox(height: 8),
                   IconButton(
                     onPressed: onDelete,
-                    icon: const Icon(Icons.delete, color: Colors.red, size: 20),
+                    icon: const Icon(Icons.delete_rounded,
+                        color: AppTheme.actionDelete, size: 20),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
                     tooltip: 'Eliminar',

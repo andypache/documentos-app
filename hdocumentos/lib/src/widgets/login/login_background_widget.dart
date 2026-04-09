@@ -26,6 +26,11 @@ class _LoginBackgroundWidgetBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    // Usar el lado más corto como referencia para que las burbujas
+    // sean proporcionales tanto en portrait como landscape
+    final s = size.shortestSide;
+
     return Container(
       width: double.infinity,
       height: double.infinity,
@@ -37,17 +42,25 @@ class _LoginBackgroundWidgetBox extends StatelessWidget {
           stops: [0.0, 1.0],
         ),
       ),
-      child: const Stack(
+      child: Stack(
         children: [
-          // Burbujas decorativas con tamaños variados para profundidad visual
-          Positioned(top: 80, left: 20, child: _Bubble(size: 120)),
-          Positioned(top: -50, left: -40, child: _Bubble(size: 160)),
-          Positioned(top: -30, right: -30, child: _Bubble(size: 140)),
-          Positioned(bottom: -60, left: 0, child: _Bubble(size: 180)),
-          Positioned(bottom: 100, right: 10, child: _Bubble(size: 100)),
-          Positioned(top: 200, right: -20, child: _Bubble(size: 80)),
+          // Burbujas decorativas con tamaños proporcionales a la pantalla
+          Positioned(
+              top: s * 0.22, left: s * 0.05, child: _Bubble(size: s * 0.3)),
+          Positioned(
+              top: -s * 0.13, left: -s * 0.1, child: _Bubble(size: s * 0.4)),
+          Positioned(
+              top: -s * 0.08, right: -s * 0.08, child: _Bubble(size: s * 0.35)),
+          Positioned(
+              bottom: -s * 0.15, left: 0, child: _Bubble(size: s * 0.45)),
+          Positioned(
+              bottom: s * 0.25,
+              right: s * 0.025,
+              child: _Bubble(size: s * 0.25)),
+          Positioned(
+              top: s * 0.5, right: -s * 0.05, child: _Bubble(size: s * 0.2)),
           // Logo centrado en la parte superior
-          _HeaderLogo(),
+          const _HeaderLogo(),
         ],
       ),
     );
@@ -61,12 +74,16 @@ class _HeaderLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isLandscape = size.width > size.height;
+    // En landscape el logo toma menos altura para dejar espacio al formulario
+    final logoHeight = isLandscape ? size.height * 0.22 : size.height * 0.18;
+
     return SafeArea(
       child: SizedBox(
         width: double.infinity,
-        height: size.height * 0.18,
+        height: logoHeight,
         child: const Padding(
-          padding: EdgeInsets.only(top: 24),
+          padding: EdgeInsets.only(top: 16),
           child: FadeInImage(
             image: AssetImage('assets/image/haku_white.png'),
             placeholder: AssetImage('assets/image/haku_white.png'),

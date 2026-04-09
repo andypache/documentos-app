@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 
@@ -41,77 +42,88 @@ class CustomerSelectionWidget extends StatelessWidget {
   }
 
   Widget _buildEmptyState() {
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Seleccionar Cliente',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Row(
+    return Builder(
+      builder: (context) {
+        final l10n = AppLocalizations.of(context);
+        return Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Buscar cliente
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: onSelectCustomer,
-                  icon: const Icon(Icons.search, size: 18),
-                  label: const Text('Buscar', style: TextStyle(fontSize: 13)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primaryButton,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
+              Text(
+                l10n.labelSelectCustomer,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(width: 8),
-              // Crear cliente
-              if (onCreateCustomer != null)
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: onCreateCustomer,
-                    icon: const Icon(Icons.person_add, size: 18),
-                    label: const Text('Nuevo', style: TextStyle(fontSize: 13)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  // Buscar cliente
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: onSelectCustomer,
+                      icon: const Icon(Icons.search, size: 18),
+                      label: Text(l10n.btnSearch,
+                          style: const TextStyle(fontSize: 13)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primaryButton,
+                        foregroundColor: AppTheme.secondary,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              const SizedBox(width: 8),
-              // Consumidor final
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: onAssignConsumerFinal,
-                  icon: const Icon(Icons.person_outline, size: 18),
-                  label: const Text('C. Final', style: TextStyle(fontSize: 13)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                  const SizedBox(width: 8),
+                  // Crear cliente
+                  if (onCreateCustomer != null)
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: onCreateCustomer,
+                        icon: const Icon(Icons.person_add, size: 18),
+                        label: Text(l10n.btnNewCustomer,
+                            style: const TextStyle(fontSize: 13)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.actionSave,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                    ),
+                  const SizedBox(width: 8),
+                  // Consumidor final
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: onAssignConsumerFinal,
+                      icon: const Icon(Icons.person_outline, size: 18),
+                      label: Text(l10n.btnConsumerFinal,
+                          style: const TextStyle(fontSize: 13)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.secondaryButton,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -227,73 +239,78 @@ class CustomerSelectionWidget extends StatelessWidget {
           // Descuento prominente (si existe)
           if (hasDiscount) ...[
             const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.green.withOpacity(0.3),
-                    Colors.green.withOpacity(0.1),
-                  ],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.green, width: 1.5),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const Icon(
-                      Icons.local_offer,
-                      color: Colors.white,
-                      size: 20,
-                    ),
+            Builder(builder: (context) {
+              final l10n = AppLocalizations.of(context);
+              return Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppTheme.actionSave.withOpacity(0.3),
+                      AppTheme.actionSave.withOpacity(0.1),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          '¡DESCUENTO DISPONIBLE!',
-                          style: TextStyle(
-                            color: Colors.greenAccent,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          '${customer.customerDiscount!.discountValue}% de descuento',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        if (customer.customerDiscount!.endDate != null) ...[
-                          const SizedBox(height: 2),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppTheme.actionSave, width: 1.5),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppTheme.actionSave,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Icon(
+                        Icons.local_offer,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Text(
-                            'Válido hasta: ${_formatDate(customer.customerDiscount!.endDate!)}',
+                            l10n.labelDiscountAvailable,
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.7),
-                              fontSize: 11,
+                              color: AppTheme.actionSave,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5,
                             ),
                           ),
+                          const SizedBox(height: 2),
+                          Text(
+                            l10n.labelDiscountValue(
+                                '${customer.customerDiscount!.discountValue}'),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          if (customer.customerDiscount!.endDate != null) ...[
+                            const SizedBox(height: 2),
+                            Text(
+                              l10n.labelDiscountValid(_formatDate(
+                                  customer.customerDiscount!.endDate!)),
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.7),
+                                fontSize: 11,
+                              ),
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
+                  ],
+                ),
+              );
+            }),
           ],
 
           // Información adicional

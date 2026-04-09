@@ -74,27 +74,80 @@ class _CompanyWizardStep5WidgetState extends State<CompanyWizardStep5Widget> {
 
   void _deletePoint(
       BuildContext context, CompanyEmissionPointModel point, int index) {
-    final l10n = AppLocalizations.of(context);
     showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.cardBackground,
-        title: Text(
-          l10n.emissionPointDeleteConfirm,
-          style: const TextStyle(color: AppTheme.textPrimary),
+      builder: (ctx) => Dialog(
+        backgroundColor: AppTheme.dialogBackground,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: AppTheme.dialogBorder, width: 1),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(l10n.emissionPointCancelBtn,
-                style: const TextStyle(color: AppTheme.textSecondary)),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: AppTheme.actionDelete.withOpacity(0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.delete_outline_rounded,
+                  color: AppTheme.actionDelete,
+                  size: 32,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                AppLocalizations.of(ctx).emissionPointDeleteConfirm,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: AppTheme.textPrimary,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 28),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(ctx, false),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppTheme.textSecondary,
+                        side: const BorderSide(color: AppTheme.dialogBorder),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.symmetric(vertical: 13),
+                      ),
+                      child:
+                          Text(AppLocalizations.of(ctx).emissionPointCancelBtn),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => Navigator.pop(ctx, true),
+                      icon: const Icon(Icons.delete_rounded, size: 18),
+                      label:
+                          Text(AppLocalizations.of(ctx).emissionPointDeleteBtn),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.actionDelete,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.symmetric(vertical: 13),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text(l10n.emissionPointDeleteBtn,
-                style: const TextStyle(color: AppTheme.actionDelete)),
-          ),
-        ],
+        ),
       ),
     ).then((confirmed) {
       if (confirmed == true && context.mounted) {

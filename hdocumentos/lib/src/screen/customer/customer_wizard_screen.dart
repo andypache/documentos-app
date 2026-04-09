@@ -39,20 +39,25 @@ class _CustomerWizardBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(
         children: [
           const BrackgroundWidget(),
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(height: 45),
-                PageTitleWidget(
-                  title: isEditing ? 'Editar Cliente' : 'Nuevo Cliente',
-                ),
-                const SizedBox(height: 55),
-                const _CustomerWizardContainer(),
-              ],
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: size.height * 0.02),
+                  PageTitleWidget(
+                    title: isEditing
+                        ? AppLocalizations.of(context).customerEditTitle
+                        : AppLocalizations.of(context).customerCreateTitle,
+                  ),
+                  SizedBox(height: size.height * 0.025),
+                  const _CustomerWizardContainer(),
+                ],
+              ),
             ),
           ),
         ],
@@ -68,17 +73,18 @@ class _CustomerWizardContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final customerForm = Provider.of<CustomerFormProvider>(context);
+    final size = MediaQuery.of(context).size;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
       child: Column(
         children: [
           _StepperIndicator(currentStep: customerForm.currentStep),
-          const SizedBox(height: 30),
+          SizedBox(height: size.height * 0.025),
           _WizardContent(currentStep: customerForm.currentStep),
-          const SizedBox(height: 30),
+          SizedBox(height: size.height * 0.025),
           const _NavigationButtons(),
-          const SizedBox(height: 50),
+          SizedBox(height: size.height * 0.06),
         ],
       ),
     );
@@ -94,15 +100,20 @@ class _StepperIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.04, vertical: size.height * 0.012),
       child: Row(
         children: [
-          _buildStep(context, 0, 'Datos', currentStep),
+          _buildStep(context, 0, AppLocalizations.of(context).stepCustomerData,
+              currentStep),
           _buildConnector(0, currentStep),
-          _buildStep(context, 1, 'Contacto', currentStep),
+          _buildStep(context, 1,
+              AppLocalizations.of(context).stepCustomerContact, currentStep),
           _buildConnector(1, currentStep),
-          _buildStep(context, 2, 'Descuento', currentStep),
+          _buildStep(context, 2, AppLocalizations.of(context).labelDiscount,
+              currentStep),
         ],
       ),
     );
@@ -112,13 +123,17 @@ class _StepperIndicator extends StatelessWidget {
       BuildContext context, int stepNumber, String label, int currentStep) {
     final isActive = stepNumber == currentStep;
     final isCompleted = stepNumber < currentStep;
+    final size = MediaQuery.of(context).size;
+    final circleSize = size.shortestSide * 0.1;
+    final iconSize = size.shortestSide * 0.05;
+    final labelFontSize = size.shortestSide * 0.028;
 
     return Expanded(
       child: Column(
         children: [
           Container(
-            width: 40,
-            height: 40,
+            width: circleSize,
+            height: circleSize,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: isActive || isCompleted
@@ -133,7 +148,7 @@ class _StepperIndicator extends StatelessWidget {
             ),
             child: Center(
               child: isCompleted
-                  ? const Icon(Icons.check, color: Colors.white, size: 20)
+                  ? Icon(Icons.check, color: Colors.white, size: iconSize)
                   : Text(
                       '${stepNumber + 1}',
                       style: TextStyle(
@@ -141,19 +156,19 @@ class _StepperIndicator extends StatelessWidget {
                             ? Colors.white
                             : Colors.white.withOpacity(0.5),
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: iconSize * 0.8,
                       ),
                     ),
             ),
           ),
-          const SizedBox(height: 5),
+          SizedBox(height: size.height * 0.005),
           Text(
             label,
             style: TextStyle(
               color: isActive || isCompleted
                   ? Colors.white
                   : Colors.white.withOpacity(0.5),
-              fontSize: 12,
+              fontSize: labelFontSize,
               fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
             ),
             textAlign: TextAlign.center,
@@ -165,7 +180,6 @@ class _StepperIndicator extends StatelessWidget {
 
   Widget _buildConnector(int stepNumber, int currentStep) {
     final isCompleted = stepNumber < currentStep;
-
     return Expanded(
       child: Container(
         height: 2,
@@ -206,35 +220,49 @@ class _NavigationButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final customerForm = Provider.of<CustomerFormProvider>(context);
+    final size = MediaQuery.of(context).size;
+    final l10n = AppLocalizations.of(context);
+    final btnPadding = EdgeInsets.symmetric(
+      horizontal: size.width * 0.05,
+      vertical: size.height * 0.015,
+    );
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // Botón Anterior/Cancelar
+        // Botón Anterior / Cancelar
         if (customerForm.currentStep > 0)
           ElevatedButton.icon(
             onPressed: customerForm.isLoading
                 ? null
                 : () => customerForm.previousStep(),
-            icon: const Icon(Icons.arrow_back),
-            label: const Text('Anterior'),
+            icon: const Icon(Icons.arrow_back_rounded),
+            label: Text(l10n.btnPrevious),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.grey,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              foregroundColor: Colors.white,
+              elevation: 0,
+              padding: btnPadding,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
             ),
           )
         else
           ElevatedButton.icon(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.close),
-            label: const Text('Cancelar'),
+            icon: const Icon(Icons.close_rounded),
+            label: Text(l10n.btnCancel),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              backgroundColor: AppTheme.actionDanger,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              padding: btnPadding,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
             ),
           ),
 
-        // Botón Siguiente/Guardar
+        // Botón Siguiente / Guardar
         if (customerForm.currentStep < 2)
           ElevatedButton.icon(
             onPressed: customerForm.isLoading
@@ -244,19 +272,22 @@ class _NavigationButtons extends StatelessWidget {
                       // Paso validado y avanzado
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content:
-                              Text('Por favor complete los campos requeridos'),
-                          backgroundColor: Colors.red,
+                        SnackBar(
+                          content: Text(l10n.msgRequiredFields),
+                          backgroundColor: AppTheme.actionDanger,
                         ),
                       );
                     }
                   },
-            icon: const Icon(Icons.arrow_forward),
-            label: const Text('Siguiente'),
+            icon: const Icon(Icons.arrow_forward_rounded),
+            label: Text(l10n.btnNext),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.primaryButton,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              foregroundColor: AppTheme.secondary,
+              elevation: 0,
+              padding: btnPadding,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
             ),
           )
         else
@@ -266,13 +297,15 @@ class _NavigationButtons extends StatelessWidget {
                 : () => _handleSaveCustomer(context, customerForm),
             icon: customerForm.isLoading
                 ? const ButtonLoadingIndicator()
-                : const Icon(Icons.save),
-            label: Text(customerForm.isLoading
-                ? AppLocalizations.of(context).btnSaving
-                : AppLocalizations.of(context).btnSave),
+                : const Icon(Icons.save_rounded),
+            label: Text(customerForm.isLoading ? l10n.btnSaving : l10n.btnSave),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.primaryButton,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              backgroundColor: AppTheme.actionSave,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              padding: btnPadding,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
             ),
           ),
       ],
@@ -284,9 +317,9 @@ class _NavigationButtons extends StatelessWidget {
     // Validar paso actual
     if (!customerForm.isValidCurrentStep()) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Por favor complete los campos requeridos'),
-          backgroundColor: Colors.red,
+        SnackBar(
+          content: Text(AppLocalizations.of(context).msgRequiredFields),
+          backgroundColor: AppTheme.actionDanger,
         ),
       );
       return;
@@ -303,14 +336,15 @@ class _NavigationButtons extends StatelessWidget {
       customerForm.isLoading = false;
 
       if (context.mounted) {
+        final l10n = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
               customer.customerId != null
-                  ? 'Cliente actualizado exitosamente'
-                  : 'Cliente creado exitosamente',
+                  ? l10n.customerUpdatedSuccess
+                  : l10n.customerCreatedSuccess,
             ),
-            backgroundColor: Colors.green,
+            backgroundColor: AppTheme.actionSave,
           ),
         );
         Navigator.pop(context, customer);
@@ -320,8 +354,8 @@ class _NavigationButtons extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error al guardar: $e'),
-            backgroundColor: Colors.red,
+            content: Text(AppLocalizations.of(context).saveError(e.toString())),
+            backgroundColor: AppTheme.actionDanger,
           ),
         );
       }

@@ -21,14 +21,85 @@ class CardSwiperWidget extends StatelessWidget {
     }
 
     final size = MediaQuery.of(context).size;
+    // shortestSide garantiza proporciones correctas tanto en portrait como landscape
+    final shortest = size.shortestSide;
 
     // Calcular dimensiones responsivas
     final cardWidth = size.width * 0.65;
-    final cardHeight = size.height * 0.28;
-    final iconSize = size.width * 0.15;
-    final titleFontSize = size.width * 0.055;
-    final descriptionFontSize = size.width * 0.035;
+    final cardHeight =
+        shortest * 0.48; // más alto para mostrar descripción completa
+    final iconSize = shortest * 0.16;
+    final titleFontSize = shortest * 0.058;
+    final descriptionFontSize = shortest * 0.038;
 
+    // Construye la tarjeta visual de un menú (reutilizable para 1 o N items)
+    Widget buildCard(MenuOptionModel menu) {
+      menu.id = 'swiper-${menu.id}';
+      return GestureDetector(
+        onTap: () => Navigator.pushNamed(context, menu.route),
+        child: Hero(
+          tag: menu.id!,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: _CartBackground(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: shortest * 0.04,
+                  vertical: shortest * 0.018,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(menu.icon, size: iconSize, color: menu.color),
+                    SizedBox(height: shortest * 0.015),
+                    Text(
+                      menu.text,
+                      style: TextStyle(
+                          color: menu.color,
+                          fontWeight: FontWeight.bold,
+                          fontSize: titleFontSize),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: shortest * 0.01),
+                    Flexible(
+                      child: Text(
+                        menu.description ?? "",
+                        overflow: TextOverflow.fade,
+                        maxLines: 3,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: AppTheme.white,
+                            fontSize: descriptionFontSize,
+                            height: 1.35),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Con un solo menú: tarjeta centrada, sin stack duplicado
+    if (menus.length == 1) {
+      return SizedBox(
+        width: double.infinity,
+        height: cardHeight,
+        child: Center(
+          child: SizedBox(
+            width: cardWidth,
+            height: cardHeight,
+            child: buildCard(menus[0]),
+          ),
+        ),
+      );
+    }
+
+    // Con múltiples menús: swiper apilado
     return SizedBox(
         width: double.infinity,
         height: cardHeight,
@@ -37,53 +108,7 @@ class CardSwiperWidget extends StatelessWidget {
             layout: SwiperLayout.STACK,
             itemWidth: cardWidth,
             itemHeight: cardHeight,
-            itemBuilder: (_, int index) {
-              final menu = menus[index];
-              menu.id = 'swiper-${menu.id}';
-              return GestureDetector(
-                  onTap: () => Navigator.pushNamed(context, menu.route),
-                  child: Hero(
-                      tag: menu.id!,
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: _CartBackground(
-                              child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: size.width * 0.04,
-                              vertical: size.height * 0.015,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(menu.icon,
-                                    size: iconSize, color: menu.color),
-                                SizedBox(height: size.height * 0.012),
-                                Text(
-                                  menu.text,
-                                  style: TextStyle(
-                                      color: menu.color,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: titleFontSize),
-                                  textAlign: TextAlign.center,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                SizedBox(height: size.height * 0.008),
-                                Flexible(
-                                  child: Text(
-                                    menu.description ?? "",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: AppTheme.white,
-                                        fontSize: descriptionFontSize),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )))));
-            }));
+            itemBuilder: (_, int index) => buildCard(menus[index])));
   }
 }
 
@@ -105,12 +130,13 @@ class _CartBackground extends StatelessWidget {
             boxShadow: [
               BoxShadow(
                   color: Colors.black.withOpacity(0.6),
-                  offset: Offset(size.width * 0.02, size.width * 0.02),
+                  offset: Offset(
+                      size.shortestSide * 0.02, size.shortestSide * 0.02),
                   blurRadius: 8)
             ]),
         margin: EdgeInsets.symmetric(
           horizontal: size.width * 0.02,
-          vertical: size.height * 0.01,
+          vertical: size.shortestSide * 0.012,
         ),
         child: ClipRRect(
             borderRadius: BorderRadius.circular(20),

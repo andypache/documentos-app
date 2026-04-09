@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/bill/product_edit_dialog.dart';
@@ -40,31 +41,38 @@ class ProductListWidget extends StatelessWidget {
               children: [
                 const Icon(Icons.shopping_cart, color: Colors.white, size: 24),
                 const SizedBox(width: 12),
-                const Expanded(
-                  child: Text(
-                    'Productos',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                Expanded(
+                  child: Builder(builder: (context) {
+                    return Text(
+                      AppLocalizations.of(context).labelProducts,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
+                  }),
                 ),
-                ElevatedButton.icon(
-                  onPressed: onAddProduct,
-                  icon: const Icon(Icons.add, size: 18),
-                  label: const Text('Agregar'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primaryButton,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 10,
+                Builder(builder: (context) {
+                  final l10n = AppLocalizations.of(context);
+                  return ElevatedButton.icon(
+                    onPressed: onAddProduct,
+                    icon: const Icon(Icons.add, size: 18),
+                    label: Text(l10n.btnAdd),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryButton,
+                      foregroundColor: AppTheme.secondary,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
+                  );
+                }),
               ],
             ),
           ),
@@ -80,35 +88,40 @@ class ProductListWidget extends StatelessWidget {
   }
 
   Widget _buildEmptyState() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-      child: Center(
-        child: Column(
-          children: [
-            Icon(
-              Icons.inventory_2_outlined,
-              size: 64,
-              color: Colors.white.withOpacity(0.3),
+    return Builder(
+      builder: (context) {
+        final l10n = AppLocalizations.of(context);
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+          child: Center(
+            child: Column(
+              children: [
+                Icon(
+                  Icons.inventory_2_outlined,
+                  size: 64,
+                  color: Colors.white.withOpacity(0.3),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.noProductsAdded,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.6),
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  l10n.noProductsAddedHint,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.4),
+                    fontSize: 12,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            Text(
-              'No hay productos agregados',
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.6),
-                fontSize: 14,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Toca "Agregar" para buscar productos',
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.4),
-                fontSize: 12,
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
