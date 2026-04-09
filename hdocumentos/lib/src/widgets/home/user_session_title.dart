@@ -26,7 +26,8 @@ class UserSessionTitle extends StatelessWidget {
               top: size.height * 0.01,
               bottom: 5,
             ),
-            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child:
+                Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
               // Avatar
               Container(
                 width: avatarSize,
@@ -88,8 +89,35 @@ class UserSessionTitle extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 9, color: Colors.white.withOpacity(0.6)))
                   ])),
-              // Selector de idioma
-              const SizedBox(width: 4),
+              // ── Derecha: badge de marca + selector de idioma ─────────────
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                decoration: BoxDecoration(
+                  color: AppTheme.primaryButton.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(
+                    color: AppTheme.primaryButton.withOpacity(0.5),
+                    width: 1,
+                  ),
+                ),
+                child: ShaderMask(
+                  shaderCallback: (bounds) => const LinearGradient(
+                    colors: [AppTheme.primaryButton, Color(0xFF80DEEA)],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ).createShader(bounds),
+                  child: const Text(
+                    'H·VENTAS',
+                    style: TextStyle(
+                      fontSize: 9.5,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 6),
               const LanguageSelectorWidget(),
             ])));
   }

@@ -76,9 +76,40 @@ class _LoginCard extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(28, 28, 28, 20),
             child: _LoginForm(l10n: l10n),
           ),
-          // ── Enlace registro ───────────────────────────────────────────────
+          // ── Enlace registro ───────────────────────────────────────────
           _RegisterLink(l10n: l10n),
-          const SizedBox(height: 20),
+          const SizedBox(height: 12),
+          // ── Marca de la app ───────────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.only(bottom: 18),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: AppTheme.primaryButton.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: AppTheme.primaryButton.withOpacity(0.35),
+                  width: 1,
+                ),
+              ),
+              child: ShaderMask(
+                shaderCallback: (bounds) => const LinearGradient(
+                  colors: [AppTheme.primaryButton, Color(0xFF80DEEA)],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ).createShader(bounds),
+                child: const Text(
+                  'H·VENTAS',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                    letterSpacing: 0.8,
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
