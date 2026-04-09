@@ -512,6 +512,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeSalesTitle => 'My Sales';
 
   @override
+  String get homeSalesEmpty => 'No sales recorded yet';
+
+  @override
+  String get homeSalesEmptyDesc => 'Your invoices will appear here once you generate your first sale.';
+
+  @override
+  String get homeSalesEmptyAction => 'Create invoice';
+
+  @override
   String get navBill => 'Invoice';
 
   @override

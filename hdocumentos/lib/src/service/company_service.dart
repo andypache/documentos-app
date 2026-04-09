@@ -166,6 +166,52 @@ class CompanyService extends ChangeNotifier {
     });
   }
 
+  // ─── Últimas ventas ───────────────────────────────────────────────────────
+
+  /// Obtiene el listado de últimas ventas del endpoint `bills/last-sales`.
+  /// Retorna null si ocurre un error o si el contexto fue desmontado.
+  /// Retorna lista vacía si la respuesta es 200 pero no hay registros.
+  Future<List<LastSaleModel>?> getLastSales(BuildContext context) async {
+    final response = await getFetch(
+      context: context,
+      url: apiLastSales,
+      params: {},
+    );
+
+    if (response.statusHttp == 404) return [];
+
+    if (response.statusHttp != 200) {
+      NotificationService.showSnackbarError(response.message);
+      return null;
+    }
+
+    try {
+      final data = response.createDataResponse().response;
+      if (data is List) {
+        return data
+            .whereType<Map<String, dynamic>>()
+            .map(LastSaleModel.fromJson)
+            .toList();
+      }
+      // El backend puede envolver la lista en { "data": [...] }
+      if (data is Map<String, dynamic>) {
+        final list = data['data'] ?? data['content'] ?? data['items'];
+        if (list is List) {
+          return list
+              .whereType<Map<String, dynamic>>()
+              .map(LastSaleModel.fromJson)
+              .toList();
+        }
+      }
+      return [];
+    } catch (_) {
+      NotificationService.showSnackbarError(
+          NotificationService.l10n?.companyDataProcessError ??
+              'Error al procesar las últimas ventas');
+      return null;
+    }
+  }
+
   Future<String> _parseResponseError(ServiceResponseModel response) async {
     try {
       final responseModel = response.createDataResponse();

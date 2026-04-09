@@ -24,6 +24,9 @@ String apiCompanyMail = "${apiCompany}company/update/mail";
 String apiCompanyEmission = "${apiCompany}company/update/emission";
 String apiCompanyTaxGroups = "${apiCompany}company/update/tax-groups";
 
+// Endpoint últimas ventas
+String apiLastSales = "${apiCompany}bills/last-sales";
+
 //URL for common
 String apiDataCatalog = "$apiCompany/catalogs";
 

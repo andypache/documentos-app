@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
-import 'package:hdocumentos/src/constant/example_data.dart';
 import 'package:hdocumentos/src/provider/app_init_provider.dart';
 import 'package:hdocumentos/src/router/app_routes.dart';
 import 'package:hdocumentos/src/service/service.dart';
@@ -193,10 +192,12 @@ class _HomeScreenBodyState extends State<_HomeScreenBody> {
             child: Column(children: [
               CardSwiperWidget(menus: menus),
               const SizedBox(height: 20),
-              CardSlider(
-                  bills: billExamples,
+              if (initProvider.hasCompany)
+                LastSalesWidget(
+                  sales: initProvider.lastSales,
                   title: l10n.homeSalesTitle,
-                  onNextPage: () {}),
+                ),
+              const SizedBox(height: 16),
             ]),
           ),
         ),

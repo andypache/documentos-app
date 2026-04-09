@@ -512,6 +512,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get homeSalesTitle => 'Mis Ventas';
 
   @override
+  String get homeSalesEmpty => 'Sin ventas registradas';
+
+  @override
+  String get homeSalesEmptyDesc => 'Tus facturas aparecerán aquí una vez que generes tu primera venta.';
+
+  @override
+  String get homeSalesEmptyAction => 'Crear factura';
+
+  @override
   String get navBill => 'Factura';
 
   @override

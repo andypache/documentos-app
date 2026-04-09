@@ -1071,6 +1071,24 @@ abstract class AppLocalizations {
   /// **'Mis Ventas'**
   String get homeSalesTitle;
 
+  /// Título empty state mis ventas
+  ///
+  /// In es, this message translates to:
+  /// **'Sin ventas registradas'**
+  String get homeSalesEmpty;
+
+  /// Descripción empty state mis ventas
+  ///
+  /// In es, this message translates to:
+  /// **'Tus facturas aparecerán aquí una vez que generes tu primera venta.'**
+  String get homeSalesEmptyDesc;
+
+  /// Botón CTA empty state mis ventas
+  ///
+  /// In es, this message translates to:
+  /// **'Crear factura'**
+  String get homeSalesEmptyAction;
+
   /// Etiqueta nav factura
   ///
   /// In es, this message translates to:

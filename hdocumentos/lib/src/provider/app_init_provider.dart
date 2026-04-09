@@ -24,6 +24,7 @@ class AppInitProvider extends ChangeNotifier {
   CatalogModelList? _catalogs;
   CompanyModel? _company;
   bool _hasCompany = false;
+  List<LastSaleModel>? _lastSales;
 
   // ─── Getters ───────────────────────────────────────────────────────────────
 
@@ -37,6 +38,10 @@ class AppInitProvider extends ChangeNotifier {
   /// false → empresa no configurada → mostrar tarjeta config en swiper,
   ///          ocultar botón config en BottomNav.
   bool get hasCompany => _hasCompany;
+
+  /// Últimas ventas cargadas desde la API. null = aún no se cargó o
+  /// no hay empresa; lista vacía = empresa existe pero 0 ventas.
+  List<LastSaleModel>? get lastSales => _lastSales;
 
   bool get isLoading => _status == AppInitStatus.loading;
   bool get isReady => _status == AppInitStatus.ready;
@@ -102,6 +107,7 @@ class AppInitProvider extends ChangeNotifier {
     _catalogs = null;
     _company = null;
     _hasCompany = false;
+    _lastSales = null;
     _errorMessage = '';
     notifyListeners();
   }
@@ -134,6 +140,18 @@ class AppInitProvider extends ChangeNotifier {
     _hasCompany = result != null;
 
     await _authService.updateCompanySession(result);
+
+    if (_hasCompany) {
+      // ignore: use_build_context_synchronously
+      await _loadLastSales(context);
+    }
+  }
+
+  /// Carga las últimas ventas desde la API (sólo si la empresa existe).
+  /// Actualiza [_lastSales] sin cambiar el estado global.
+  Future<void> _loadLastSales(BuildContext context) async {
+    final result = await _companyService.getLastSales(context);
+    _lastSales = result; // null = error, [] = sin ventas
   }
 
   // ─── Helpers ───────────────────────────────────────────────────────────────

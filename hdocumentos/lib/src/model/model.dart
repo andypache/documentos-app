@@ -14,6 +14,7 @@ export 'package:hdocumentos/src/model/customer/customer_model.dart';
 export 'package:hdocumentos/src/model/customer/identification_type_model.dart';
 export 'package:hdocumentos/src/model/customer/customer_discount_model.dart';
 export 'package:hdocumentos/src/model/bill/bill_model.dart';
+export 'package:hdocumentos/src/model/bill/last_sale_model.dart';
 export 'package:hdocumentos/src/model/payment_method_model.dart';
 export 'package:hdocumentos/src/model/bill_item_model.dart';
 export 'package:hdocumentos/src/model/bill_calculation_request_model.dart';
