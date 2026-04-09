@@ -29,7 +29,10 @@ void main() async {
     providers: [
       ChangeNotifierProvider(create: (_) => AuthService()),
       ChangeNotifierProvider(create: (_) => LocaleProvider()),
-      ChangeNotifierProvider(create: (_) => AppInitProvider()),
+      ChangeNotifierProxyProvider<AuthService, AppInitProvider>(
+        create: (ctx) => AppInitProvider(ctx.read<AuthService>()),
+        update: (ctx, auth, previous) => previous ?? AppInitProvider(auth),
+      ),
     ],
     child: const MyApp(),
   ));

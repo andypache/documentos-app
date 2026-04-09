@@ -68,6 +68,13 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  Future<void> updateCompanySession(CompanyModel? company) async {
+    final session = Preferences.userSession;
+    session.company = company;
+    Preferences.userSession = session;
+    notifyListeners();
+  }
+
   //Detele session user
   Future logout() async {
     await storage.delete(key: 'access_token');

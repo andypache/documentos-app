@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/service/auth_service.dart';
 import 'package:hdocumentos/src/share/preference.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/common/language_selector_widget.dart';
+import 'package:provider/provider.dart';
 
 ///Widgets that put user session into top screen
 class UserSessionTitle extends StatelessWidget {
@@ -11,6 +13,8 @@ class UserSessionTitle extends StatelessWidget {
   //Build widgets
   @override
   Widget build(BuildContext context) {
+    // Escuchar AuthService para reconstruirse cuando cambie la sesión
+    context.watch<AuthService>();
     // Leer la sesión en build() para reflejar siempre el estado más reciente
     final session = Preferences.userSession;
     final size = MediaQuery.of(context).size;
@@ -60,7 +64,7 @@ class UserSessionTitle extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                     Text(
-                      '${session.names} ${session.surnames}',
+                      session.fullName,
                       style: const TextStyle(
                         fontSize: 12.5,
                         color: AppTheme.white,
@@ -70,22 +74,22 @@ class UserSessionTitle extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 1),
-                    Text(
-                      (session.companyName != null &&
-                              session.companyName!.isNotEmpty)
-                          ? session.companyName!
-                          : 'HVENTAS',
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.white.withOpacity(0.7),
-                        letterSpacing: 0.08,
+                    if (session.company != null &&
+                        (session.company!.businessName ?? '').isNotEmpty) ...[
+                      const SizedBox(height: 1),
+                      Text(
+                        session.company!.businessName!,
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.white.withOpacity(0.7),
+                          letterSpacing: 0.08,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    ],
                     const SizedBox(height: 0.8),
-                    Text(session.identification,
+                    Text(session.username,
                         style: TextStyle(
                             fontSize: 9, color: Colors.white.withOpacity(0.6)))
                   ])),

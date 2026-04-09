@@ -15,6 +15,9 @@ enum AppInitStatus { idle, loading, ready, error }
 ///   Controla la visibilidad del menú "Configuración" y el botón del BottomNav.
 class AppInitProvider extends ChangeNotifier {
   final CompanyService _companyService = CompanyService();
+  final AuthService _authService;
+
+  AppInitProvider(this._authService);
 
   AppInitStatus _status = AppInitStatus.idle;
   String _errorMessage = '';
@@ -119,6 +122,8 @@ class AppInitProvider extends ChangeNotifier {
 
   /// Carga la empresa por defecto. No lanza excepción si no existe (404):
   /// en ese caso [_hasCompany] queda en false y el flujo continúa normal.
+  /// Si la empresa se cargó con éxito, actualiza la sesión del usuario
+  /// para que [Preferences.userSession] refleje los datos más recientes.
   Future<void> _loadCompany(
     BuildContext context, {
     bool forceRefresh = false,
@@ -127,6 +132,8 @@ class AppInitProvider extends ChangeNotifier {
         await _companyService.getCompany(context, forceRefresh: forceRefresh);
     _company = result;
     _hasCompany = result != null;
+
+    await _authService.updateCompanySession(result);
   }
 
   // ─── Helpers ───────────────────────────────────────────────────────────────
