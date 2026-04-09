@@ -59,37 +59,7 @@ class _LoginBackgroundWidgetBox extends StatelessWidget {
               child: _Bubble(size: s * 0.25)),
           Positioned(
               top: s * 0.5, right: -s * 0.05, child: _Bubble(size: s * 0.2)),
-          // Logo centrado en la parte superior
-          const _HeaderLogo(),
         ],
-      ),
-    );
-  }
-}
-
-/// Logo de la empresa en la parte superior del fondo.
-class _HeaderLogo extends StatelessWidget {
-  const _HeaderLogo();
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final isLandscape = size.width > size.height;
-    // En landscape el logo toma menos altura para dejar espacio al formulario
-    final logoHeight = isLandscape ? size.height * 0.22 : size.height * 0.18;
-
-    return SafeArea(
-      child: SizedBox(
-        width: double.infinity,
-        height: logoHeight,
-        child: const Padding(
-          padding: EdgeInsets.only(top: 16),
-          child: FadeInImage(
-            image: AssetImage('assets/image/haku_white.png'),
-            placeholder: AssetImage('assets/image/haku_white.png'),
-            fit: BoxFit.contain,
-          ),
-        ),
       ),
     );
   }

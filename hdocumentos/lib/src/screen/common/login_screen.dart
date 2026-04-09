@@ -94,7 +94,7 @@ class _LoginHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(28, 24, 28, 24),
+      padding: const EdgeInsets.fromLTRB(28, 20, 28, 20),
       child: Column(
         children: [
           // ── Selector de idioma alineado a la derecha ──────────────────────
@@ -102,13 +102,14 @@ class _LoginHeader extends StatelessWidget {
             alignment: Alignment.centerRight,
             child: LanguageSelectorWidget(),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
+          // ── Ícono de acceso ───────────────────────────────────────────────
           Container(
-            width: 64,
-            height: 64,
+            width: 52,
+            height: 52,
             decoration: BoxDecoration(
               color: AppTheme.primary,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(14),
               border: Border.all(
                 color: AppTheme.primaryButton.withOpacity(0.5),
                 width: 1.5,
@@ -117,10 +118,10 @@ class _LoginHeader extends StatelessWidget {
             child: const Icon(
               Icons.lock_outline_rounded,
               color: AppTheme.primaryButton,
-              size: 32,
+              size: 26,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           Text(
             l10n.loginTitle,
             style: const TextStyle(
