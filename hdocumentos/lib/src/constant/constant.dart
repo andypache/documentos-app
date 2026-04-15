@@ -13,6 +13,7 @@ String apiCompany =
 String apiDataCompany = "${apiCompany}company/by-email";
 String apiCompanyDefault = "${apiCompany}companies/company-user/default";
 String apiCompanyCreate = "${apiCompany}companies/create";
+String apiCompanyUpdate = "${apiCompany}companies/update";
 String apiPrintingLogoRegisterCompany =
     "${apiCompany}company/printing-logo/register";
 

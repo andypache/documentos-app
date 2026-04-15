@@ -8,17 +8,6 @@ import 'package:hdocumentos/src/constant/constant.dart';
 import 'package:hdocumentos/src/service/notification_service.dart';
 import 'package:hdocumentos/src/share/preference.dart';
 
-// ─── Endpoints por paso ───────────────────────────────────────────────────────
-
-final Map<int, String> _stepEndpoints = {
-  0: apiCompanyBasic, // Paso 1: datos generales
-  1: apiCompanyLogo, // Paso 2: logo
-  2: apiCompanyCertificate, // Paso 3: certificado
-  3: apiCompanyMail, // Paso 4: correo
-  4: apiCompanyEmission, // Paso 5: emisión
-  5: apiCompanyTaxGroups, // Paso 6: grupos de impuesto
-};
-
 /// Provider para el wizard de configuración de compañia
 class CompanyFormProvider extends ChangeNotifier {
   // Keys de formulario por paso
@@ -189,11 +178,9 @@ class CompanyFormProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final url = _stepEndpoints[_currentStep];
-      if (url == null) return;
-
       final body = _buildStepBody(_currentStep);
-      final response = await postFetch(context: context, url: url, body: body);
+      final response =
+          await putFetch(context: context, url: apiCompanyUpdate, body: body);
 
       if (!context.mounted) return;
 
@@ -202,7 +189,7 @@ class CompanyFormProvider extends ChangeNotifier {
         NotificationService.showSnackbarSuccess(
             l10nMsg?.stepSavedSuccess ?? 'Paso guardado correctamente');
       } else {
-        NotificationService.showSnackbarError(response.message);
+        NotificationService.showSnackbarError(getError(response).toString());
       }
     } catch (e) {
       NotificationService.showSnackbarError(e.toString());
@@ -217,17 +204,25 @@ class CompanyFormProvider extends ChangeNotifier {
     switch (step) {
       case 0:
         return {
-          'business_name': company.businessName,
+          'company_id': company.companyId,
           'identification': company.identification,
           'identification_type_id': company.identificationTypeId,
-          'address': company.address,
-          'phone': company.phone,
           'email': company.email,
-          'website': company.website,
+          'address': company.address,
+          'business_name': company.businessName,
+          'phone': company.phone
         };
       case 1:
         return {
-          if (company.logo != null) 'logo_image': base64Encode(company.logo!),
+          'company_id': company.companyId,
+          'additional_Information': {
+            if (company.logo != null) 'logo_image': base64Encode(company.logo!),
+            'website': company.website,
+            'id': company.additionalInformation?.id,
+            'company_id': company.additionalInformation?.companyId,
+            'item_address': company.additionalInformation?.itemAddress,
+            'max_discount': company.additionalInformation?.maxDiscount
+          }
         };
       case 2:
         return {

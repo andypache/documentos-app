@@ -33,6 +33,7 @@ Future<ServiceResponseModel> getFetch({
         result: result,
         url: url,
         body: params,
+        method: _HttpMethod.get,
       ) ??
       result;
 }
@@ -55,6 +56,25 @@ Future<ServiceResponseModel> postFetch({
       result;
 }
 
+/// Realiza una petición PUT autenticada.
+/// Maneja refresco de token automático ante 401.
+Future<ServiceResponseModel> putFetch({
+  required BuildContext context,
+  required String url,
+  required Object body,
+}) async {
+  final result = await _HttpClient.put(url: url, body: body);
+  if (!context.mounted) return result;
+  return await _TokenRefreshHandler.handle(
+        context: context,
+        result: result,
+        url: url,
+        body: body,
+        method: _HttpMethod.put,
+      ) ??
+      result;
+}
+
 /// Realiza una petición POST con form-data (sin token Bearer).
 /// Usado para autenticación OAuth.
 Future<ServiceResponseModel> postFormFetch({
@@ -71,6 +91,18 @@ ServiceResponseModel getResponse(http.Response response) {
   return ServiceResponseModel.fromJson(response.statusCode, data);
 }
 
+Object getError(ServiceResponseModel response) {
+  if (response.body['response']?['error'] != null &&
+      response.body['response']['error'].isNotEmpty) {
+    return response.body['response']['error'];
+  } else if (response.body['response']?['message'] != null &&
+      response.body['response']['message'].isNotEmpty) {
+    return response.body['response']['message'];
+  } else {
+    return NotificationService.l10n?.saveError ??
+        'Error al ejecutar la operación, por favor intente más tarde.';
+  }
+}
 // ─── Cliente HTTP ─────────────────────────────────────────────────────────────
 
 /// Responsabilidad: construir headers y ejecutar llamadas HTTP.
@@ -79,10 +111,12 @@ class _HttpClient {
   static const Duration _timeout = Duration(seconds: 15);
 
   /// Construye los headers de autorización con el token almacenado.
+  /// Incluye [Accept-Language] con el idioma seleccionado por el usuario.
   static Future<Map<String, String>> _authHeaders() async {
     final token = await _storage.read(key: 'access_token') ?? '';
     return {
       HttpHeaders.contentTypeHeader: 'application/json',
+      HttpHeaders.acceptLanguageHeader: Preferences.language,
       'Authorization': 'Bearer $token',
     };
   }
@@ -147,6 +181,28 @@ class _HttpClient {
     }
   }
 
+  /// Ejecuta PUT autenticado con body JSON.
+  static Future<ServiceResponseModel> put({
+    required String url,
+    required Object body,
+  }) async {
+    try {
+      final headers = await _authHeaders();
+      final response = await http
+          .put(
+            Uri.parse(url),
+            headers: headers,
+            body: jsonEncode(body),
+          )
+          .timeout(_timeout);
+      return getResponse(response);
+    } on Exception catch (e) {
+      // ignore: avoid_print
+      print(e);
+      return _errorResponse();
+    }
+  }
+
   /// Ejecuta POST con form-data (OAuth).
   static Future<ServiceResponseModel> postForm({
     required String url,
@@ -170,6 +226,10 @@ class _HttpClient {
   }
 }
 
+// ─── Tipo de petición HTTP ───────────────────────────────────────────────────
+
+enum _HttpMethod { get, post, put }
+
 // ─── Manejador de refresco de token ──────────────────────────────────────────
 
 /// Responsabilidad: renovar el token ante 401 y reintentar la petición,
@@ -182,6 +242,7 @@ class _TokenRefreshHandler {
     required ServiceResponseModel result,
     required String url,
     required Object body,
+    _HttpMethod method = _HttpMethod.post,
   }) async {
     if (result.statusHttp != 401) return null;
 
@@ -194,6 +255,7 @@ class _TokenRefreshHandler {
       context: context,
       url: url,
       body: body,
+      method: method,
     );
   }
 
@@ -202,6 +264,7 @@ class _TokenRefreshHandler {
     required BuildContext context,
     required String url,
     required Object body,
+    _HttpMethod method = _HttpMethod.post,
   }) async {
     final refreshToken = await _storage.read(key: 'refresh_token') ?? '';
     final refreshResult = await AuthService.refreshLogin(
@@ -218,9 +281,13 @@ class _TokenRefreshHandler {
     }
 
     // Reintentar con el nuevo token según el tipo de petición
-    return body is Map<String, dynamic>
-        ? await _HttpClient.get(url: url, params: body)
-        : await _HttpClient.post(url: url, body: body);
+    if (method == _HttpMethod.get && body is Map<String, dynamic>) {
+      return await _HttpClient.get(url: url, params: body);
+    } else if (method == _HttpMethod.put) {
+      return await _HttpClient.put(url: url, body: body);
+    } else {
+      return await _HttpClient.post(url: url, body: body);
+    }
   }
 
   /// Cierra la sesión y redirige al login.
