@@ -1,6 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
+import 'package:hdocumentos/src/model/config/company_model.dart';
 import 'package:hdocumentos/src/provider/form/company_form_provider.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
@@ -44,8 +45,10 @@ class _CompanyWizardStep3WidgetState extends State<CompanyWizardStep3Widget> {
     /// ya está en el modelo: se considera válida sin requerir el campo.
     final bool passwordFieldRequired = _changePassword;
 
-    final certMissing = submitted && company.certificatePath == null;
-    final dateMissing = submitted && company.certificateExpirationDate == null;
+    final certMissing =
+        submitted && company.certificateData?.certificatePath == null;
+    final dateMissing =
+        submitted && company.certificateData?.certificateExpirationDate == null;
 
     return Form(
       key: provider.formKeyStep3,
@@ -66,7 +69,7 @@ class _CompanyWizardStep3WidgetState extends State<CompanyWizardStep3Widget> {
           MaterialButtonWidget(
             type: AppTheme.secondaryButton,
             icon: Icons.upload_file,
-            textButton: company.certificatePath != null
+            textButton: company.certificateData?.certificatePath != null
                 ? l10n.step3CertLoaded
                 : l10n.step3CertButton,
             minWidth: double.infinity,
@@ -99,13 +102,16 @@ class _CompanyWizardStep3WidgetState extends State<CompanyWizardStep3Widget> {
             prefixIcon: Icons.person_outline,
             labelText: l10n.certificateUser,
             hintText: l10n.certificateUserHint,
-            initialValue: company.certificateUser,
+            initialValue: company.certificateData?.certificateUser,
             filled: true,
             fillColor: AppTheme.whiteGradient,
             validator: FieldValidators.compose([
               FieldValidators.required(l10n),
             ]),
-            onChanged: (v) => company.certificateUser = v,
+            onChanged: (v) {
+              company.certificateData ??= CompanyCertificateModel();
+              company.certificateData!.certificateUser = v;
+            },
           ),
           SizedBox(height: size.height * 0.018),
 
@@ -139,7 +145,10 @@ class _CompanyWizardStep3WidgetState extends State<CompanyWizardStep3Widget> {
               validator: FieldValidators.compose([
                 FieldValidators.required(l10n),
               ]),
-              onChanged: (v) => company.certificatePassword = v,
+              onChanged: (v) {
+                company.certificateData ??= CompanyCertificateModel();
+                company.certificateData!.certificatePassword = v;
+              },
             ),
           SizedBox(height: size.height * 0.018),
 
@@ -147,18 +156,19 @@ class _CompanyWizardStep3WidgetState extends State<CompanyWizardStep3Widget> {
           InputDateFieldWidget(
             labelText: l10n.certificateExpiration,
             hintText: l10n.certificateExpirationHint,
-            initialDate: company.certificateExpirationDate,
+            initialDate: company.certificateData?.certificateExpirationDate,
             filled: true,
             fillColor: AppTheme.whiteGradient,
             validator: FieldValidators.compose([
               FieldValidators.required(l10n),
             ]),
             onChanged: (v) {
+              company.certificateData ??= CompanyCertificateModel();
               try {
-                company.certificateExpirationDate =
+                company.certificateData!.certificateExpirationDate =
                     DateFormat('dd/MM/yyyy').parse(v);
               } catch (_) {
-                company.certificateExpirationDate = null;
+                company.certificateData!.certificateExpirationDate = null;
               }
             },
           ),
@@ -179,18 +189,19 @@ class _CompanyWizardStep3WidgetState extends State<CompanyWizardStep3Widget> {
           // ── Resumen ──────────────────────────────────────────────────────
           CompanyWizardStepSummary(
             items: [
-              if (company.certificatePath != null)
+              if (company.certificateData?.certificatePath != null)
                 CompanyWizardSummaryItem(
                     icon: Icons.check_circle_outline,
                     text: l10n.step3CertSummary),
-              if (company.certificateUser?.isNotEmpty == true)
+              if (company.certificateData?.certificateUser?.isNotEmpty == true)
                 CompanyWizardSummaryItem(
-                    icon: Icons.person_outline, text: company.certificateUser!),
-              if (company.certificateExpirationDate != null)
+                    icon: Icons.person_outline,
+                    text: company.certificateData!.certificateUser!),
+              if (company.certificateData?.certificateExpirationDate != null)
                 CompanyWizardSummaryItem(
                     icon: Icons.calendar_today_outlined,
                     text: l10n.certificateExpiresSummary(
-                      '${company.certificateExpirationDate!.day}/${company.certificateExpirationDate!.month}/${company.certificateExpirationDate!.year}',
+                      '${company.certificateData!.certificateExpirationDate!.day}/${company.certificateData!.certificateExpirationDate!.month}/${company.certificateData!.certificateExpirationDate!.year}',
                     )),
             ],
             size: size,

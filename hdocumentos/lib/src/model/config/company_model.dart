@@ -5,15 +5,17 @@ import 'dart:typed_data';
 class CompanyAdditionalInformationModel {
   final String? id;
   final String? companyId;
-  final Uint8List? logoImage;
-  final String? website;
-  final double? maxDiscount;
-  final String? itemAddress;
+  Uint8List? logoImage;
+  String? logoPath;
+  String? website;
+  double? maxDiscount;
+  String? itemAddress;
 
-  const CompanyAdditionalInformationModel({
+  CompanyAdditionalInformationModel({
     this.id,
     this.companyId,
     this.logoImage,
+    this.logoPath,
     this.website,
     this.maxDiscount,
     this.itemAddress,
@@ -27,6 +29,7 @@ class CompanyAdditionalInformationModel {
         logoImage: json['logo_image'] != null
             ? base64Decode(json['logo_image'] as String)
             : null,
+        logoPath: json['logo_path'],
         website: json['website'],
         maxDiscount: json['max_discount'] != null
             ? double.tryParse(json['max_discount'].toString())
@@ -39,6 +42,7 @@ class CompanyAdditionalInformationModel {
     if (id != null) result['id'] = id;
     if (companyId != null) result['company_id'] = companyId;
     if (logoImage != null) result['logo_image'] = base64Encode(logoImage!);
+    if (logoPath != null) result['logo_path'] = logoPath;
     if (website != null) result['website'] = website;
     if (maxDiscount != null) result['max_discount'] = maxDiscount;
     if (itemAddress != null) result['item_address'] = itemAddress;
@@ -50,15 +54,17 @@ class CompanyAdditionalInformationModel {
 class CompanyCertificateModel {
   final String? id;
   final String? companyId;
-  final Uint8List? certificate;
-  final String? certificateUser;
-  final String? certificatePassword;
-  final DateTime? certificateExpirationDate;
+  Uint8List? certificate;
+  String? certificatePath;
+  String? certificateUser;
+  String? certificatePassword;
+  DateTime? certificateExpirationDate;
 
-  const CompanyCertificateModel({
+  CompanyCertificateModel({
     this.id,
     this.companyId,
     this.certificate,
+    this.certificatePath,
     this.certificateUser,
     this.certificatePassword,
     this.certificateExpirationDate,
@@ -71,6 +77,7 @@ class CompanyCertificateModel {
         certificate: json['certificate'] != null
             ? base64Decode(json['certificate'] as String)
             : null,
+        certificatePath: json['certificate'] != null ? 'loaded' : null,
         certificateUser: json['certificate_user'],
         certificatePassword: json['certificate_password'],
         certificateExpirationDate: json['certificate_expiration_date'] != null
@@ -130,13 +137,13 @@ class CompanyDocumentTypeModel {
 class CompanyEmailConfigurationModel {
   final String? id;
   final String? companyId;
-  final String? mailServer;
-  final String? mailPort;
-  final String? mailAddress;
-  final String? mailUser;
-  final String? mailPassword;
+  String? mailServer;
+  String? mailPort;
+  String? mailAddress;
+  String? mailUser;
+  String? mailPassword;
 
-  const CompanyEmailConfigurationModel({
+  CompanyEmailConfigurationModel({
     this.id,
     this.companyId,
     this.mailServer,
@@ -376,35 +383,14 @@ class CompanyModel {
   // ── Sub-modelo: información adicional (logo, web, descuento, dirección) ───
   CompanyAdditionalInformationModel? additionalInformation;
 
-  /// Campos de edición local para el wizard
-  Uint8List? logo;
-  String? logoPath;
-  String? website;
-  double? maxDiscount;
-  String? itemAddress;
-
   // ── Sub-modelo: certificado digital ───────────────────────────────────────
   CompanyCertificateModel? certificateData;
-
-  /// Campos de edición local para el wizard
-  Uint8List? certificate;
-  String? certificatePath;
-  String? certificateUser;
-  String? certificatePassword;
-  DateTime? certificateExpirationDate;
 
   /// true si el backend indica que ya tiene certificado cargado
   bool hasCertificate;
 
   // ── Sub-modelo: configuración de correo ───────────────────────────────────
   CompanyEmailConfigurationModel? emailConfiguration;
-
-  /// Campos de edición local para el wizard
-  String? mailServer;
-  String? mailPort;
-  String? mailAddress;
-  String? mailUser;
-  String? mailPassword;
 
   // ── Listas anidadas (respuesta del API) ───────────────────────────────────
   List<CompanyDocumentTypeModel> documentTypes;
@@ -439,26 +425,11 @@ class CompanyModel {
     this.state,
     // ── Información adicional ─────────────────────────────────────────────────
     this.additionalInformation,
-    this.logo,
-    this.logoPath,
-    this.website,
-    this.maxDiscount,
-    this.itemAddress,
     // ── Certificado ───────────────────────────────────────────────────────────
     this.certificateData,
-    this.certificate,
-    this.certificatePath,
-    this.certificateUser,
-    this.certificatePassword,
-    this.certificateExpirationDate,
     this.hasCertificate = false,
     // ── Correo ────────────────────────────────────────────────────────────────
     this.emailConfiguration,
-    this.mailServer,
-    this.mailPort,
-    this.mailAddress,
-    this.mailUser,
-    this.mailPassword,
     // ── Listas anidadas ───────────────────────────────────────────────────────
     this.documentTypes = const [],
     this.emissionPoints = const [],
@@ -488,30 +459,34 @@ class CompanyModel {
       );
 
   /// Carga desde la sesión del usuario (sin claves ni archivos)
-  factory CompanyModel.fromSession(Map<String, dynamic> session) =>
-      CompanyModel(
-        identificationTypeId: session['company_identification_type_id'],
-        identificationTypeName: session['company_identification_type_name'],
-        identification: session['company_identification'],
-        businessName: session['company_name'],
-        address: session['company_address'],
-        phone: session['company_phone'],
-        email: session['company_email'],
-        state: session['company_state'],
-        logoPath: session['company_logo_url'],
-        website: session['company_website'],
-        maxDiscount: session['company_max_discount'] != null
-            ? double.tryParse(session['company_max_discount'].toString())
-            : null,
-        itemAddress: session['company_item_address'],
-        documentTypeId: session['document_type_id'],
-        documentTypeName: session['document_type_name'],
-        establishmentCode: session['establishment_code'],
-        emissionPointCode: session['emission_point_code'],
-        currentSequential: session['current_sequential'] ?? 1,
-        description: session['emission_description'],
-        isActive: session['emission_is_active'] ?? true,
-      );
+  factory CompanyModel.fromSession(Map<String, dynamic> session) {
+    final addInfo = CompanyAdditionalInformationModel(
+      logoPath: session['company_logo_url'],
+      website: session['company_website'],
+      maxDiscount: session['company_max_discount'] != null
+          ? double.tryParse(session['company_max_discount'].toString())
+          : null,
+      itemAddress: session['company_item_address'],
+    );
+    return CompanyModel(
+      identificationTypeId: session['company_identification_type_id'],
+      identificationTypeName: session['company_identification_type_name'],
+      identification: session['company_identification'],
+      businessName: session['company_name'],
+      address: session['company_address'],
+      phone: session['company_phone'],
+      email: session['company_email'],
+      state: session['company_state'],
+      additionalInformation: addInfo,
+      documentTypeId: session['document_type_id'],
+      documentTypeName: session['document_type_name'],
+      establishmentCode: session['establishment_code'],
+      emissionPointCode: session['emission_point_code'],
+      currentSequential: session['current_sequential'] ?? 1,
+      description: session['emission_description'],
+      isActive: session['emission_is_active'] ?? true,
+    );
+  }
 
   /// Deserializa la respuesta completa del endpoint `companies/default`.
   factory CompanyModel.fromJson(Map<String, dynamic> json) {
@@ -575,29 +550,11 @@ class CompanyModel {
       state: json['state'],
       // Información adicional
       additionalInformation: addInfo,
-      logo: addInfo?.logoImage,
-      logoPath: addInfo?.id != null ? null : json['logo_path'],
-      website: addInfo?.website ?? json['website'],
-      maxDiscount: addInfo?.maxDiscount ??
-          (json['max_discount'] != null
-              ? double.tryParse(json['max_discount'].toString())
-              : null),
-      itemAddress: addInfo?.itemAddress ?? json['item_address'],
       // Certificado
       certificateData: certData,
-      certificate: certData?.certificate,
-      certificatePath: certData?.certificate != null ? 'loaded' : null,
-      certificateUser: certData?.certificateUser,
-      certificatePassword: certData?.certificatePassword,
-      certificateExpirationDate: certData?.certificateExpirationDate,
       hasCertificate: certData != null,
       // Correo
       emailConfiguration: emailConfig,
-      mailServer: emailConfig?.mailServer ?? json['mail_server'],
-      mailPort: emailConfig?.mailPort ?? json['mail_port'],
-      mailAddress: emailConfig?.mailAddress ?? json['mail_address'],
-      mailUser: emailConfig?.mailUser ?? json['mail_user'],
-      mailPassword: emailConfig?.mailPassword ?? json['mail_password'],
       // Listas anidadas
       documentTypes: docTypes,
       emissionPoints: emPoints,
@@ -620,10 +577,6 @@ class CompanyModel {
   }
 
   Map<String, dynamic> toJson() {
-    // Helper: elimina las entradas con valor null del mapa
-    Map<String, dynamic> compact(Map<String, dynamic> m) =>
-        m..removeWhere((_, v) => v == null);
-
     final Map<String, dynamic> result = {};
 
     // ── Datos básicos (solo si tienen valor) ──────────────────────────────
@@ -639,43 +592,19 @@ class CompanyModel {
     if (state != null) result['state'] = state;
 
     // ── Información adicional ─────────────────────────────────────────────
-    final rawLogo = logo ?? additionalInformation?.logoImage;
-    final addInfoMap = compact({
-      'id': additionalInformation?.id,
-      'company_id': additionalInformation?.companyId ?? companyId,
-      'logo_image': rawLogo != null ? base64Encode(rawLogo) : null,
-      'website': website ?? additionalInformation?.website,
-      'max_discount': maxDiscount ?? additionalInformation?.maxDiscount,
-      'item_address': itemAddress ?? additionalInformation?.itemAddress,
-    });
-    if (addInfoMap.isNotEmpty) result['additional_information'] = addInfoMap;
+    if (additionalInformation != null) {
+      result['additional_information'] = additionalInformation!.toJson();
+    }
 
     // ── Certificado ───────────────────────────────────────────────────────
-    final rawCert = certificate ?? certificateData?.certificate;
-    final certMap = compact({
-      'id': certificateData?.id,
-      'company_id': certificateData?.companyId ?? companyId,
-      'certificate': rawCert != null ? base64Encode(rawCert) : null,
-      'certificate_user': certificateUser ?? certificateData?.certificateUser,
-      'certificate_password':
-          certificatePassword ?? certificateData?.certificatePassword,
-      'certificate_expiration_date': (certificateExpirationDate ??
-              certificateData?.certificateExpirationDate)
-          ?.toIso8601String(),
-    });
-    if (certMap.isNotEmpty) result['certificate'] = certMap;
+    if (certificateData != null) {
+      result['certificate'] = certificateData!.toJson();
+    }
 
     // ── Configuración de correo ───────────────────────────────────────────
-    final mailMap = compact({
-      'id': emailConfiguration?.id,
-      'company_id': emailConfiguration?.companyId ?? companyId,
-      'mail_server': mailServer ?? emailConfiguration?.mailServer,
-      'mail_port': mailPort ?? emailConfiguration?.mailPort,
-      'mail_address': mailAddress ?? emailConfiguration?.mailAddress,
-      'mail_user': mailUser ?? emailConfiguration?.mailUser,
-      'mail_password': mailPassword ?? emailConfiguration?.mailPassword,
-    });
-    if (mailMap.isNotEmpty) result['email_configuration'] = mailMap;
+    if (emailConfiguration != null) {
+      result['email_configuration'] = emailConfiguration!.toJson();
+    }
 
     // ── Listas anidadas ───────────────────────────────────────────────────
     if (documentTypes.isNotEmpty) {

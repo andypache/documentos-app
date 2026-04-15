@@ -47,8 +47,7 @@ class CompanyFormProvider extends ChangeNotifier {
 
   CompanyFormProvider(this.company, {this.isEditing = false}) {
     // Al cargar un modelo existente, sincronizar bytes locales para los widgets
-    logoBytes = company.logo ?? company.additionalInformation?.logoImage;
-    if (logoBytes != null) company.logo = logoBytes;
+    logoBytes = company.additionalInformation?.logoImage;
     // En edición con certificado ya configurado, no se requiere nueva contraseña
     if (isEditing && company.hasCertificate) {
       requireCertPassword = false;
@@ -85,15 +84,11 @@ class CompanyFormProvider extends ChangeNotifier {
     if (_currentStep == 2) {
       _step3Submitted = true;
       notifyListeners();
-      final certOk = company.certificatePath != null;
-      final dateOk = company.certificateExpirationDate != null;
-      // Si no se requiere cambio de contraseña (edición con cert existente y switch OFF),
-      // solo se validan los demás campos del formulario (usuario, fecha)
+      final certOk = company.certificateData?.certificatePath != null;
+      final dateOk = company.certificateData?.certificateExpirationDate != null;
       if (!requireCertPassword) {
         return formValid && certOk && dateOk;
       }
-      // En creación o cuando el usuario activó el cambio de contraseña,
-      // la contraseña se valida dentro del Form normalmente
       return formValid && certOk && dateOk;
     }
     // Paso 5 (índice 4): al menos un punto de emisión agregado y uno activo
@@ -143,25 +138,27 @@ class CompanyFormProvider extends ChangeNotifier {
     }
   }
 
-  /// Actualiza el logo: guarda los bytes en [company.logo] para serializar a Base64.
+  /// Actualiza el logo: guarda los bytes en [additionalInformation.logoImage] para serializar a Base64.
   void updateLogo(Uint8List? bytes, String? path) {
     logoBytes = bytes;
-    company.logo = bytes;
+    company.additionalInformation ??= CompanyAdditionalInformationModel();
+    company.additionalInformation!.logoImage = bytes;
     if (path != null) {
       logoFile = File(path);
-      company.logoPath = path;
+      company.additionalInformation!.logoPath = path;
     }
     notifyListeners();
   }
 
   /// Actualiza el certificado: lee los bytes del archivo y los guarda
-  /// en [company.certificate] como [Uint8List] para serializar a Base64.
+  /// en [certificateData.certificate] como [Uint8List] para serializar a Base64.
   Future<void> updateCertificate(String path) async {
     final file = File(path);
     final bytes = await file.readAsBytes();
     certificateFile = file;
-    company.certificatePath = path;
-    company.certificate = bytes;
+    company.certificateData ??= CompanyCertificateModel();
+    company.certificateData!.certificatePath = path;
+    company.certificateData!.certificate = bytes;
     notifyListeners();
   }
 
@@ -215,40 +212,65 @@ class CompanyFormProvider extends ChangeNotifier {
       case 1:
         return {
           'company_id': company.companyId,
-          'additional_Information': {
-            if (company.logo != null) 'logo_image': base64Encode(company.logo!),
-            'website': company.website,
+          'additional_information': {
+            if (company.additionalInformation?.logoImage != null)
+              'logo_image':
+                  base64Encode(company.additionalInformation!.logoImage!),
+            'website': company.additionalInformation?.website,
             'id': company.additionalInformation?.id,
             'company_id': company.additionalInformation?.companyId,
             'item_address': company.additionalInformation?.itemAddress,
-            'max_discount': company.additionalInformation?.maxDiscount
+            'max_discount': company.additionalInformation?.maxDiscount,
           }
         };
       case 2:
         return {
-          if (company.certificate != null)
-            'certificate': base64Encode(company.certificate!),
-          if (company.certificatePassword != null)
-            'certificate_password': company.certificatePassword,
-          if (company.certificateUser != null)
-            'certificate_user': company.certificateUser,
-          if (company.certificateExpirationDate != null)
-            'certificate_expiration_date':
-                company.certificateExpirationDate!.toIso8601String(),
+          'company_id': company.companyId,
+          'certificate': {
+            'company_id': company.companyId,
+            'id': company.certificateData?.id,
+            if (company.certificateData?.certificate != null)
+              'certificate':
+                  base64Encode(company.certificateData!.certificate!),
+            if (company.certificateData?.certificatePassword != null)
+              'certificate_password':
+                  company.certificateData!.certificatePassword,
+            if (company.certificateData?.certificateUser != null)
+              'certificate_user': company.certificateData!.certificateUser,
+            if (company.certificateData?.certificateExpirationDate != null)
+              'certificate_expiration_date': company
+                  .certificateData!.certificateExpirationDate!
+                  .toIso8601String(),
+          }
         };
       case 3:
         return {
-          'mail_server': company.mailServer,
-          'mail_port': company.mailPort,
-          'mail_address': company.mailAddress,
-          'mail_user': company.mailUser,
-          'mail_password': company.mailPassword,
+          'company_id': company.companyId,
+          'email_configuration': {
+            'company_id': company.companyId,
+            'id': company.emailConfiguration?.id,
+            'mail_server': company.emailConfiguration?.mailServer,
+            'mail_port': company.emailConfiguration?.mailPort,
+            'mail_address': company.emailConfiguration?.mailAddress,
+            'mail_user': company.emailConfiguration?.mailUser,
+            'mail_password': company.emailConfiguration?.mailPassword,
+          }
         };
       case 4:
         return {
-          'emission_points':
-              company.emissionPoints.map((p) => p.toJson()).toList(),
-          'selected_emission_point_id': selectedEmissionPointId,
+          'company_id': company.companyId,
+          'emission_points': company.emissionPoints
+              .map((p) => {
+                    if (p.id != null) 'id': p.id,
+                    'company_id': p.companyId ?? company.companyId,
+                    'document_type_id': p.documentTypeId,
+                    'establishment_code': p.establishmentCode,
+                    'emission_point_code': p.emissionPointCode,
+                    'current_sequential': p.currentSequential,
+                    'description': p.description,
+                    'is_active': p.isActive,
+                  })
+              .toList(),
         };
       case 5:
         // Envía solo los system_parameters que corresponden a grupos TAX-GROUP
@@ -272,8 +294,7 @@ class CompanyFormProvider extends ChangeNotifier {
   /// los campos locales del wizard (logoBytes, etc.).
   void loadFromModel(CompanyModel model) {
     company = model;
-    logoBytes = model.logo ?? model.additionalInformation?.logoImage;
-    if (logoBytes != null) company.logo = logoBytes;
+    logoBytes = model.additionalInformation?.logoImage;
     notifyListeners();
   }
 

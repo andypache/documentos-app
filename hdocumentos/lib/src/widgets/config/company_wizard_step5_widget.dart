@@ -888,9 +888,11 @@ class _FinalSummaryWidget extends StatelessWidget {
               label: l10n.summaryAddress, value: company.address, size: size),
           _SummaryRow(
               label: l10n.summaryEmail, value: company.email, size: size),
-          if (company.website?.isNotEmpty == true)
+          if (company.additionalInformation?.website?.isNotEmpty == true)
             _SummaryRow(
-                label: l10n.summaryWebsite, value: company.website, size: size),
+                label: l10n.summaryWebsite,
+                value: company.additionalInformation!.website,
+                size: size),
           if (selectedPoint != null) ...[
             _SummaryRow(
                 label: l10n.summaryEstablishment,
@@ -903,11 +905,11 @@ class _FinalSummaryWidget extends StatelessWidget {
           ],
           _SummaryRow(
             label: l10n.summaryCertificate,
-            value: company.certificatePath != null
+            value: company.certificateData?.certificatePath != null
                 ? l10n.summaryCertLoaded
                 : l10n.summaryCertNotLoaded,
             size: size,
-            valueColor: company.certificatePath != null
+            valueColor: company.certificateData?.certificatePath != null
                 ? AppTheme.actionSave
                 : AppTheme.actionDelete,
           ),

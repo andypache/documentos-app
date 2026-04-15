@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
+import 'package:hdocumentos/src/model/config/company_model.dart';
 import 'package:hdocumentos/src/provider/form/company_form_provider.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
@@ -32,7 +33,7 @@ class CompanyWizardStep2Widget extends StatelessWidget {
           ImagePickerFieldWidget(
             label: l10n.step2LogoLabel,
             currentImage: provider.logoBytes,
-            imageName: provider.company.logoPath,
+            imageName: company.additionalInformation?.logoPath,
             onImagePicked: (bytes, path) => provider.updateLogo(bytes, path),
           ),
           SizedBox(height: size.height * 0.018),
@@ -40,30 +41,42 @@ class CompanyWizardStep2Widget extends StatelessWidget {
             prefixIcon: Icons.language_outlined,
             labelText: l10n.step2Website,
             hintText: l10n.step2WebsiteHint,
-            initialValue: company.website,
+            initialValue: company.additionalInformation?.website,
             keyboardType: TextInputType.url,
             filled: true,
             fillColor: AppTheme.whiteGradient,
-            onChanged: (v) => company.website = v,
+            onChanged: (v) {
+              company.additionalInformation ??=
+                  CompanyAdditionalInformationModel();
+              company.additionalInformation!.website = v;
+            },
           ),
           SizedBox(height: size.height * 0.018),
           InputNumberFieldWidget(
             prefixIcon: Icons.discount_outlined,
             labelText: l10n.step2MaxDiscount,
             hintText: l10n.step2MaxDiscountHint,
-            initialValue: company.maxDiscount,
+            initialValue: company.additionalInformation?.maxDiscount,
             allowDecimals: true,
-            onChanged: (v) => company.maxDiscount = double.tryParse(v),
+            onChanged: (v) {
+              company.additionalInformation ??=
+                  CompanyAdditionalInformationModel();
+              company.additionalInformation!.maxDiscount = double.tryParse(v);
+            },
           ),
           SizedBox(height: size.height * 0.018),
           InputFieldWidget(
             prefixIcon: Icons.pin_drop_outlined,
             labelText: l10n.step2ItemAddress,
             hintText: l10n.step2ItemAddressHint,
-            initialValue: company.itemAddress,
+            initialValue: company.additionalInformation?.itemAddress,
             filled: true,
             fillColor: AppTheme.whiteGradient,
-            onChanged: (v) => company.itemAddress = v,
+            onChanged: (v) {
+              company.additionalInformation ??=
+                  CompanyAdditionalInformationModel();
+              company.additionalInformation!.itemAddress = v;
+            },
           ),
           SizedBox(height: size.height * 0.025),
           // Resumen
@@ -73,14 +86,15 @@ class CompanyWizardStep2Widget extends StatelessWidget {
                 CompanyWizardSummaryItem(
                     icon: Icons.check_circle_outline,
                     text: l10n.step2LogoLoaded),
-              if (company.website?.isNotEmpty == true)
+              if (company.additionalInformation?.website?.isNotEmpty == true)
                 CompanyWizardSummaryItem(
-                    icon: Icons.language_outlined, text: company.website!),
-              if (company.maxDiscount != null)
+                    icon: Icons.language_outlined,
+                    text: company.additionalInformation!.website!),
+              if (company.additionalInformation?.maxDiscount != null)
                 CompanyWizardSummaryItem(
                     icon: Icons.discount_outlined,
                     text: l10n.step2MaxDiscountSummary(
-                        company.maxDiscount.toString())),
+                        company.additionalInformation!.maxDiscount.toString())),
             ],
             size: size,
           ),

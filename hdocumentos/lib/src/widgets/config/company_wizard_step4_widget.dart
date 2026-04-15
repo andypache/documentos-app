@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
+import 'package:hdocumentos/src/model/config/company_model.dart';
 import 'package:hdocumentos/src/provider/form/company_form_provider.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
@@ -79,42 +80,54 @@ class _CompanyWizardStep4WidgetState extends State<CompanyWizardStep4Widget> {
             prefixIcon: Icons.dns_outlined,
             labelText: l10n.mailServer,
             hintText: l10n.mailServerHint,
-            initialValue: company.mailServer,
+            initialValue: company.emailConfiguration?.mailServer,
             filled: true,
             fillColor: AppTheme.whiteGradient,
-            onChanged: (v) => company.mailServer = v,
+            onChanged: (v) {
+              company.emailConfiguration ??= CompanyEmailConfigurationModel();
+              company.emailConfiguration!.mailServer = v;
+            },
           ),
           SizedBox(height: size.height * 0.018),
           InputFieldWidget(
             prefixIcon: Icons.settings_ethernet,
             labelText: l10n.mailPort,
             hintText: l10n.mailPortHint,
-            initialValue: company.mailPort,
+            initialValue: company.emailConfiguration?.mailPort,
             keyboardType: TextInputType.number,
             filled: true,
             fillColor: AppTheme.whiteGradient,
-            onChanged: (v) => company.mailPort = v,
+            onChanged: (v) {
+              company.emailConfiguration ??= CompanyEmailConfigurationModel();
+              company.emailConfiguration!.mailPort = v;
+            },
           ),
           SizedBox(height: size.height * 0.018),
           InputFieldWidget(
             prefixIcon: Icons.alternate_email,
             labelText: l10n.mailAddress,
             hintText: l10n.mailAddressHint,
-            initialValue: company.mailAddress,
+            initialValue: company.emailConfiguration?.mailAddress,
             keyboardType: TextInputType.emailAddress,
             filled: true,
             fillColor: AppTheme.whiteGradient,
-            onChanged: (v) => company.mailAddress = v,
+            onChanged: (v) {
+              company.emailConfiguration ??= CompanyEmailConfigurationModel();
+              company.emailConfiguration!.mailAddress = v;
+            },
           ),
           SizedBox(height: size.height * 0.018),
           InputFieldWidget(
             prefixIcon: Icons.person_outline,
             labelText: l10n.mailUser,
             hintText: l10n.mailUserHint,
-            initialValue: company.mailUser,
+            initialValue: company.emailConfiguration?.mailUser,
             filled: true,
             fillColor: AppTheme.whiteGradient,
-            onChanged: (v) => company.mailUser = v,
+            onChanged: (v) {
+              company.emailConfiguration ??= CompanyEmailConfigurationModel();
+              company.emailConfiguration!.mailUser = v;
+            },
           ),
           SizedBox(height: size.height * 0.018),
 
@@ -144,22 +157,28 @@ class _CompanyWizardStep4WidgetState extends State<CompanyWizardStep4Widget> {
               obscureText: true,
               filled: true,
               fillColor: AppTheme.whiteGradient,
-              onChanged: (v) => company.mailPassword = v,
+              onChanged: (v) {
+                company.emailConfiguration ??= CompanyEmailConfigurationModel();
+                company.emailConfiguration!.mailPassword = v;
+              },
             ),
           SizedBox(height: size.height * 0.025),
           // Resumen
           CompanyWizardStepSummary(
             items: [
-              if (company.mailServer?.isNotEmpty == true)
+              if (company.emailConfiguration?.mailServer?.isNotEmpty == true)
                 CompanyWizardSummaryItem(
-                    icon: Icons.dns_outlined, text: company.mailServer!),
-              if (company.mailAddress?.isNotEmpty == true)
+                    icon: Icons.dns_outlined,
+                    text: company.emailConfiguration!.mailServer!),
+              if (company.emailConfiguration?.mailAddress?.isNotEmpty == true)
                 CompanyWizardSummaryItem(
-                    icon: Icons.alternate_email, text: company.mailAddress!),
-              if (company.mailPort?.isNotEmpty == true)
+                    icon: Icons.alternate_email,
+                    text: company.emailConfiguration!.mailAddress!),
+              if (company.emailConfiguration?.mailPort?.isNotEmpty == true)
                 CompanyWizardSummaryItem(
                     icon: Icons.settings_ethernet,
-                    text: l10n.mailPortSummary(company.mailPort!)),
+                    text: l10n.mailPortSummary(
+                        company.emailConfiguration!.mailPort!)),
             ],
             size: size,
           ),
