@@ -77,8 +77,10 @@ class CompanyWizardStep6Widget extends StatelessWidget {
     final taxGroupCodes = taxGroups.map((e) => e.code).toSet();
     final selectedCodes = provider.company.systemParameters
         .where((sp) =>
-            sp.systemParameterId != null &&
-            taxGroupCodes.contains(sp.systemParameterId))
+                sp.systemParameterId != null &&
+                taxGroupCodes.contains(sp.systemParameterId) &&
+                sp.state == 'ACTIVE' // Solo considera activos
+            )
         .map((sp) => sp.systemParameterId!)
         .toList();
 

@@ -3,9 +3,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/model/config/company_model.dart';
-import 'package:hdocumentos/src/service/client/consume_service.dart';
+import 'package:hdocumentos/src/service/service.dart';
 import 'package:hdocumentos/src/constant/constant.dart';
-import 'package:hdocumentos/src/service/notification_service.dart';
 import 'package:hdocumentos/src/share/preference.dart';
 
 /// Provider para el wizard de configuración de compañia
@@ -185,6 +184,11 @@ class CompanyFormProvider extends ChangeNotifier {
         final l10nMsg = NotificationService.l10n;
         NotificationService.showSnackbarSuccess(
             l10nMsg?.stepSavedSuccess ?? 'Paso guardado correctamente');
+        // Refrescar los datos de la compañía en el backend y cerrar edición
+        await CompanyService().getCompany(context, forceRefresh: true);
+        if (!context.mounted) return;
+        sleep(const Duration(seconds: 1));
+        //Navigator.of(context).pop();
       } else {
         NotificationService.showSnackbarError(getError(response).toString());
       }
@@ -273,14 +277,15 @@ class CompanyFormProvider extends ChangeNotifier {
               .toList(),
         };
       case 5:
-        // Envía solo los system_parameters que corresponden a grupos TAX-GROUP
-        final taxGroupParams = company.systemParameters
-            .where((sp) =>
-                sp.systemParameterId != null &&
-                sp.systemParameterId!.contains('TAX-GROUP-'))
-            .toList();
         return {
-          'system_parameters': taxGroupParams.map((e) => e.toJson()).toList(),
+          'company_id': company.companyId,
+          'system_parameters': company.systemParameters
+              .map((e) => {
+                    'company_id': company.companyId,
+                    if (e.id != null) 'id': e.id,
+                    'system_parameter_id': e.systemParameterId,
+                  })
+              .toList(),
         };
       default:
         return company.toJson();
