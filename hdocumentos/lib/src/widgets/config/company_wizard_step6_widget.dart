@@ -111,7 +111,7 @@ class CompanyWizardStep6Widget extends StatelessWidget {
               final taxParams = codes
                   .map((code) => CompanySystemParameterRefModel(
                         systemParameterId: code,
-                        state: 'A',
+                        state: 'ACTIVE',
                       ))
                   .toList();
 

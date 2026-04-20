@@ -1,8 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/config/company_model.dart';
+import 'package:hdocumentos/src/provider/app_init_provider.dart';
 import 'package:hdocumentos/src/provider/form/company_form_provider.dart';
 import 'package:hdocumentos/src/service/company_service.dart';
 import 'package:hdocumentos/src/service/notification_service.dart';
@@ -25,8 +24,6 @@ class ConfigurationWizardScreen extends StatefulWidget {
 }
 
 class _ConfigurationWizardScreenState extends State<ConfigurationWizardScreen> {
-  final _service = CompanyService();
-
   _LoadStatus _status = _LoadStatus.loading;
   CompanyModel? _company;
 
@@ -39,17 +36,14 @@ class _ConfigurationWizardScreenState extends State<ConfigurationWizardScreen> {
   Future<void> _load() async {
     setState(() => _status = _LoadStatus.loading);
     try {
-      final company = await _service
-          .getCompany(context)
-          .timeout(const Duration(seconds: 20));
+      // Leer la empresa desde la sesión (AppInitProvider) sin llamar al API.
+      // El refresco desde API sólo ocurre con el botón de refresh de la barra.
+      final company = context.read<AppInitProvider>().company;
       if (!mounted) return;
       setState(() {
-        // Si el API devuelve datos úsalos; si no (empresa nueva) arranca vacío
         _company = company ?? CompanyModel.empty();
         _status = _LoadStatus.ready;
       });
-    } on TimeoutException catch (_) {
-      if (mounted) setState(() => _status = _LoadStatus.error);
     } catch (_) {
       if (mounted) setState(() => _status = _LoadStatus.error);
     }

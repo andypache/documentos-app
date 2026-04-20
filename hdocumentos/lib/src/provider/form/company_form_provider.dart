@@ -3,9 +3,11 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/model/config/company_model.dart';
+import 'package:hdocumentos/src/provider/app_init_provider.dart';
 import 'package:hdocumentos/src/service/service.dart';
 import 'package:hdocumentos/src/constant/constant.dart';
 import 'package:hdocumentos/src/share/preference.dart';
+import 'package:provider/provider.dart';
 
 /// Provider para el wizard de configuración de compañia
 class CompanyFormProvider extends ChangeNotifier {
@@ -184,17 +186,19 @@ class CompanyFormProvider extends ChangeNotifier {
         final l10nMsg = NotificationService.l10n;
         NotificationService.showSnackbarSuccess(
             l10nMsg?.stepSavedSuccess ?? 'Paso guardado correctamente');
-        // Refrescar los datos de la compañía en el backend y cerrar edición
-        await CompanyService().getCompany(context, forceRefresh: true);
+        // Sincronizar la empresa editada (logo, certificado, etc.) en el
+        // AppInitProvider y en la sesión sin llamar al API
+        await context.read<AppInitProvider>().updateCompany(company);
         if (!context.mounted) return;
-        sleep(const Duration(seconds: 1));
-        //Navigator.of(context).pop();
+        _isSavingStep = false;
+        notifyListeners();
       } else {
         NotificationService.showSnackbarError(getError(response).toString());
+        _isSavingStep = false;
+        notifyListeners();
       }
     } catch (e) {
       NotificationService.showSnackbarError(e.toString());
-    } finally {
       _isSavingStep = false;
       notifyListeners();
     }
@@ -332,6 +336,25 @@ class CompanyFormProvider extends ChangeNotifier {
         point.id != null ? list.indexWhere((p) => p.id == point.id) : -1;
     // 2ª prioridad: usar el índice conocido (puntos locales sin id)
     final idx = idxById >= 0 ? idxById : editingIndex;
+
+    // Si el punto a guardar es activo, desactivar todos los demás
+    if (point.isActive == true) {
+      for (int i = 0; i < list.length; i++) {
+        if (i != idx && list[i].isActive == true) {
+          list[i] = CompanyEmissionPointModel(
+            id: list[i].id,
+            companyId: list[i].companyId,
+            documentTypeId: list[i].documentTypeId,
+            establishmentCode: list[i].establishmentCode,
+            emissionPointCode: list[i].emissionPointCode,
+            currentSequential: list[i].currentSequential,
+            description: list[i].description,
+            isActive: false,
+          );
+        }
+      }
+    }
+
     if (idx >= 0 && idx < list.length) {
       list[idx] = point;
     } else {
@@ -360,18 +383,40 @@ class CompanyFormProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Marca un punto como el activo por su índice y lo persiste en Preferences
+  /// Marca el punto dado como activo, desactiva los demás y actualiza la selección.
   void selectActiveEmissionPoint(CompanyEmissionPointModel point) {
-    final idx = company.emissionPoints.indexOf(point);
-    selectedEmissionPointIndex = idx >= 0 ? idx : null;
-    _syncSelectedPointFields(point);
+    final list = List<CompanyEmissionPointModel>.from(company.emissionPoints);
+    final idx = list.indexOf(point);
+    if (idx < 0) return;
+
+    // Desactivar todos y activar solo el elegido
+    for (int i = 0; i < list.length; i++) {
+      final p = list[i];
+      final shouldBeActive = i == idx;
+      if (p.isActive != shouldBeActive) {
+        list[i] = CompanyEmissionPointModel(
+          id: p.id,
+          companyId: p.companyId,
+          documentTypeId: p.documentTypeId,
+          establishmentCode: p.establishmentCode,
+          emissionPointCode: p.emissionPointCode,
+          currentSequential: p.currentSequential,
+          description: p.description,
+          isActive: shouldBeActive,
+        );
+      }
+    }
+    company.emissionPoints = list;
+
+    selectedEmissionPointIndex = idx;
+    _syncSelectedPointFields(list[idx]);
     // Persistir en Preferences
     Preferences.saveActiveEmissionPoint(
-      id: point.id,
-      documentTypeId: point.documentTypeId,
-      establishmentCode: point.establishmentCode,
-      emissionPointCode: point.emissionPointCode,
-      currentSequential: point.currentSequential,
+      id: list[idx].id,
+      documentTypeId: list[idx].documentTypeId,
+      establishmentCode: list[idx].establishmentCode,
+      emissionPointCode: list[idx].emissionPointCode,
+      currentSequential: list[idx].currentSequential,
     );
     notifyListeners();
   }
@@ -386,19 +431,17 @@ class CompanyFormProvider extends ChangeNotifier {
     company.isActive = point.isActive;
   }
 
-  /// Inicializa la selección con el primer punto activo existente (si hay)
+  /// Inicializa la selección con el punto que tiene isActive == true (si hay).
+  /// Si ninguno está activo, selectedEmissionPointIndex queda en null.
   void initEmissionPointSelection() {
-    final savedId = Preferences.activeEmissionPointId;
     final points = company.emissionPoints;
-    if (points.isEmpty) return;
-    // Intentar restaurar por id guardado en prefs
-    int idx = savedId != null ? points.indexWhere((p) => p.id == savedId) : -1;
-    if (idx < 0) {
-      // Fallback: primer punto activo o el primero de la lista
-      idx = points.indexWhere((p) => p.isActive);
-      if (idx < 0) idx = 0;
+    if (points.isEmpty) {
+      selectedEmissionPointIndex = null;
+      return;
     }
-    selectedEmissionPointIndex = idx;
-    _syncSelectedPointFields(points[idx]);
+    final idx = points.indexWhere((p) => p.isActive);
+    selectedEmissionPointIndex = idx >= 0 ? idx : null;
+    if (idx >= 0) _syncSelectedPointFields(points[idx]);
+    notifyListeners();
   }
 }

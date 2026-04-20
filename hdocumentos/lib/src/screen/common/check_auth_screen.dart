@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/provider/app_init_provider.dart';
 import 'package:hdocumentos/src/service/service.dart';
 import 'package:provider/provider.dart';
 
@@ -23,8 +24,13 @@ class CheckOutScreen extends StatelessWidget {
                       Navigator.pushReplacementNamed(context, 'login');
                     });
                   } else {
-                    Future.microtask(() {
-                      Navigator.pushReplacementNamed(context, 'home');
+                    Future.microtask(() async {
+                      // Cargar catálogos y empresa antes de entrar al home
+                      // (igual que en el login) para que todo aparezca de golpe
+                      await context.read<AppInitProvider>().init(context);
+                      if (context.mounted) {
+                        Navigator.pushReplacementNamed(context, 'home');
+                      }
                     });
                   }
                   return Container();

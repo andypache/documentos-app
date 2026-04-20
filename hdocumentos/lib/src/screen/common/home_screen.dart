@@ -20,9 +20,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Diferir al primer frame para tener context disponible
+    // Solo iniciar si no se hizo ya (login y check lo llaman antes de navegar).
+    // Salvaguarda para accesos directos o recarga inesperada.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<AppInitProvider>().init(context);
+      final provider = context.read<AppInitProvider>();
+      if (provider.status == AppInitStatus.idle) {
+        provider.init(context);
+      }
     });
   }
 

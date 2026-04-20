@@ -101,6 +101,16 @@ class AppInitProvider extends ChangeNotifier {
     await init(context, forceRefresh: true);
   }
 
+  /// Actualiza la compañía en memoria y en sesión sin llamar al API.
+  /// Usar después de editar datos de empresa para reflejar los cambios
+  /// inmediatamente (logo, certificado, etc.) sin forzar recarga del backend.
+  Future<void> updateCompany(CompanyModel company) async {
+    _company = company;
+    _hasCompany = true;
+    await _authService.updateCompanySession(company);
+    notifyListeners();
+  }
+
   /// Limpia el estado de la sesión (usar en logout).
   void reset() {
     _status = AppInitStatus.idle;

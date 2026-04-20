@@ -404,6 +404,10 @@ class _SignInButton extends StatelessWidget {
 
       if (response.statusHttp == 200) {
         Preferences.keepSession = loginForm.keepSession;
+        // Cargar catálogos y empresa antes de ir al home
+        if (context.mounted) {
+          await context.read<AppInitProvider>().init(context);
+        }
         navigator.pushReplacementNamed('home');
       } else {
         NotificationService.showError(

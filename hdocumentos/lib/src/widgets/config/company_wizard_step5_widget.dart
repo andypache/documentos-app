@@ -36,11 +36,13 @@ class _CompanyWizardStep5WidgetState extends State<CompanyWizardStep5Widget> {
   }
 
   void _openNewForm() {
+    final provider = context.read<CompanyFormProvider>();
+    final alreadyHasActive = provider.emissionPoints.any((p) => p.isActive);
     setState(() {
       _isNewPoint = true;
       _editingIndex = -1;
-      _editingPoint = const CompanyEmissionPointModel(
-        isActive: true,
+      _editingPoint = CompanyEmissionPointModel(
+        isActive: !alreadyHasActive,
         currentSequential: 1,
       );
     });
@@ -710,7 +712,8 @@ class _EmissionPointFormState extends State<_EmissionPointForm> {
               onChanged: (v) => _description = v,
             ),
             SizedBox(height: size.height * 0.015),
-            // Switch deshabilitado (opaco) si ya hay otro punto activo
+            // Switch deshabilitado (opaco) si ya hay otro punto activo y
+            // este punto no es el activo (evita tener dos activos a la vez)
             Opacity(
               opacity: (otherActive && !_isActive) ? 0.45 : 1.0,
               child: IgnorePointer(
