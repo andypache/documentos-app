@@ -92,16 +92,49 @@ ServiceResponseModel getResponse(http.Response response) {
 }
 
 Object getError(ServiceResponseModel response) {
-  if (response.body['response']?['error'] != null &&
-      response.body['response']['error'].isNotEmpty) {
-    return response.body['response']['error'];
-  } else if (response.body['response']?['message'] != null &&
-      response.body['response']['message'].isNotEmpty) {
-    return response.body['response']['message'];
-  } else {
-    return NotificationService.l10n?.saveError ??
-        'Error al ejecutar la operación, por favor intente más tarde.';
+  // 1. Campo error directo del modelo (OAuth / errores de autenticación)
+  if (response.error != null &&
+      response.error!.isNotEmpty &&
+      response.error != 'null') {
+    return response.error!;
   }
+
+  // 2. Mensaje directo del modelo
+  if (response.message.isNotEmpty && response.message != 'null') {
+    return response.message;
+  }
+
+  // 3. Anidado en body['response']['error']
+  try {
+    final bodyError = response.body?['response']?['error'];
+    if (bodyError != null &&
+        bodyError.toString().isNotEmpty &&
+        bodyError.toString() != 'null') {
+      return bodyError.toString();
+    }
+
+    // 4. Anidado en body['response']['message']
+    final bodyMessage = response.body?['response']?['message'];
+    if (bodyMessage != null &&
+        bodyMessage.toString().isNotEmpty &&
+        bodyMessage.toString() != 'null') {
+      return bodyMessage.toString();
+    }
+
+    // 5. Directo en body['message']
+    final rootMessage = response.body?['message'];
+    if (rootMessage != null &&
+        rootMessage.toString().isNotEmpty &&
+        rootMessage.toString() != 'null') {
+      return rootMessage.toString();
+    }
+  } catch (_) {
+    // body con formato inesperado → caer al fallback
+  }
+
+  // 6. Fallback genérico
+  return NotificationService.l10n?.saveError ??
+      'Error al ejecutar la operación, por favor intente más tarde.';
 }
 // ─── Cliente HTTP ─────────────────────────────────────────────────────────────
 

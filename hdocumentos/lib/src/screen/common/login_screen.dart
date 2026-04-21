@@ -400,18 +400,19 @@ class _SignInButton extends StatelessWidget {
     try {
       final ServiceResponseModel response =
           await authService.login(loginForm.username, loginForm.password);
-      loginForm.isLoading = false;
 
       if (response.statusHttp == 200) {
         Preferences.keepSession = loginForm.keepSession;
-        // Cargar catálogos y empresa antes de ir al home
+        // Cargar catálogos y empresa — mantener isLoading=true hasta terminar
         if (context.mounted) {
           await context.read<AppInitProvider>().init(context);
         }
+        loginForm.isLoading = false;
         navigator.pushReplacementNamed('home');
       } else {
+        loginForm.isLoading = false;
         NotificationService.showError(
-          response.error ?? response.message,
+          getError(response).toString(),
           title: l10n.loginTitle,
         );
       }
