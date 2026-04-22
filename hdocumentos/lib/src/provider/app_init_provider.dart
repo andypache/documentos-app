@@ -104,9 +104,14 @@ class AppInitProvider extends ChangeNotifier {
   /// Actualiza la compañía en memoria y en sesión sin llamar al API.
   /// Usar después de editar datos de empresa para reflejar los cambios
   /// inmediatamente (logo, certificado, etc.) sin forzar recarga del backend.
+  ///
+  /// Si [_lastSales] es null (empresa recién creada, ventas aún no cargadas),
+  /// se inicializa a lista vacía para evitar que [LastSalesWidget] muestre
+  /// un spinner de carga infinito al volver al home.
   Future<void> updateCompany(CompanyModel company) async {
     _company = company;
     _hasCompany = true;
+    _lastSales ??= []; // Empresa nueva: no hay ventas todavía
     await _authService.updateCompanySession(company);
     notifyListeners();
   }
