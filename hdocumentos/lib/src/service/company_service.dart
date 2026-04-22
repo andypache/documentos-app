@@ -149,10 +149,12 @@ class CompanyService extends ChangeNotifier {
 
   Future<CompanyModel> createCompany(
       BuildContext context, CompanyModel companyModel) {
+    Map<String, dynamic> body = companyModel.toJson();
+    cleanNulls(body);
     return postFetch(
       context: context,
       url: apiCompanyCreate,
-      body: companyModel.toJson(),
+      body: body,
     ).then((response) async {
       if (response.statusHttp != 201) {
         throw Exception(await _parseResponseError(response));
@@ -164,6 +166,18 @@ class CompanyService extends ChangeNotifier {
       }
       return CompanyModel.fromJson(data);
     });
+  }
+
+  void cleanNulls(Map<String, dynamic> map) {
+    final keysToRemove = <String>{};
+    map.forEach((key, value) {
+      if (value == null) {
+        keysToRemove.add(key);
+      } else if (value is Map<String, dynamic>) {
+        cleanNulls(value);
+      }
+    });
+    keysToRemove.forEach(map.remove);
   }
 
   // ─── Últimas ventas ───────────────────────────────────────────────────────

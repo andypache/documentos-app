@@ -26,6 +26,7 @@ class ConfigurationWizardScreen extends StatefulWidget {
 class _ConfigurationWizardScreenState extends State<ConfigurationWizardScreen> {
   _LoadStatus _status = _LoadStatus.loading;
   CompanyModel? _company;
+  bool _isEditing = false;
 
   @override
   void initState() {
@@ -42,6 +43,8 @@ class _ConfigurationWizardScreenState extends State<ConfigurationWizardScreen> {
       if (!mounted) return;
       setState(() {
         _company = company ?? CompanyModel.empty();
+        // Calculado UNA SOLA VEZ desde el company original (antes de ediciones del usuario)
+        _isEditing = company?.businessName?.isNotEmpty == true;
         _status = _LoadStatus.ready;
       });
     } catch (_) {
@@ -117,12 +120,9 @@ class _ConfigurationWizardScreenState extends State<ConfigurationWizardScreen> {
         );
 
       case _LoadStatus.ready:
-        final company = _company!;
-        final isEditing = company.businessName?.isNotEmpty == true;
-
         return ChangeNotifierProvider(
-          create: (_) => CompanyFormProvider(company, isEditing: isEditing),
-          child: _ConfigurationWizardBody(isEditing: isEditing),
+          create: (_) => CompanyFormProvider(_company!, isEditing: _isEditing),
+          child: _ConfigurationWizardBody(isEditing: _isEditing),
         );
     }
   }
@@ -542,6 +542,9 @@ class _CompanyNavigationButtons extends StatelessWidget {
           .timeout(const Duration(seconds: 20000));
 
       if (context.mounted) {
+        // Sincronizar el companyId y datos devueltos por el servidor en sesión
+        await context.read<AppInitProvider>().updateCompany(company);
+        if (!context.mounted) return;
         provider.isLoading = false;
         NotificationService.showSnackbarSuccess(
             l10n.companySavedSuccess(company.businessName ?? ''));
