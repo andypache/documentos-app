@@ -68,6 +68,14 @@ abstract class FieldValidators {
     };
   }
 
+  static FormFieldValidator<String> minValue(AppLocalizations l10n, int min) {
+    return (v) {
+      if (v == null || v.trim().isEmpty) return null;
+      final n = num.tryParse(v.trim());
+      return (n != null && n >= min) ? null : l10n.validatorMinValue(min);
+    };
+  }
+
   static FormFieldValidator<String> decimal(AppLocalizations l10n) {
     return (v) {
       if (v == null || v.trim().isEmpty) return null;

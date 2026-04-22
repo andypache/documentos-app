@@ -173,6 +173,11 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String validatorMinValue(int min) {
+    return 'El valor mínimo es $min';
+  }
+
+  @override
   String get btnSaveStep => 'Guardar este paso';
 
   @override

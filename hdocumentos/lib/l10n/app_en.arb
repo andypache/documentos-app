@@ -148,6 +148,12 @@
     "placeholders": { "length": { "type": "int" } }
   },
 
+  "validatorMinValue": "The minimum value is {min}",
+  "@validatorMinValue": {
+    "description": "Validation: minimum numeric value",
+    "placeholders": { "min": { "type": "int" } }
+  },
+
   "btnSaveStep": "Save this step",
   "@btnSaveStep": { "description": "Button to save the current step in edit mode" },
 

@@ -690,13 +690,15 @@ class _EmissionPointFormState extends State<_EmissionPointForm> {
               onChanged: (v) => setState(() => _emissionPointCode = v),
             ),
             SizedBox(height: size.height * 0.015),
-            InputNumberFieldWidget(
+            InputFieldWidget(
               prefixIcon: Icons.format_list_numbered,
               labelText: l10n.currentSequential,
               hintText: l10n.currentSequentialHint,
-              initialValue: _currentSequential.toDouble(),
+              initialValue: _currentSequential.toString(),
               validator: FieldValidators.compose([
                 FieldValidators.required(l10n),
+                FieldValidators.numeric(l10n),
+                FieldValidators.minValue(l10n, 1),
               ]),
               onChanged: (v) =>
                   _currentSequential = int.tryParse(v) ?? _currentSequential,

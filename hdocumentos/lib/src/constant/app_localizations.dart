@@ -405,6 +405,12 @@ abstract class AppLocalizations {
   /// **'Debe tener exactamente {length} caracteres'**
   String validatorExactLength(int length);
 
+  /// Validación: valor mínimo numérico
+  ///
+  /// In es, this message translates to:
+  /// **'El valor mínimo es {min}'**
+  String validatorMinValue(int min);
+
   /// Botón guardar el paso actual en modo edición
   ///
   /// In es, this message translates to:
