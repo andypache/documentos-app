@@ -140,6 +140,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get validatorUrl => 'Ingresa una URL válida (http:// o https://)';
 
   @override
+  String get validatorDecimal => 'Solo se permiten números decimales';
+
+  @override
+  String get validatorAlphanumericBasic => 'Solo se permiten letras y números sin caracteres especiales';
+
+  @override
+  String get validatorDateMustBeFuture => 'La fecha debe ser posterior a hoy';
+
+  @override
+  String get validatorInvalidDate => 'Fecha inválida';
+
+  @override
   String get validatorPort => 'Ingresa un puerto válido (1 - 65535)';
 
   @override

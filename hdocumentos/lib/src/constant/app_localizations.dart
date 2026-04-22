@@ -351,6 +351,30 @@ abstract class AppLocalizations {
   /// **'Ingresa una URL válida (http:// o https://)'**
   String get validatorUrl;
 
+  /// Validación: número decimal
+  ///
+  /// In es, this message translates to:
+  /// **'Solo se permiten números decimales'**
+  String get validatorDecimal;
+
+  /// Validación: alfanumérico básico
+  ///
+  /// In es, this message translates to:
+  /// **'Solo se permiten letras y números sin caracteres especiales'**
+  String get validatorAlphanumericBasic;
+
+  /// Validación: la fecha debe ser futura
+  ///
+  /// In es, this message translates to:
+  /// **'La fecha debe ser posterior a hoy'**
+  String get validatorDateMustBeFuture;
+
+  /// Validación: fecha inválida
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha inválida'**
+  String get validatorInvalidDate;
+
   /// Validación: rango de puerto de red
   ///
   /// In es, this message translates to:

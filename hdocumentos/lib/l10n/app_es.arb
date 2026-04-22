@@ -112,6 +112,18 @@
   "validatorUrl": "Ingresa una URL válida (http:// o https://)",
   "@validatorUrl": { "description": "Validación: formato de URL" },
 
+  "validatorDecimal": "Solo se permiten números decimales",
+  "@validatorDecimal": { "description": "Validación: número decimal" },
+
+  "validatorAlphanumericBasic": "Solo se permiten letras y números sin caracteres especiales",
+  "@validatorAlphanumericBasic": { "description": "Validación: alfanumérico básico" },
+
+  "validatorDateMustBeFuture": "La fecha debe ser posterior a hoy",
+  "@validatorDateMustBeFuture": { "description": "Validación: la fecha debe ser futura" },
+
+  "validatorInvalidDate": "Fecha inválida",
+  "@validatorInvalidDate": { "description": "Validación: fecha inválida" },
+
   "validatorPort": "Ingresa un puerto válido (1 - 65535)",
   "@validatorPort": { "description": "Validación: rango de puerto de red" },
 

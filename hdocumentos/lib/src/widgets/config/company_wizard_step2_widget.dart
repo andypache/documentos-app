@@ -45,6 +45,11 @@ class CompanyWizardStep2Widget extends StatelessWidget {
             keyboardType: TextInputType.url,
             filled: true,
             fillColor: AppTheme.whiteGradient,
+            validator: FieldValidators.compose([
+              FieldValidators.minLength(l10n, 6),
+              FieldValidators.maxLength(l10n, 200),
+              FieldValidators.url(l10n),
+            ]),
             onChanged: (v) {
               company.additionalInformation ??=
                   CompanyAdditionalInformationModel();
@@ -58,6 +63,9 @@ class CompanyWizardStep2Widget extends StatelessWidget {
             hintText: l10n.step2MaxDiscountHint,
             initialValue: company.additionalInformation?.maxDiscount,
             allowDecimals: true,
+            validator: FieldValidators.compose([
+              FieldValidators.decimal(l10n),
+            ]),
             onChanged: (v) {
               company.additionalInformation ??=
                   CompanyAdditionalInformationModel();
@@ -72,6 +80,11 @@ class CompanyWizardStep2Widget extends StatelessWidget {
             initialValue: company.additionalInformation?.itemAddress,
             filled: true,
             fillColor: AppTheme.whiteGradient,
+            validator: FieldValidators.compose([
+              FieldValidators.minLength(l10n, 3),
+              FieldValidators.maxLength(l10n, 200),
+              FieldValidators.alphanumericBasic(l10n),
+            ]),
             onChanged: (v) {
               company.additionalInformation ??=
                   CompanyAdditionalInformationModel();

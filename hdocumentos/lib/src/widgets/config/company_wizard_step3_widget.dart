@@ -107,6 +107,9 @@ class _CompanyWizardStep3WidgetState extends State<CompanyWizardStep3Widget> {
             fillColor: AppTheme.whiteGradient,
             validator: FieldValidators.compose([
               FieldValidators.required(l10n),
+              FieldValidators.minLength(l10n, 3),
+              FieldValidators.maxLength(l10n, 200),
+              FieldValidators.alphanumeric(l10n),
             ]),
             onChanged: (v) {
               company.certificateData ??= CompanyCertificateModel();
@@ -144,6 +147,9 @@ class _CompanyWizardStep3WidgetState extends State<CompanyWizardStep3Widget> {
               fillColor: AppTheme.whiteGradient,
               validator: FieldValidators.compose([
                 FieldValidators.required(l10n),
+                FieldValidators.minLength(l10n, 3),
+                FieldValidators.maxLength(l10n, 200),
+                FieldValidators.alphanumeric(l10n),
               ]),
               onChanged: (v) {
                 company.certificateData ??= CompanyCertificateModel();
@@ -161,6 +167,7 @@ class _CompanyWizardStep3WidgetState extends State<CompanyWizardStep3Widget> {
             fillColor: AppTheme.whiteGradient,
             validator: FieldValidators.compose([
               FieldValidators.required(l10n),
+              FieldValidators.moreThanCurrentDate(l10n),
             ]),
             onChanged: (v) {
               company.certificateData ??= CompanyCertificateModel();

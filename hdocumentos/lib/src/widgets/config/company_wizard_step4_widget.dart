@@ -30,12 +30,25 @@ class _CompanyWizardStep4WidgetState extends State<CompanyWizardStep4Widget> {
     _changePassword = !hasExistingMail;
   }
 
+  /// Retorna true si al menos un campo de correo tiene contenido.
+  /// En ese caso todos los campos se vuelven obligatorios.
+  bool _anyFieldFilled(CompanyModel company) {
+    final cfg = company.emailConfiguration;
+    if (cfg == null) return false;
+    return (cfg.mailServer?.trim().isNotEmpty == true) ||
+        (cfg.mailPort?.trim().isNotEmpty == true) ||
+        (cfg.mailAddress?.trim().isNotEmpty == true) ||
+        (cfg.mailUser?.trim().isNotEmpty == true) ||
+        (cfg.mailPassword?.trim().isNotEmpty == true);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final size = MediaQuery.of(context).size;
     final provider = Provider.of<CompanyFormProvider>(context);
     final company = provider.company;
+    final bool req = _anyFieldFilled(company);
 
     return Form(
       key: provider.formKeyStep4,
@@ -83,9 +96,16 @@ class _CompanyWizardStep4WidgetState extends State<CompanyWizardStep4Widget> {
             initialValue: company.emailConfiguration?.mailServer,
             filled: true,
             fillColor: AppTheme.whiteGradient,
+            validator: FieldValidators.compose([
+              if (req) FieldValidators.required(l10n),
+              FieldValidators.minLength(l10n, 3),
+              FieldValidators.maxLength(l10n, 200),
+              FieldValidators.alphanumeric(l10n),
+            ]),
             onChanged: (v) {
               company.emailConfiguration ??= CompanyEmailConfigurationModel();
               company.emailConfiguration!.mailServer = v;
+              setState(() {});
             },
           ),
           SizedBox(height: size.height * 0.018),
@@ -97,9 +117,16 @@ class _CompanyWizardStep4WidgetState extends State<CompanyWizardStep4Widget> {
             keyboardType: TextInputType.number,
             filled: true,
             fillColor: AppTheme.whiteGradient,
+            validator: FieldValidators.compose([
+              if (req) FieldValidators.required(l10n),
+              FieldValidators.minLength(l10n, 1),
+              FieldValidators.maxLength(l10n, 10),
+              FieldValidators.numeric(l10n),
+            ]),
             onChanged: (v) {
               company.emailConfiguration ??= CompanyEmailConfigurationModel();
               company.emailConfiguration!.mailPort = v;
+              setState(() {});
             },
           ),
           SizedBox(height: size.height * 0.018),
@@ -111,9 +138,16 @@ class _CompanyWizardStep4WidgetState extends State<CompanyWizardStep4Widget> {
             keyboardType: TextInputType.emailAddress,
             filled: true,
             fillColor: AppTheme.whiteGradient,
+            validator: FieldValidators.compose([
+              if (req) FieldValidators.required(l10n),
+              FieldValidators.minLength(l10n, 3),
+              FieldValidators.maxLength(l10n, 200),
+              FieldValidators.email(l10n),
+            ]),
             onChanged: (v) {
               company.emailConfiguration ??= CompanyEmailConfigurationModel();
               company.emailConfiguration!.mailAddress = v;
+              setState(() {});
             },
           ),
           SizedBox(height: size.height * 0.018),
@@ -124,9 +158,16 @@ class _CompanyWizardStep4WidgetState extends State<CompanyWizardStep4Widget> {
             initialValue: company.emailConfiguration?.mailUser,
             filled: true,
             fillColor: AppTheme.whiteGradient,
+            validator: FieldValidators.compose([
+              if (req) FieldValidators.required(l10n),
+              FieldValidators.minLength(l10n, 3),
+              FieldValidators.maxLength(l10n, 200),
+              FieldValidators.alphanumeric(l10n),
+            ]),
             onChanged: (v) {
               company.emailConfiguration ??= CompanyEmailConfigurationModel();
               company.emailConfiguration!.mailUser = v;
+              setState(() {});
             },
           ),
           SizedBox(height: size.height * 0.018),
@@ -157,9 +198,16 @@ class _CompanyWizardStep4WidgetState extends State<CompanyWizardStep4Widget> {
               obscureText: true,
               filled: true,
               fillColor: AppTheme.whiteGradient,
+              validator: FieldValidators.compose([
+                if (req) FieldValidators.required(l10n),
+                FieldValidators.minLength(l10n, 3),
+                FieldValidators.maxLength(l10n, 200),
+                FieldValidators.alphanumeric(l10n),
+              ]),
               onChanged: (v) {
                 company.emailConfiguration ??= CompanyEmailConfigurationModel();
                 company.emailConfiguration!.mailPassword = v;
+                setState(() {});
               },
             ),
           SizedBox(height: size.height * 0.025),

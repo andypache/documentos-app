@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
+import 'package:intl/intl.dart' as intl;
 
 /// Utilidad centralizada de validaciones para campos de formulario.
 ///
@@ -67,13 +68,32 @@ abstract class FieldValidators {
     };
   }
 
-  /// Solo letras y números (sin caracteres especiales).
+  static FormFieldValidator<String> decimal(AppLocalizations l10n) {
+    return (v) {
+      if (v == null || v.trim().isEmpty) return null;
+      return RegExp(r'^\d+(\.\d+)?$').hasMatch(v.trim())
+          ? null
+          : l10n.validatorDecimal;
+    };
+  }
+
+  /// Solo letras y números (con caracteres especiales).
   static FormFieldValidator<String> alphanumeric(AppLocalizations l10n) {
     return (v) {
       if (v == null || v.trim().isEmpty) return null;
       return RegExp(r'^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ .,]+$').hasMatch(v.trim())
           ? null
           : l10n.validatorAlphanumeric;
+    };
+  }
+
+  /// Solo letras y números (sin caracteres especiales).
+  static FormFieldValidator<String> alphanumericBasic(AppLocalizations l10n) {
+    return (v) {
+      if (v == null || v.trim().isEmpty) return null;
+      return RegExp(r'^[a-zA-Z0-9\s]+$').hasMatch(v.trim())
+          ? null
+          : l10n.validatorAlphanumericBasic;
     };
   }
 
@@ -94,6 +114,20 @@ abstract class FieldValidators {
       final regex =
           RegExp(r'^https?:\/\/([\w\-]+\.)+[\w\-]+(\/[\w\-\.\/?%&=]*)?$');
       return regex.hasMatch(v.trim()) ? null : l10n.validatorUrl;
+    };
+  }
+
+  static FormFieldValidator<String> moreThanCurrentDate(AppLocalizations l10n) {
+    return (v) {
+      if (v == null || v.trim().isEmpty) return null;
+      try {
+        final inputDate = intl.DateFormat('dd/MM/yyyy').parseStrict(v.trim());
+        final now = DateTime.now();
+        final today = DateTime(now.year, now.month, now.day);
+        return inputDate.isAfter(today) ? null : l10n.validatorDateMustBeFuture;
+      } catch (_) {
+        return l10n.validatorInvalidDate;
+      }
     };
   }
 

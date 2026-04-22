@@ -63,6 +63,9 @@ class CompanyWizardStep1Widget extends StatelessWidget {
             fillColor: AppTheme.whiteGradient,
             validator: FieldValidators.compose([
               FieldValidators.required(l10n),
+              FieldValidators.minLength(l10n, 3),
+              FieldValidators.maxLength(l10n, 20),
+              FieldValidators.alphanumericBasic(l10n),
             ]),
             onChanged: (v) => company.identification = v,
           ),
@@ -76,6 +79,9 @@ class CompanyWizardStep1Widget extends StatelessWidget {
             fillColor: AppTheme.whiteGradient,
             validator: FieldValidators.compose([
               FieldValidators.required(l10n),
+              FieldValidators.minLength(l10n, 3),
+              FieldValidators.maxLength(l10n, 200),
+              FieldValidators.alphanumeric(l10n),
             ]),
             onChanged: (v) => company.businessName = v,
           ),
@@ -89,6 +95,7 @@ class CompanyWizardStep1Widget extends StatelessWidget {
             fillColor: AppTheme.whiteGradient,
             validator: FieldValidators.compose([
               FieldValidators.required(l10n),
+              FieldValidators.minLength(l10n, 3),
               FieldValidators.maxLength(l10n, 200),
               FieldValidators.alphanumeric(l10n),
             ]),
@@ -103,6 +110,12 @@ class CompanyWizardStep1Widget extends StatelessWidget {
             keyboardType: TextInputType.phone,
             filled: true,
             fillColor: AppTheme.whiteGradient,
+            validator: FieldValidators.compose([
+              FieldValidators.required(l10n),
+              FieldValidators.minLength(l10n, 7),
+              FieldValidators.maxLength(l10n, 50),
+              FieldValidators.numeric(l10n),
+            ]),
             onChanged: (v) => company.phone = v,
           ),
           SizedBox(height: size.height * 0.018),
@@ -116,6 +129,8 @@ class CompanyWizardStep1Widget extends StatelessWidget {
             fillColor: AppTheme.whiteGradient,
             validator: FieldValidators.compose([
               FieldValidators.required(l10n),
+              FieldValidators.minLength(l10n, 7),
+              FieldValidators.maxLength(l10n, 100),
               FieldValidators.email(l10n),
             ]),
             onChanged: (v) => company.email = v,
