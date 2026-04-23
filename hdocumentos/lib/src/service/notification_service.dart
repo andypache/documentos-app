@@ -18,6 +18,8 @@ class NotificationService {
   static GlobalKey<ScaffoldMessengerState> messengerKey =
       GlobalKey<ScaffoldMessengerState>();
 
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   /// Obtiene [AppLocalizations] usando el context del messengerKey global.
   /// Retorna null si el messenger aún no está montado.
   static AppLocalizations? get l10n {
@@ -66,37 +68,80 @@ class NotificationService {
 
   // ── Motor interno ──────────────────────────────────────────────────────────
 
+  static OverlayEntry? _currentOverlay;
+
   static void _show({
     required String message,
     required String title,
     required NotificationType type,
     required Duration duration,
   }) {
-    final messenger = messengerKey.currentState;
-    if (messenger == null) return; // null-safe: sin crash si no está montado
+    // Pequeño delay para asegurar que la navegación terminó
+    // y el Overlay del destino esté montado
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _insertOverlay(
+        message: message,
+        title: title,
+        type: type,
+        duration: duration,
+      );
+    });
+  }
+
+  static void _insertOverlay({
+    required String message,
+    required String title,
+    required NotificationType type,
+    required Duration duration,
+  }) {
+    final overlay = navigatorKey.currentState?.overlay;
+    if (overlay == null) return;
 
     final config = _configFor(type);
 
-    messenger
-      ..clearSnackBars()
-      ..showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: AppTheme.transparent,
-          elevation: 0,
-          duration: duration,
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          padding: EdgeInsets.zero,
-          content: _NotificationCard(
+    // Cerrar notificación anterior si existe
+    try {
+      _currentOverlay?.remove();
+    } catch (_) {}
+    _currentOverlay = null;
+
+    late OverlayEntry entry;
+    entry = OverlayEntry(
+      builder: (_) => Positioned(
+        left: 0,
+        right: 0,
+        bottom: 0,
+        child: Material(
+          color: AppTheme.transparent,
+          child: _NotificationCard(
             title: title,
             message: message,
             accentColor: config.accentColor,
             backgroundColor: config.backgroundColor,
             icon: config.icon,
-            onDismiss: () => messenger.hideCurrentSnackBar(),
+            onDismiss: () {
+              try {
+                entry.remove();
+              } catch (_) {}
+              if (_currentOverlay == entry) _currentOverlay = null;
+            },
           ),
         ),
-      );
+      ),
+    );
+
+    _currentOverlay = entry;
+    overlay.insert(entry);
+
+    // Auto-cerrar tras la duración
+    Future.delayed(duration, () {
+      if (_currentOverlay == entry) {
+        try {
+          entry.remove();
+        } catch (_) {}
+        _currentOverlay = null;
+      }
+    });
   }
 
   static _NotificationConfig _configFor(NotificationType type) {

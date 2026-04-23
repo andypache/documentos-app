@@ -11,11 +11,13 @@ class ItemFormProvider extends ChangeNotifier {
 
   int _currentStep = 0;
   bool _isLoading = false;
+  bool _isEditing = false;
   ItemModel _item = ItemModel.createEmpty();
 
   // Getters
   int get currentStep => _currentStep;
   bool get isLoading => _isLoading;
+  bool get isEditing => _isEditing;
   ItemModel get item => _item;
 
   // Step 1 - Información Básica
@@ -138,6 +140,7 @@ class ItemFormProvider extends ChangeNotifier {
   // Cargar un item existente para edición
   void loadItem(ItemModel existingItem) {
     _item = existingItem;
+    _isEditing = true;
     name = existingItem.name;
     description = existingItem.description ?? "";
     searchKey = existingItem.searchKey ?? "";
@@ -159,6 +162,7 @@ class ItemFormProvider extends ChangeNotifier {
   void reset() {
     _currentStep = 0;
     _isLoading = false;
+    _isEditing = false;
     name = "";
     description = "";
     searchKey = "";

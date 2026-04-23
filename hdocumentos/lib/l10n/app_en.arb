@@ -615,8 +615,14 @@
   "itemCreateTitle": "Create Product",
   "@itemCreateTitle": { "description": "Title for create product wizard" },
 
+  "itemCreateSubtitle": "Fill in the new product information",
+  "@itemCreateSubtitle": { "description": "Subtitle for create product wizard" },
+
   "itemEditTitle": "Edit Product",
   "@itemEditTitle": { "description": "Title for edit product wizard" },
+
+  "itemEditSubtitle": "Update the product information",
+  "@itemEditSubtitle": { "description": "Subtitle for edit product wizard" },
 
   "customerCreateTitle": "New Customer",
   "@customerCreateTitle": { "description": "Title for create customer wizard" },

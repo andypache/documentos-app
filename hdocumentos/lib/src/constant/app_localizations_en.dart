@@ -652,7 +652,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get itemCreateTitle => 'Create Product';
 
   @override
+  String get itemCreateSubtitle => 'Fill in the new product information';
+
+  @override
   String get itemEditTitle => 'Edit Product';
+
+  @override
+  String get itemEditSubtitle => 'Update the product information';
 
   @override
   String get customerCreateTitle => 'New Customer';

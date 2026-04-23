@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/provider/item_list_provider.dart';
+import 'package:hdocumentos/src/screen/item/item_stock_screen.dart';
 import 'package:hdocumentos/src/screen/item/item_wizard_screen.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/item/item_card_widget.dart';
@@ -28,21 +29,20 @@ class _ItemScreenContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Stack(
+      body: Stack(
         children: [
-          BrackgroundWidget(),
-          _ItemScreenBody(),
+          const BrackgroundWidget(),
+          Column(
+            children: [
+              const Expanded(child: _ItemScreenBody()),
+              _BottomActionBar(
+                onNewProduct: () => _navigateToCreateItem(context),
+                onCancel: () => Navigator.pop(context),
+              ),
+            ],
+          ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _navigateToCreateItem(context),
-        backgroundColor: AppTheme.primaryButton,
-        foregroundColor: AppTheme.secondary,
-        elevation: 2,
-        icon: const Icon(Icons.add_rounded),
-        label: Text(AppLocalizations.of(context).btnNewProduct),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
@@ -62,6 +62,85 @@ class _ItemScreenContent extends StatelessWidget {
   }
 }
 
+///Barra inferior con botón Cancelar y Nuevo Producto
+class _BottomActionBar extends StatelessWidget {
+  final VoidCallback onNewProduct;
+  final VoidCallback onCancel;
+
+  const _BottomActionBar({
+    Key? key,
+    required this.onNewProduct,
+    required this.onCancel,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final l10n = AppLocalizations.of(context);
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: size.width * 0.05,
+        vertical: size.height * 0.015,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.2),
+        border: Border(
+          top: BorderSide(color: Colors.white.withOpacity(0.1), width: 1),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Cancelar
+          ElevatedButton.icon(
+            onPressed: onCancel,
+            icon: Icon(Icons.close_rounded, size: size.width * 0.045),
+            label: Text(
+              l10n.btnCancel,
+              style: TextStyle(fontSize: size.width * 0.034),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.actionDanger,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              padding: EdgeInsets.symmetric(
+                horizontal: size.width * 0.05,
+                vertical: size.height * 0.012,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+
+          // Nuevo Producto
+          ElevatedButton.icon(
+            onPressed: onNewProduct,
+            icon: Icon(Icons.add_rounded, size: size.width * 0.045),
+            label: Text(
+              l10n.btnNewProduct,
+              style: TextStyle(fontSize: size.width * 0.034),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primaryButton,
+              foregroundColor: AppTheme.secondary,
+              elevation: 0,
+              padding: EdgeInsets.symmetric(
+                horizontal: size.width * 0.05,
+                vertical: size.height * 0.012,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 ///Cuerpo principal de la pantalla
 class _ItemScreenBody extends StatelessWidget {
   const _ItemScreenBody({Key? key}) : super(key: key);
@@ -74,28 +153,10 @@ class _ItemScreenBody extends StatelessWidget {
       children: [
         // Widget de información del usuario
         const UserSessionTitle(),
-        // Header con título y botón de cerrar
-        Container(
-          padding: EdgeInsets.only(
-            top: 0,
-            left: size.width * 0.05,
-            right: size.width * 0.05,
-            bottom: 0,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Expanded(
-                child: PageTitleWidget(title: ''), // sobreescrito abajo
-              ),
-              IconButton(
-                icon: Icon(Icons.close,
-                    color: Colors.white, size: size.width * 0.07),
-                onPressed: () => Navigator.pop(context),
-                tooltip: 'Cerrar',
-              ),
-            ],
-          ),
+        // Header con título
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+          child: const PageTitleWidget(title: ''),
         ),
         // Resto del contenido
         Expanded(
@@ -106,7 +167,7 @@ class _ItemScreenBody extends StatelessWidget {
                 const _SearchSection(),
                 SizedBox(height: size.height * 0.025),
                 const _ItemListSection(),
-                SizedBox(height: size.height * 0.1), // Espacio para el FAB
+                SizedBox(height: size.height * 0.02),
               ],
             ),
           ),
@@ -304,6 +365,9 @@ class _ItemListSection extends StatelessWidget {
               onTap: () => _showItemDetail(context, item),
               onEdit: () => _navigateToEditItem(context, item),
               onDelete: () => _confirmDelete(context, provider, item),
+              onStockChange: item.isService == 'N'
+                  ? () => _navigateToStockChange(context, item)
+                  : null,
             );
           },
         ),
@@ -321,6 +385,27 @@ class _ItemListSection extends StatelessWidget {
       ),
       builder: (context) => _ItemDetailSheet(item: item),
     );
+  }
+
+  Future<void> _navigateToStockChange(
+      BuildContext context, ItemModel item) async {
+    final provider = Provider.of<ItemListProvider>(context, listen: false);
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ChangeNotifierProvider.value(
+          value: provider,
+          child: ItemStockScreen(item: item),
+        ),
+      ),
+    );
+
+    // Si se guardó el stock, recargar la lista
+    if (result == true && context.mounted) {
+      if (provider.hasSearched) {
+        provider.loadAllItems();
+      }
+    }
   }
 
   Future<void> _navigateToEditItem(BuildContext context, ItemModel item) async {

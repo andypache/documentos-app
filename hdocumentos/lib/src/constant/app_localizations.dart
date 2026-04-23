@@ -1335,11 +1335,23 @@ abstract class AppLocalizations {
   /// **'Crear Producto'**
   String get itemCreateTitle;
 
+  /// Subtítulo wizard crear producto
+  ///
+  /// In es, this message translates to:
+  /// **'Completa la información del nuevo producto'**
+  String get itemCreateSubtitle;
+
   /// Título wizard editar producto
   ///
   /// In es, this message translates to:
   /// **'Editar Producto'**
   String get itemEditTitle;
+
+  /// Subtítulo wizard editar producto
+  ///
+  /// In es, this message translates to:
+  /// **'Actualiza la información del producto'**
+  String get itemEditSubtitle;
 
   /// Título wizard crear cliente
   ///

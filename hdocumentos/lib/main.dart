@@ -57,6 +57,7 @@ class MyApp extends StatelessWidget {
             initialRoute: AppRoutes.initialRoute,
             routes: AppRoutes.getAppRoutes(),
             theme: AppTheme.lightTheme,
+            navigatorKey: NotificationService.navigatorKey,
             scaffoldMessengerKey: NotificationService.messengerKey);
       },
     );

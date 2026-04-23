@@ -652,7 +652,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get itemCreateTitle => 'Crear Producto';
 
   @override
+  String get itemCreateSubtitle => 'Completa la información del nuevo producto';
+
+  @override
   String get itemEditTitle => 'Editar Producto';
+
+  @override
+  String get itemEditSubtitle => 'Actualiza la información del producto';
 
   @override
   String get customerCreateTitle => 'Nuevo Cliente';

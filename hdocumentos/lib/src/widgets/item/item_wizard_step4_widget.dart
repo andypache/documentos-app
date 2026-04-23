@@ -29,6 +29,28 @@ class ItemWizardStep4Widget extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
+          const SizedBox(height: 16),
+          // ── Panel de información (primero) ────────────────────────
+          Container(
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: AppTheme.primaryButton.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: AppTheme.primaryButton, width: 1),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.info_outline, color: AppTheme.primaryButton),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    l10n.taxInfoNote,
+                    style: const TextStyle(color: Colors.white70, fontSize: 14),
+                  ),
+                ),
+              ],
+            ),
+          ),
           const SizedBox(height: 20),
           if (itemForm.itemTaxList.isEmpty)
             Container(
@@ -105,26 +127,6 @@ class ItemWizardStep4Widget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          Container(
-            padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: AppTheme.primaryButton.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: AppTheme.primaryButton, width: 1),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.info_outline, color: AppTheme.primaryButton),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    l10n.taxInfoNote,
-                    style: const TextStyle(color: Colors.white70, fontSize: 14),
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/provider/form/item_form_provider.dart';
+import 'package:hdocumentos/src/service/notification_service.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/item/item_wizard_step1_widget.dart';
 import 'package:hdocumentos/src/widgets/item/item_wizard_step2_widget.dart';
@@ -48,17 +49,72 @@ class _ItemWizardBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return SafeArea(
-      child: SingleChildScrollView(
+    final l10n = AppLocalizations.of(context);
+
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: SafeArea(
         child: Column(
           children: [
-            SizedBox(height: size.height * 0.02),
-            PageTitleWidget(
-                title: isEditing
-                    ? AppLocalizations.of(context).itemEditTitle
-                    : AppLocalizations.of(context).itemCreateTitle),
-            SizedBox(height: size.height * 0.025),
-            const _ItemWizardContainer(),
+            const UserSessionTitle(),
+            // ── Encabezado: título + subtítulo + botón cerrar ─────────
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: size.width * 0.05,
+                vertical: size.height * 0.01,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          isEditing ? l10n.itemEditTitle : l10n.itemCreateTitle,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: size.width * 0.052,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                        Text(
+                          isEditing
+                              ? l10n.itemEditSubtitle
+                              : l10n.itemCreateSubtitle,
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.6),
+                            fontSize: size.width * 0.032,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: Icon(
+                      Icons.close_rounded,
+                      color: Colors.white.withOpacity(0.8),
+                      size: size.width * 0.07,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // ── Indicador de pasos ────────────────────────────────────
+            const _ItemStepperIndicator(),
+            // ── Contenido scrollable ──────────────────────────────────
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: size.width * 0.05,
+                  vertical: size.height * 0.015,
+                ),
+                child: const _ItemWizardContainer(),
+              ),
+            ),
+            // ── Botones de navegación ─────────────────────────────────
+            const _WizardNavigationButtons(),
           ],
         ),
       ),
@@ -66,35 +122,121 @@ class _ItemWizardBody extends StatelessWidget {
   }
 }
 
-///Container principal del wizard
+///Indicador de pasos estilo íconos (igual al de compañía)
+class _ItemStepperIndicator extends StatelessWidget {
+  const _ItemStepperIndicator({Key? key}) : super(key: key);
+
+  static const List<IconData> _stepIcons = [
+    Icons.info_outline_rounded,
+    Icons.attach_money_rounded,
+    Icons.qr_code_rounded,
+    Icons.receipt_long_outlined,
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final itemForm = Provider.of<ItemFormProvider>(context);
+    final current = itemForm.currentStep;
+    final l10n = AppLocalizations.of(context);
+    final stepLabels = [
+      l10n.stepBasic,
+      l10n.stepPrices,
+      l10n.stepCodes,
+      l10n.stepTaxes,
+    ];
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: size.width * 0.04,
+        vertical: size.height * 0.01,
+      ),
+      child: Row(
+        children: List.generate(_stepIcons.length * 2 - 1, (i) {
+          if (i.isOdd) {
+            final stepIndex = i ~/ 2;
+            return Expanded(
+              child: Container(
+                height: 2,
+                margin: EdgeInsets.only(bottom: size.height * 0.03),
+                decoration: BoxDecoration(
+                  color: stepIndex < current
+                      ? AppTheme.primaryButton
+                      : Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(1),
+                ),
+              ),
+            );
+          }
+          final stepIndex = i ~/ 2;
+          final isActive = stepIndex == current;
+          final isCompleted = stepIndex < current;
+
+          return Expanded(
+            child: Column(
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 250),
+                  width: size.width * 0.065,
+                  height: size.width * 0.065,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isActive || isCompleted
+                        ? AppTheme.primaryButton
+                        : Colors.white.withOpacity(0.12),
+                    border: Border.all(
+                      color: isActive || isCompleted
+                          ? AppTheme.primaryButton
+                          : Colors.white.withOpacity(0.3),
+                      width: 2,
+                    ),
+                  ),
+                  child: Center(
+                    child: isCompleted
+                        ? Icon(Icons.check_rounded,
+                            color: Colors.white, size: size.width * 0.038)
+                        : Icon(
+                            _stepIcons[stepIndex],
+                            color: isActive
+                                ? Colors.white
+                                : Colors.white.withOpacity(0.4),
+                            size: size.width * 0.038,
+                          ),
+                  ),
+                ),
+                SizedBox(height: size.height * 0.005),
+                Text(
+                  stepLabels[stepIndex],
+                  style: TextStyle(
+                    color:
+                        isActive || isCompleted ? Colors.white : Colors.white54,
+                    fontSize: size.shortestSide * 0.026,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          );
+        }),
+      ),
+    );
+  }
+}
+
+///Container principal del wizard (solo contenido del paso actual)
 class _ItemWizardContainer extends StatelessWidget {
   const _ItemWizardContainer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final itemForm = Provider.of<ItemFormProvider>(context);
-    final size = MediaQuery.of(context).size;
-
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
-      child: Column(
-        children: [
-          _WizardStepIndicator(currentStep: itemForm.currentStep),
-          SizedBox(height: size.height * 0.025),
-          _WizardContent(currentStep: itemForm.currentStep),
-          SizedBox(height: size.height * 0.025),
-          const _WizardNavigationButtons(),
-          SizedBox(height: size.height * 0.06),
-        ],
-      ),
-    );
+    return _WizardContent(currentStep: itemForm.currentStep);
   }
 }
 
-///Indicador de pasos del wizard
+///Indicador de pasos del wizard (legacy — ya no se usa)
 class _WizardStepIndicator extends StatelessWidget {
   final int currentStep;
-
   const _WizardStepIndicator({Key? key, required this.currentStep})
       : super(key: key);
 
@@ -245,92 +387,121 @@ class _WizardNavigationButtons extends StatelessWidget {
     final itemForm = Provider.of<ItemFormProvider>(context);
     final size = MediaQuery.of(context).size;
     final l10n = AppLocalizations.of(context);
-    final btnPadding = EdgeInsets.symmetric(
-      horizontal: size.width * 0.05,
-      vertical: size.height * 0.015,
-    );
+    final bool busy = itemForm.isLoading;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // Botón Anterior / Cancelar
-        if (itemForm.currentStep > 0)
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: size.width * 0.05,
+        vertical: size.height * 0.015,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.2),
+        border: Border(
+          top: BorderSide(color: Colors.white.withOpacity(0.1), width: 1),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // ── Anterior / Cancelar ───────────────────────────────────
           ElevatedButton.icon(
-            onPressed:
-                itemForm.isLoading ? null : () => itemForm.previousStep(),
-            icon: const Icon(Icons.arrow_back_rounded),
-            label: Text(l10n.btnPrevious),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.grey,
-              foregroundColor: Colors.white,
-              elevation: 0,
-              padding: btnPadding,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-          )
-        else
-          ElevatedButton.icon(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.close_rounded),
-            label: Text(l10n.btnCancel),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.actionDanger,
-              foregroundColor: Colors.white,
-              elevation: 0,
-              padding: btnPadding,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-          ),
-
-        // Botón Siguiente / Guardar
-        if (itemForm.currentStep < 3)
-          ElevatedButton.icon(
-            onPressed: itemForm.isLoading
+            onPressed: busy
                 ? null
                 : () {
-                    if (itemForm.nextStep()) {
-                      // Paso validado y avanzado
+                    if (itemForm.currentStep > 0) {
+                      itemForm.previousStep();
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(l10n.msgRequiredFields),
-                          backgroundColor: AppTheme.actionDanger,
-                        ),
-                      );
+                      Navigator.pop(context);
                     }
                   },
-            icon: const Icon(Icons.arrow_forward_rounded),
-            label: Text(l10n.btnNext),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.primaryButton,
-              foregroundColor: AppTheme.secondary,
-              elevation: 0,
-              padding: btnPadding,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+            icon: Icon(
+              itemForm.currentStep > 0
+                  ? Icons.arrow_back_rounded
+                  : Icons.close_rounded,
+              size: size.width * 0.045,
             ),
-          )
-        else
-          ElevatedButton.icon(
-            onPressed: itemForm.isLoading
-                ? null
-                : () => _onSaveItem(context, itemForm),
-            icon: itemForm.isLoading
-                ? const ButtonLoadingIndicator()
-                : const Icon(Icons.save_rounded),
-            label: Text(itemForm.isLoading ? l10n.btnSaving : l10n.btnSave),
+            label: Text(
+              itemForm.currentStep > 0 ? l10n.btnPrevious : l10n.btnCancel,
+              style: TextStyle(fontSize: size.width * 0.034),
+            ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.actionSave,
+              backgroundColor: itemForm.currentStep > 0
+                  ? AppTheme.grey
+                  : AppTheme.actionDanger,
               foregroundColor: Colors.white,
               elevation: 0,
-              padding: btnPadding,
+              padding: EdgeInsets.symmetric(
+                horizontal: size.width * 0.05,
+                vertical: size.height * 0.012,
+              ),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
             ),
           ),
-      ],
+
+          // ── Indicador de paso ─────────────────────────────────────
+          Text(
+            l10n.stepCounter(itemForm.currentStep + 1, 4),
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.5),
+              fontSize: size.width * 0.032,
+            ),
+          ),
+
+          // ── Siguiente / Guardar ───────────────────────────────────
+          itemForm.currentStep < 3
+              ? ElevatedButton.icon(
+                  onPressed: busy
+                      ? null
+                      : () {
+                          if (!itemForm.nextStep()) {
+                            NotificationService.showError(
+                                l10n.msgRequiredFields);
+                          }
+                        },
+                  icon: Icon(Icons.arrow_forward_rounded,
+                      size: size.width * 0.045),
+                  label: Text(l10n.btnNext,
+                      style: TextStyle(
+                          fontSize: size.width * 0.034,
+                          fontWeight: FontWeight.bold)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.primaryButton,
+                    foregroundColor: AppTheme.secondary,
+                    elevation: 0,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: size.width * 0.05,
+                      vertical: size.height * 0.012,
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                )
+              : ElevatedButton.icon(
+                  onPressed: busy ? null : () => _onSaveItem(context, itemForm),
+                  icon: busy
+                      ? ButtonLoadingIndicator(size: size.width * 0.045)
+                      : Icon(Icons.save_rounded, size: size.width * 0.045),
+                  label: Text(
+                    busy ? l10n.btnSaving : l10n.btnSave,
+                    style: TextStyle(
+                        fontSize: size.width * 0.034,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.actionSave,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: size.width * 0.05,
+                      vertical: size.height * 0.012,
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+        ],
+      ),
     );
   }
 
@@ -338,12 +509,8 @@ class _WizardNavigationButtons extends StatelessWidget {
       BuildContext context, ItemFormProvider itemForm) async {
     // Validar último paso
     if (!itemForm.isValidCurrentStep()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context).msgRequiredFields),
-          backgroundColor: AppTheme.actionDanger,
-        ),
-      );
+      NotificationService.showError(
+          AppLocalizations.of(context).msgRequiredFields);
       return;
     }
 
@@ -363,26 +530,18 @@ class _WizardNavigationButtons extends StatelessWidget {
       itemForm.isLoading = false;
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context).itemCreatedSuccess),
-            backgroundColor: AppTheme.actionSave,
-          ),
-        );
-
-        // Resetear formulario y volver
+        // Primero volver a la pantalla anterior, luego mostrar notificación
         itemForm.reset();
         Navigator.pop(context, true); // Retorna true para indicar que se guardó
+
+        NotificationService.showSuccess(
+            AppLocalizations.of(context).itemCreatedSuccess);
       }
     } catch (e) {
       itemForm.isLoading = false;
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context).saveError(e.toString())),
-            backgroundColor: AppTheme.actionDanger,
-          ),
-        );
+        NotificationService.showError(
+            AppLocalizations.of(context).saveError(e.toString()));
       }
     }
   }

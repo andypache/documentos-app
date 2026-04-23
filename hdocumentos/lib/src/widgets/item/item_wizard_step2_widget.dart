@@ -132,7 +132,7 @@ class _ItemWizardStep2WidgetState extends State<ItemWizardStep2Widget> {
             autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
           const SizedBox(height: 20),
-          if (!itemForm.isService)
+          if (!itemForm.isService && !itemForm.isEditing)
             TextFormField(
               controller: _stockController,
               style: const TextStyle(color: Colors.white),
