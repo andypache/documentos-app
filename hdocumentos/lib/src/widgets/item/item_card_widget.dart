@@ -9,6 +9,7 @@ class ItemCardWidget extends StatelessWidget {
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
   final VoidCallback? onStockChange;
+  final VoidCallback? onPriceChange;
 
   const ItemCardWidget({
     Key? key,
@@ -17,6 +18,7 @@ class ItemCardWidget extends StatelessWidget {
     this.onEdit,
     this.onDelete,
     this.onStockChange,
+    this.onPriceChange,
   }) : super(key: key);
 
   @override
@@ -140,6 +142,11 @@ class ItemCardWidget extends StatelessWidget {
                         icon: Icons.edit_outlined,
                         color: Colors.blue,
                         onPressed: onEdit!),
+                  if (onPriceChange != null)
+                    _ActionBtn(
+                        icon: Icons.attach_money_rounded,
+                        color: Colors.green,
+                        onPressed: onPriceChange!),
                   if (onStockChange != null && item.isService == 'N')
                     _ActionBtn(
                         icon: Icons.inventory_2_outlined,

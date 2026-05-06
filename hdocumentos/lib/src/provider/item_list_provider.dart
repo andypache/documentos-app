@@ -94,6 +94,44 @@ class ItemListProvider extends ChangeNotifier {
     }
   }
 
+  // Actualizar precio de un item
+  Future<bool> updatePrice(
+      String itemId, double newPrice, double newCost) async {
+    try {
+      // TODO: Llamar al servicio real
+      // await ItemService.updatePrice(itemId, newPrice, newCost);
+
+      await Future.delayed(const Duration(milliseconds: 500));
+      final index = _items.indexWhere((i) => i.itemId == itemId);
+      if (index != -1) {
+        final original = _items[index];
+        _items[index] = ItemModel(
+          itemId: original.itemId,
+          name: original.name,
+          description: original.description,
+          searchKey: original.searchKey,
+          isService: original.isService,
+          barCode: original.barCode,
+          qrCode: original.qrCode,
+          price: newPrice,
+          cost: newCost,
+          discount: original.discount,
+          stock: original.stock,
+          image: original.image,
+          imageName: original.imageName,
+          state: original.state,
+          itemTaxList: original.itemTaxList,
+          createdAt: original.createdAt,
+        );
+        _filterItems();
+        notifyListeners();
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   // Actualizar stock de un item
   Future<bool> updateStock(String itemId, int newStock) async {
     try {

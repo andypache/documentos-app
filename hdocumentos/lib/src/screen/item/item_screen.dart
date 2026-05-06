@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/provider/item_list_provider.dart';
+import 'package:hdocumentos/src/screen/item/item_price_screen.dart';
 import 'package:hdocumentos/src/screen/item/item_stock_screen.dart';
 import 'package:hdocumentos/src/screen/item/item_wizard_screen.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
@@ -364,6 +365,7 @@ class _ItemListSection extends StatelessWidget {
               item: item,
               onTap: () => _showItemDetail(context, item),
               onEdit: () => _navigateToEditItem(context, item),
+              onPriceChange: () => _navigateToPriceChange(context, item),
               onDelete: () => _confirmDelete(context, provider, item),
               onStockChange: item.isService == 'N'
                   ? () => _navigateToStockChange(context, item)
@@ -385,6 +387,26 @@ class _ItemListSection extends StatelessWidget {
       ),
       builder: (context) => _ItemDetailSheet(item: item),
     );
+  }
+
+  Future<void> _navigateToPriceChange(
+      BuildContext context, ItemModel item) async {
+    final provider = Provider.of<ItemListProvider>(context, listen: false);
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ChangeNotifierProvider.value(
+          value: provider,
+          child: ItemPriceScreen(item: item),
+        ),
+      ),
+    );
+
+    if (result == true && context.mounted) {
+      if (provider.hasSearched) {
+        provider.loadAllItems();
+      }
+    }
   }
 
   Future<void> _navigateToStockChange(
