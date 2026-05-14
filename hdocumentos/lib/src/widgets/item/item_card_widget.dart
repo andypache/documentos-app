@@ -45,10 +45,11 @@ class ItemCardWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: AppTheme.primaryButton, width: 2),
                 ),
-                child: item.image != null
+                child: item.media?.image != null
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.memory(item.image!, fit: BoxFit.cover),
+                        child:
+                            Image.memory(item.media!.image!, fit: BoxFit.cover),
                       )
                     : Icon(
                         item.isService == 'Y'
@@ -111,7 +112,7 @@ class ItemCardWidget extends StatelessWidget {
                         Icon(Icons.attach_money,
                             color: Colors.green[300], size: 14),
                         Text(
-                          '\$${item.price?.toStringAsFixed(2) ?? "0.00"}',
+                          '\$${item.pricing?.price?.toStringAsFixed(2) ?? "0.00"}',
                           style: TextStyle(
                               color: Colors.green[300],
                               fontSize: 13,

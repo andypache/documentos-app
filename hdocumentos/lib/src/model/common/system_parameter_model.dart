@@ -3,7 +3,8 @@ class SystemParameterModel {
   String? systemParameterId;
   String? name;
   String? description;
-  String? companySystemParameter;
+  String? companySystemParameterId;
+  String? companySaleParameterId;
   double? numberParameter;
   String? isTaxSale; // 'S' or 'N'
   String? taxCode;
@@ -14,7 +15,8 @@ class SystemParameterModel {
     this.systemParameterId,
     this.name,
     this.description,
-    this.companySystemParameter,
+    this.companySystemParameterId,
+    this.companySaleParameterId,
     this.numberParameter,
     this.isTaxSale,
     this.taxCode,
@@ -34,7 +36,8 @@ class SystemParameterModel {
         systemParameterId: json["system_parameter_id"],
         name: json["name"],
         description: json["description"],
-        companySystemParameter: json["company_system_parameter"],
+        companySystemParameterId: json["company_system_parameter_id"],
+        companySaleParameterId: json["company_sale_parameter_id"],
         numberParameter: json["number_parameter"]?.toDouble(),
         isTaxSale: json["is_tax_sale"],
         taxCode: json["tax_code"],
@@ -46,7 +49,8 @@ class SystemParameterModel {
         "system_parameter_id": systemParameterId,
         "name": name,
         "description": description,
-        "company_system_parameter": companySystemParameter,
+        "company_system_parameter_id": companySystemParameterId,
+        "company_sale_parameter_id": companySaleParameterId,
         "number_parameter": numberParameter,
         "is_tax_sale": isTaxSale,
         "tax_code": taxCode,

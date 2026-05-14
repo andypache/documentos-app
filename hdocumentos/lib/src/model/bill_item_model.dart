@@ -25,14 +25,14 @@ class BillItemModel {
     double? customPrice,
     double? customDiscount,
   }) {
-    final unitPrice = customPrice ?? item.price ?? 0.0;
+    final unitPrice = customPrice ?? item.pricing?.price ?? 0.0;
     final discount = customDiscount ?? 0.0;
     final subtotal = (unitPrice * quantity) - discount;
 
     // Calcular impuestos
     double totalTax = 0.0;
-    if (item.itemTaxList != null) {
-      for (var tax in item.itemTaxList!) {
+    if (item.itemTaxes != null) {
+      for (var tax in item.itemTaxes!) {
         totalTax += subtotal * (tax.percentage / 100);
       }
     }

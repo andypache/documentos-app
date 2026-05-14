@@ -30,7 +30,7 @@ class ItemFormProvider extends ChangeNotifier {
   // Step 2 - Precios y Stock
   double price = 0.0;
   double cost = 0.0;
-  int discount = 0;
+  double discount = 0.0;
   int stock = 0;
 
   // Step 3 - Códigos e Imagen
@@ -125,15 +125,12 @@ class ItemFormProvider extends ChangeNotifier {
       isService: isService ? 'Y' : 'N',
       barCode: barCode.isEmpty ? null : barCode,
       qrCode: qrCode.isEmpty ? null : qrCode,
-      price: price,
-      cost: cost,
-      discount: discount,
-      stock: stock,
-      image: image,
-      imageName: imageName,
       state: state,
-      itemTaxList: itemTaxList.isEmpty ? null : itemTaxList,
       createdAt: DateTime.now(),
+      pricing: ItemPricingModel(price: price, cost: cost, discount: discount),
+      stock: ItemStockModel(stock: isService ? 0 : stock),
+      media: image != null ? ItemMediaModel(image: image) : null,
+      itemTaxes: itemTaxList.isEmpty ? null : itemTaxList,
     );
   }
 
@@ -146,15 +143,15 @@ class ItemFormProvider extends ChangeNotifier {
     searchKey = existingItem.searchKey ?? "";
     isService = existingItem.isService == 'Y';
     state = existingItem.state ?? 'A';
-    price = existingItem.price ?? 0.0;
-    cost = existingItem.cost ?? 0.0;
-    discount = existingItem.discount ?? 0;
-    stock = existingItem.stock ?? 0;
+    price = existingItem.pricing?.price ?? 0.0;
+    cost = existingItem.pricing?.cost ?? 0.0;
+    discount = existingItem.pricing?.discount ?? 0.0;
+    stock = existingItem.stock?.stock ?? 0;
     barCode = existingItem.barCode ?? "";
     qrCode = existingItem.qrCode ?? "";
-    image = existingItem.image;
-    imageName = existingItem.imageName;
-    itemTaxList = existingItem.itemTaxList ?? [];
+    image = existingItem.media?.image;
+    imageName = null;
+    itemTaxList = existingItem.itemTaxes ?? [];
     notifyListeners();
   }
 

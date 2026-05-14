@@ -633,6 +633,8 @@
 
   "itemCreatedSuccess": "Producto guardado exitosamente",
   "@itemCreatedSuccess": { "description": "Mensaje éxito al crear producto" },
+  "itemDataProcessError": "Error al procesar la operación del producto",
+  "@itemDataProcessError": { "description": "Error genérico al procesar item" },
 
   "itemUpdatedSuccess": "Producto actualizado exitosamente",
   "@itemUpdatedSuccess": { "description": "Mensaje éxito al actualizar producto" },

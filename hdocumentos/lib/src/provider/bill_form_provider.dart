@@ -143,8 +143,7 @@ class BillFormProvider extends ChangeNotifier {
   /// Agregar item a la factura
   void addItem(ItemModel item, {int quantity = 1, double? customPrice}) {
     // Verificar si el item ya existe
-    final existingIndex =
-        _billItems.indexWhere((bi) => bi.item.itemId == item.itemId);
+    final existingIndex = _billItems.indexWhere((bi) => bi.item.id == item.id);
 
     if (existingIndex >= 0) {
       // Si existe, actualizar cantidad
@@ -249,7 +248,7 @@ class BillFormProvider extends ChangeNotifier {
             : null,
         items: _billItems.map((billItem) {
           return BillCalculationItemModel(
-            itemId: int.parse(billItem.item.itemId!),
+            itemId: int.parse(billItem.item.id!),
             quantity: billItem.quantity,
             unitPrice: billItem.unitPrice,
             discount: billItem.discount,
@@ -323,7 +322,7 @@ class BillFormProvider extends ChangeNotifier {
     // Validar stock de productos (solo productos físicos)
     for (var billItem in _billItems) {
       if (billItem.item.isService != 'Y') {
-        final stock = billItem.item.stock ?? 0;
+        final stock = billItem.item.stock?.stock ?? 0;
         if (billItem.quantity > stock) {
           NotificationService.showSnackbarError(
             'Stock insuficiente para ${billItem.item.name}. Disponible: $stock',
@@ -343,7 +342,7 @@ class BillFormProvider extends ChangeNotifier {
         'paymentMethodId': _selectedPaymentMethod!.id,
         'items': _billItems.map((item) {
           return {
-            'itemId': item.item.itemId,
+            'itemId': item.item.id,
             'quantity': item.quantity,
             'unitPrice': item.unitPrice,
             'discount': item.discount,

@@ -670,6 +670,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get itemCreatedSuccess => 'Product saved successfully';
 
   @override
+  String get itemDataProcessError => 'Error processing the product operation';
+
+  @override
   String get itemUpdatedSuccess => 'Product updated successfully';
 
   @override

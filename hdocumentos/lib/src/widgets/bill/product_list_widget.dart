@@ -147,7 +147,7 @@ class ProductListWidget extends StatelessWidget {
   Widget _buildProductCard(
       BuildContext context, BillItemModel billItem, int index) {
     final item = billItem.item;
-    final hasTaxes = item.itemTaxList != null && item.itemTaxList!.isNotEmpty;
+    final hasTaxes = item.itemTaxes != null && item.itemTaxes!.isNotEmpty;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -220,7 +220,7 @@ class ProductListWidget extends StatelessWidget {
                       Wrap(
                         spacing: 4,
                         runSpacing: 4,
-                        children: item.itemTaxList!.map((tax) {
+                        children: item.itemTaxes!.map((tax) {
                           return Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 6,

@@ -1371,6 +1371,12 @@ abstract class AppLocalizations {
   /// **'Producto guardado exitosamente'**
   String get itemCreatedSuccess;
 
+  /// Error genérico al procesar item
+  ///
+  /// In es, this message translates to:
+  /// **'Error al procesar la operación del producto'**
+  String get itemDataProcessError;
+
   /// Mensaje éxito al actualizar producto
   ///
   /// In es, this message translates to:

@@ -31,6 +31,12 @@ String apiLastSales = "${apiCompany}bills/last-sales";
 //URL for common
 String apiDataCatalog = "$apiCompany/catalogs";
 
+//URL for item (document-service)
+String apiItem =
+    '${Environment.protocol}://${Environment.host}${Environment.portItem}/${Environment.baseUrl}/';
+String apiItemCreate = '${apiItem}item-service/items/create';
+String apiItemUpdate = '${apiItem}item-service/items/update';
+
 //Return Column error
 Widget errorLoadContainer(error) {
   return Column(

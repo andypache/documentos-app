@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
-import 'package:hdocumentos/src/model/item/company_system_parameter_model.dart';
-import 'package:hdocumentos/src/model/item/item_tax_model.dart';
+import 'package:hdocumentos/src/model/config/company_sale_parameter_model.dart';
+import 'package:hdocumentos/src/model/common/sale_parameter_model.dart';
+import 'package:hdocumentos/src/model/item/item_model.dart';
 import 'package:hdocumentos/src/provider/form/item_form_provider.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/item/tax_selection_dialog_widget.dart';
@@ -76,29 +77,48 @@ class ItemWizardStep4Widget extends StatelessWidget {
               itemCount: itemForm.itemTaxList.length,
               itemBuilder: (context, index) {
                 final tax = itemForm.itemTaxList[index];
-                final numberParam = tax.companySystemParameter?.systemParameter
-                        ?.numberParameter ??
-                    0;
+                final saleParam = tax.companySaleParameter?.saleParameter;
+                final numberParam = saleParam?.numberParameter ?? 0.0;
                 final percentage = numberParam % 1 == 0
                     ? numberParam.toStringAsFixed(0)
                     : numberParam.toStringAsFixed(2);
+                final taxName = saleParam?.name ?? 'Impuesto ${index + 1}';
+                final taxDescription = saleParam?.description;
 
                 return Card(
                   color: AppTheme.white.withOpacity(0.1),
                   child: ListTile(
-                    leading: const Icon(
-                      Icons.percent,
-                      color: AppTheme.primaryButton,
+                    leading: Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: AppTheme.primaryButton.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Center(
+                        child: Text(
+                          '$percentage%',
+                          style: const TextStyle(
+                            color: AppTheme.primaryButton,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
                     ),
                     title: Text(
-                      tax.companySystemParameter?.systemParameter?.name ??
-                          'Impuesto ${index + 1}',
+                      taxName,
                       style: const TextStyle(color: Colors.white),
                     ),
-                    subtitle: Text(
-                      '$percentage%',
-                      style: const TextStyle(color: Colors.white70),
-                    ),
+                    subtitle: taxDescription != null
+                        ? Text(
+                            taxDescription,
+                            style: const TextStyle(
+                                color: Colors.white54, fontSize: 12),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        : null,
                     trailing: IconButton(
                       icon: const Icon(Icons.delete_rounded,
                           color: AppTheme.actionDelete),
@@ -138,24 +158,31 @@ class ItemWizardStep4Widget extends StatelessWidget {
       builder: (context) => TaxSelectionDialogWidget(
         currentTaxes: itemForm.itemTaxList,
         onTaxSelected: (selectedTax) {
-          // Crear CompanySystemParameterModel con el SystemParameterModel seleccionado
-          final companySystemParam = CompanySystemParameterModel(
-            companySystemParameterId: selectedTax.companySystemParameter,
+          // Construir SaleParameterModel con los datos del impuesto seleccionado
+          final saleParam = SaleParameterModel(
+            id: selectedTax.companySaleParameterId,
             systemParameterId: selectedTax.systemParameterId,
-            systemParameter: selectedTax,
+            name: selectedTax.name,
+            description: selectedTax.description,
             numberParameter: selectedTax.numberParameter,
-            isTaxSale: selectedTax.isTaxSale,
             taxCode: selectedTax.taxCode,
             percentageCode: selectedTax.percentageCode,
+            systemParameter: selectedTax,
+          );
+
+          // Crear CompanySaleParameterModel completo
+          final companySaleParam = CompanySaleParameterModel(
+            id: selectedTax.companySaleParameterId,
+            saleParameterId: selectedTax.systemParameterId,
+            saleParameter: saleParam,
           );
 
           // Crear ItemTaxModel
           final itemTax = ItemTaxModel(
-            idCompanySystemParameter: selectedTax.companySystemParameter,
-            companySystemParameter: companySystemParam,
+            idCompanySaleParameter: selectedTax.companySaleParameterId,
+            companySaleParameter: companySaleParam,
           );
 
-          // Agregar al provider
           itemForm.addTax(itemTax);
         },
       ),

@@ -35,138 +35,58 @@ class _ProductSearchDialogState extends State<ProductSearchDialog> {
     // Datos de ejemplo con impuestos
     _items = [
       ItemModel(
-        itemId: '1',
+        id: '1',
         name: 'Laptop Dell Inspiron 15',
         description: 'Laptop con procesador Intel i5, 8GB RAM',
         searchKey: 'LAPTOP',
         barCode: '7891234567890',
-        price: 850.00,
-        cost: 650.00,
-        discount: 0,
-        stock: 10,
         isService: 'N',
         state: 'A',
-        itemTaxList: [
-          ItemTaxModel(
-            iteTaxId: '1',
-            companySystemParameter: CompanySystemParameterModel(
-              companySystemParameterId: '1',
-              numberParameter: 12.0,
-              isTaxSale: 'Y',
-              systemParameter: SystemParameterModel(
-                systemParameterId: '1',
-                name: 'IVA',
-              ),
-            ),
-          ),
-        ],
+        pricing: ItemPricingModel(price: 850.00, cost: 650.00, discount: 0),
+        stock: ItemStockModel(stock: 10),
       ),
       ItemModel(
-        itemId: '2',
+        id: '2',
         name: 'Mouse Logitech MX Master 3',
         description: 'Mouse inalámbrico ergonómico',
         searchKey: 'MOUSE',
         barCode: '7891234567891',
-        price: 95.00,
-        cost: 70.00,
-        discount: 0,
-        stock: 25,
         isService: 'N',
         state: 'A',
-        itemTaxList: [
-          ItemTaxModel(
-            iteTaxId: '1',
-            companySystemParameter: CompanySystemParameterModel(
-              companySystemParameterId: '1',
-              numberParameter: 12.0,
-              isTaxSale: 'Y',
-              systemParameter: SystemParameterModel(
-                systemParameterId: '1',
-                name: 'IVA',
-              ),
-            ),
-          ),
-        ],
+        pricing: ItemPricingModel(price: 95.00, cost: 70.00, discount: 0),
+        stock: ItemStockModel(stock: 25),
       ),
       ItemModel(
-        itemId: '3',
+        id: '3',
         name: 'Servicio de Consultoría IT',
         description: 'Asesoría técnica y consultoría',
         searchKey: 'CONSULTORIA',
-        price: 150.00,
-        cost: 0.0,
-        discount: 0,
-        stock: 0,
         isService: 'Y',
         state: 'A',
-        itemTaxList: [
-          ItemTaxModel(
-            iteTaxId: '1',
-            companySystemParameter: CompanySystemParameterModel(
-              companySystemParameterId: '1',
-              numberParameter: 12.0,
-              isTaxSale: 'Y',
-              systemParameter: SystemParameterModel(
-                systemParameterId: '1',
-                name: 'IVA',
-              ),
-            ),
-          ),
-        ],
+        pricing: ItemPricingModel(price: 150.00, cost: 0.0, discount: 0),
+        stock: ItemStockModel(stock: 0),
       ),
       ItemModel(
-        itemId: '4',
+        id: '4',
         name: 'Teclado Mecánico Keychron K2',
         description: 'Teclado mecánico inalámbrico RGB',
         searchKey: 'TECLADO',
         barCode: '7891234567892',
-        price: 120.00,
-        cost: 85.00,
-        discount: 0,
-        stock: 15,
         isService: 'N',
         state: 'A',
-        itemTaxList: [
-          ItemTaxModel(
-            iteTaxId: '1',
-            companySystemParameter: CompanySystemParameterModel(
-              companySystemParameterId: '1',
-              numberParameter: 12.0,
-              isTaxSale: 'Y',
-              systemParameter: SystemParameterModel(
-                systemParameterId: '1',
-                name: 'IVA',
-              ),
-            ),
-          ),
-        ],
+        pricing: ItemPricingModel(price: 120.00, cost: 85.00, discount: 0),
+        stock: ItemStockModel(stock: 15),
       ),
       ItemModel(
-        itemId: '5',
+        id: '5',
         name: 'Monitor LG UltraWide 29"',
         description: 'Monitor IPS 2560x1080',
         searchKey: 'MONITOR',
         barCode: '7891234567893',
-        price: 350.00,
-        cost: 280.00,
-        discount: 0,
-        stock: 8,
         isService: 'N',
         state: 'A',
-        itemTaxList: [
-          ItemTaxModel(
-            iteTaxId: '1',
-            companySystemParameter: CompanySystemParameterModel(
-              companySystemParameterId: '1',
-              numberParameter: 12.0,
-              isTaxSale: 'Y',
-              systemParameter: SystemParameterModel(
-                systemParameterId: '1',
-                name: 'IVA',
-              ),
-            ),
-          ),
-        ],
+        pricing: ItemPricingModel(price: 350.00, cost: 280.00, discount: 0),
+        stock: ItemStockModel(stock: 8),
       ),
     ];
   }
@@ -421,7 +341,7 @@ class _ProductSearchDialogState extends State<ProductSearchDialog> {
   }
 
   Widget _buildItemCard(ItemModel item) {
-    final hasTaxes = item.itemTaxList != null && item.itemTaxList!.isNotEmpty;
+    final hasTaxes = item.itemTaxes != null && item.itemTaxes!.isNotEmpty;
     final isService = item.isService == 'Y';
 
     return Card(
@@ -464,7 +384,7 @@ class _ProductSearchDialogState extends State<ProductSearchDialog> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '\$${item.price?.toStringAsFixed(2) ?? '0.00'}',
+                      '\$${item.pricing?.price?.toStringAsFixed(2) ?? '0.00'}',
                       style: const TextStyle(
                         color: AppTheme.primaryButton,
                         fontSize: 15,
@@ -474,7 +394,7 @@ class _ProductSearchDialogState extends State<ProductSearchDialog> {
                     if (!isService) ...[
                       const SizedBox(height: 2),
                       Text(
-                        'Stock: ${item.stock ?? 0}',
+                        'Stock: ${item.stock?.stock ?? 0}',
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.6),
                           fontSize: 12,
@@ -486,7 +406,7 @@ class _ProductSearchDialogState extends State<ProductSearchDialog> {
                       Wrap(
                         spacing: 4,
                         runSpacing: 4,
-                        children: item.itemTaxList!.map((tax) {
+                        children: item.itemTaxes!.map((tax) {
                           return Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 6,

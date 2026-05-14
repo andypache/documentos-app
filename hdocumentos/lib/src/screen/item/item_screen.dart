@@ -535,7 +535,7 @@ class _ItemListSection extends StatelessWidget {
     );
 
     if (confirmed == true && context.mounted) {
-      final success = await provider.deleteItem(item.itemId!);
+      final success = await provider.deleteItem(item.id!);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -657,19 +657,19 @@ class _ItemDetailSheet extends StatelessWidget {
           _DetailRow(
             icon: Icons.attach_money_rounded,
             label: AppLocalizations.of(context).labelPrice,
-            value: '\$${item.price?.toStringAsFixed(2) ?? "0.00"}',
+            value: '\$${item.pricing?.price?.toStringAsFixed(2) ?? "0.00"}',
           ),
           _DetailRow(
             icon: Icons.money_off_rounded,
             label: AppLocalizations.of(context).labelCost,
-            value: '\$${item.cost?.toStringAsFixed(2) ?? "0.00"}',
+            value: '\$${item.pricing?.cost?.toStringAsFixed(2) ?? "0.00"}',
           ),
           if (item.isService == 'N')
             _DetailRow(
               icon: Icons.inventory_rounded,
               label: AppLocalizations.of(context).labelStock,
-              value:
-                  AppLocalizations.of(context).labelStockUnits(item.stock ?? 0),
+              value: AppLocalizations.of(context)
+                  .labelStockUnits(item.stock?.stock ?? 0),
             ),
           if (item.barCode != null && item.barCode!.isNotEmpty)
             _DetailRow(

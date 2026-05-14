@@ -126,7 +126,7 @@ class _ItemWizardStep2WidgetState extends State<ItemWizardStep2Widget> {
               hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
             ),
             onChanged: (value) {
-              itemForm.discount = int.tryParse(value) ?? 0;
+              itemForm.discount = double.tryParse(value) ?? 0;
             },
             validator: _validatorDiscount,
             autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -183,7 +183,7 @@ class _ItemWizardStep2WidgetState extends State<ItemWizardStep2Widget> {
 
   String? _validatorDiscount(String? value) {
     if (value != null && value.isNotEmpty) {
-      final discount = int.tryParse(value);
+      final discount = double.tryParse(value);
       if (discount == null || discount < 0 || discount > 100) {
         return 'El descuento debe estar entre 0 y 100';
       }

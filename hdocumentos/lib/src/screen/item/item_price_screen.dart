@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/provider/item_list_provider.dart';
@@ -25,9 +27,9 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
   void initState() {
     super.initState();
     _priceController = TextEditingController(
-        text: (widget.item.price ?? 0.0).toStringAsFixed(2));
+        text: (widget.item.pricing?.price ?? 0.0).toStringAsFixed(2));
     _costController = TextEditingController(
-        text: (widget.item.cost ?? 0.0).toStringAsFixed(2));
+        text: (widget.item.pricing?.cost ?? 0.0).toStringAsFixed(2));
   }
 
   @override
@@ -78,10 +80,12 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
                               border: Border.all(
                                   color: AppTheme.primaryButton, width: 2),
                             ),
-                            child: widget.item.image != null
+                            child: widget.item.media?.image != null
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
-                                    child: Image.memory(widget.item.image!,
+                                    child: Image.memory(
+                                        widget.item.media?.image ??
+                                            Uint8List(0),
                                         fit: BoxFit.cover),
                                   )
                                 : const Icon(Icons.inventory_2,
@@ -127,7 +131,7 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
                           child: _PriceInfoBox(
                             label: 'Precio actual',
                             value:
-                                '\$${(widget.item.price ?? 0).toStringAsFixed(2)}',
+                                '\$${(widget.item.pricing?.price ?? 0).toStringAsFixed(2)}',
                             icon: Icons.attach_money_rounded,
                             color: Colors.green,
                           ),
@@ -137,7 +141,7 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
                           child: _PriceInfoBox(
                             label: 'Costo actual',
                             value:
-                                '\$${(widget.item.cost ?? 0).toStringAsFixed(2)}',
+                                '\$${(widget.item.pricing?.cost ?? 0).toStringAsFixed(2)}',
                             icon: Icons.money_off_rounded,
                             color: Colors.amber,
                           ),
@@ -293,7 +297,7 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
     try {
       final provider = Provider.of<ItemListProvider>(context, listen: false);
       final success =
-          await provider.updatePrice(widget.item.itemId!, newPrice, newCost);
+          await provider.updatePrice(widget.item.id!, newPrice, newCost);
 
       if (!mounted) return;
 

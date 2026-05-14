@@ -8,6 +8,7 @@ class Environment {
   static String get host => dotenv.env['HOST'] ?? '';
   static String get portSecurity => dotenv.env['PORT_SECURITY'] ?? '';
   static String get portCompany => dotenv.env['PORT_COMPANY'] ?? '';
+  static String get portItem => dotenv.env['PORT_ITEM'] ?? '';
   static String get baseUrl => dotenv.env['BASE_URL'] ?? '';
   static String get clientName => dotenv.env['CLIENT_NAME'] ?? '';
   static String get clientSecret => dotenv.env['CLIENT_SECRET'] ?? '';

@@ -1,4 +1,4 @@
-import 'package:hdocumentos/src/model/item/system_parameter_model.dart';
+import 'package:hdocumentos/src/model/common/system_parameter_model.dart';
 
 ///Class to represent Company System Parameter configuration
 class CompanySystemParameterModel {

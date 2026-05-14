@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/provider/item_list_provider.dart';
@@ -74,10 +76,12 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
                               border: Border.all(
                                   color: AppTheme.primaryButton, width: 2),
                             ),
-                            child: widget.item.image != null
+                            child: widget.item.media?.image != null
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
-                                    child: Image.memory(widget.item.image!,
+                                    child: Image.memory(
+                                        widget.item.media?.image ??
+                                            Uint8List(0),
                                         fit: BoxFit.cover),
                                   )
                                 : const Icon(Icons.inventory_2,
@@ -237,7 +241,7 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
 
     try {
       final provider = Provider.of<ItemListProvider>(context, listen: false);
-      final success = await provider.updateStock(widget.item.itemId!, newStock);
+      final success = await provider.updateStock(widget.item.id!, newStock);
 
       if (!mounted) return;
 

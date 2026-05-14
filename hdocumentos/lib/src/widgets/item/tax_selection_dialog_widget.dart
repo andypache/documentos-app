@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
-import 'package:hdocumentos/src/model/item/item_tax_model.dart';
-import 'package:hdocumentos/src/model/item/system_parameter_model.dart';
+import 'package:hdocumentos/src/model/model.dart';
+import 'package:hdocumentos/src/service/service.dart';
+import 'package:hdocumentos/src/share/preference.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/common/loading_widget.dart';
 
@@ -22,7 +23,9 @@ class TaxSelectionDialogWidget extends StatefulWidget {
 }
 
 class _TaxSelectionDialogWidgetState extends State<TaxSelectionDialogWidget> {
-  List<SystemParameterModel> _availableTaxes = [];
+  final CompanyService _companyService = CompanyService();
+  List<CompanySaleParameterModel> _companySaleParameters = [];
+  final List<SystemParameterModel> _availableTaxes = [];
   bool _isLoading = true;
 
   @override
@@ -34,159 +37,74 @@ class _TaxSelectionDialogWidgetState extends State<TaxSelectionDialogWidget> {
   Future<void> _loadTaxes() async {
     setState(() => _isLoading = true);
 
-    // TODO: Reemplazar con llamada real al servicio
-    await Future.delayed(const Duration(milliseconds: 500));
+    _companySaleParameters =
+        Preferences.userSession.company?.saleParameters ?? [];
 
-    // Datos de ejemplo basados en la tabla proporcionada
-    _availableTaxes = [
-      SystemParameterModel(
-        systemParameterId: "1",
-        name: "IVA 0",
-        description: "Impuesto al valor agregado de una venta",
-        companySystemParameter: "1",
-        numberParameter: 0,
-        isTaxSale: "S",
-        taxCode: "2",
-        percentageCode: "0",
-      ),
-      SystemParameterModel(
-        systemParameterId: "2",
-        name: "IVA 12",
-        description: "Impuesto al valor agregado de una venta",
-        companySystemParameter: "2",
-        numberParameter: 12,
-        isTaxSale: "S",
-        taxCode: "2",
-        percentageCode: "2",
-      ),
-      SystemParameterModel(
-        systemParameterId: "3",
-        name: "IVA 14",
-        description: "Impuesto al valor agregado de una venta",
-        companySystemParameter: "3",
-        numberParameter: 14,
-        isTaxSale: "S",
-        taxCode: "2",
-        percentageCode: "4",
-      ),
-      SystemParameterModel(
-        systemParameterId: "4",
-        name: "NO OBJETO IVA",
-        description: "Impuesto al valor agregado de una venta",
-        companySystemParameter: "4",
-        numberParameter: 0,
-        isTaxSale: "S",
-        taxCode: "2",
-        percentageCode: "6",
-      ),
-      SystemParameterModel(
-        systemParameterId: "5",
-        name: "EXENTO IVA",
-        description: "Impuesto al valor agregado de una venta",
-        companySystemParameter: "5",
-        numberParameter: 0,
-        isTaxSale: "S",
-        taxCode: "2",
-        percentageCode: "7",
-      ),
-      SystemParameterModel(
-        systemParameterId: "6",
-        name: "ICE Perfumes y Aguas de Tocador",
-        description: "Impuesto a los consumos especiales",
-        companySystemParameter: "6",
-        numberParameter: 20,
-        isTaxSale: "S",
-        taxCode: "3",
-        percentageCode: "3610",
-      ),
-      SystemParameterModel(
-        systemParameterId: "7",
-        name: "ICE Bebidas Energizantes",
-        description: "Impuesto a los consumos especiales",
-        companySystemParameter: "7",
-        numberParameter: 10,
-        isTaxSale: "S",
-        taxCode: "3",
-        percentageCode: "3101",
-      ),
-      SystemParameterModel(
-        systemParameterId: "8",
-        name: "ICE Bebidas No Alcohólicas",
-        description: "Impuesto a los consumos especiales",
-        companySystemParameter: "8",
-        numberParameter: 0.18,
-        isTaxSale: "S",
-        taxCode: "3",
-        percentageCode: "3111",
-      ),
-      SystemParameterModel(
-        systemParameterId: "9",
-        name: "ICE FUNDAS PLÁSTICAS",
-        description: "Impuesto a los consumos especiales",
-        companySystemParameter: "9",
-        numberParameter: 0.04,
-        isTaxSale: "S",
-        taxCode: "3",
-        percentageCode: "3680",
-      ),
-      SystemParameterModel(
-        systemParameterId: "10",
-        name: "ICE Perfumes Aguas de Tocador Cae",
-        description: "Impuesto a los consumos especiales",
-        companySystemParameter: "10",
-        numberParameter: 20,
-        isTaxSale: "S",
-        taxCode: "3",
-        percentageCode: "3710",
-      ),
-      SystemParameterModel(
-        systemParameterId: "11",
-        name: "ICE BEBIDAS NO ALCOHOLICAS SENAE",
-        description: "Impuesto a los consumos especiales",
-        companySystemParameter: "11",
-        numberParameter: 0.18,
-        isTaxSale: "S",
-        taxCode: "3",
-        percentageCode: "3602",
-      ),
-      SystemParameterModel(
-        systemParameterId: "19",
-        name: "IVA 8",
-        description: "Impuesto al valor agregado de una venta diferenciado",
-        companySystemParameter: "19",
-        numberParameter: 8,
-        isTaxSale: "S",
-        taxCode: "2",
-        percentageCode: "8",
-      ),
-      SystemParameterModel(
-        systemParameterId: "20",
-        name: "IVA 15",
-        description: "Impuesto al valor agregado de una venta",
-        companySystemParameter: "20",
-        numberParameter: 15,
-        isTaxSale: "S",
-        taxCode: "2",
-        percentageCode: "4",
-      ),
-    ];
+    if (_companySaleParameters.isEmpty) {
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+      return;
+    }
+
+    final catalog =
+        await _companyService.getCatalogs(context) ?? CatalogModelList();
+
+    // Índices para búsqueda O(1)
+    final saleParamByCode = {
+      for (final sp in catalog.saleParameters) sp.code: sp,
+    };
+    final systemParamByCode = {
+      for (final sp in catalog.systemParameters) sp.code: sp,
+    };
+
+    _availableTaxes.clear();
+
+    for (final companySaleParam in _companySaleParameters) {
+      final saleParam = saleParamByCode[companySaleParam.saleParameterId];
+      if (saleParam == null) continue;
+
+      final systemParamId = saleParam.value?['system_parameter_id'] as String?;
+      if (systemParamId == null) continue;
+
+      final systemParam = systemParamByCode[systemParamId];
+      if (systemParam == null) continue;
+
+      _availableTaxes.add(SystemParameterModel(
+        systemParameterId: systemParamId,
+        name: saleParam.description,
+        description: systemParam.description,
+        companySystemParameterId: null,
+        companySaleParameterId: companySaleParam.id,
+        numberParameter: double.tryParse(
+            saleParam.value?['number_parameter']?.toString() ?? ''),
+        isTaxSale: 'S',
+        taxCode: systemParamId,
+        percentageCode: saleParam.value?['percentage_code'] as String?,
+      ));
+    }
 
     if (!mounted) return;
     setState(() => _isLoading = false);
   }
 
-  // Obtener los tax_code ya utilizados en los impuestos actuales
+  // Obtener los tax_code ya utilizados en los impuestos actuales.
+  // Cruza los idCompanySaleParameter de los impuestos actuales con
+  // _availableTaxes para obtener el taxCode de grupo bloqueado.
   Set<String> _getUsedTaxCodes() {
-    return widget.currentTaxes
-        .where((tax) =>
-            tax.companySystemParameter?.systemParameter?.taxCode != null)
-        .map((tax) => tax.companySystemParameter!.systemParameter!.taxCode!)
+    final usedIds = widget.currentTaxes
+        .map((tax) => tax.idCompanySaleParameter)
+        .whereType<String>()
+        .toSet();
+
+    return _availableTaxes
+        .where((tax) => usedIds.contains(tax.companySaleParameterId))
+        .map((tax) => tax.taxCode)
+        .whereType<String>()
         .toSet();
   }
 
-  // Verificar si un impuesto puede ser seleccionado
-  bool _canSelectTax(SystemParameterModel tax) {
-    final usedTaxCodes = _getUsedTaxCodes();
+  // Verificar si un impuesto puede ser seleccionado dado el set de códigos usados
+  bool _canSelectTax(SystemParameterModel tax, Set<String> usedTaxCodes) {
     return !usedTaxCodes.contains(tax.taxCode);
   }
 
@@ -203,22 +121,10 @@ class _TaxSelectionDialogWidgetState extends State<TaxSelectionDialogWidget> {
     return grouped;
   }
 
-  String _getTaxGroupName(BuildContext context, String taxCode) {
-    final l10n = AppLocalizations.of(context);
-    switch (taxCode) {
-      case '2':
-        return l10n.taxGroupIVA;
-      case '3':
-        return l10n.taxGroupICE;
-      default:
-        return l10n.taxGroupOther;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final groupedTaxes = _groupTaxesByCode();
     final usedTaxCodes = _getUsedTaxCodes();
+    final groupedTaxes = _groupTaxesByCode();
 
     return Dialog(
       backgroundColor: AppTheme.dialogBackground,
@@ -300,7 +206,9 @@ class _TaxSelectionDialogWidgetState extends State<TaxSelectionDialogWidget> {
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      _getTaxGroupName(context, taxCode),
+                                      entry.value[0].description ??
+                                          AppLocalizations.of(context)
+                                              .taxGroupOther,
                                       style: TextStyle(
                                         color: isGroupDisabled
                                             ? Colors.white38
@@ -356,7 +264,8 @@ class _TaxSelectionDialogWidgetState extends State<TaxSelectionDialogWidget> {
 
                             // Lista de impuestos del grupo
                             ...taxes.map((tax) {
-                              final canSelect = _canSelectTax(tax);
+                              final canSelect =
+                                  _canSelectTax(tax, usedTaxCodes);
                               return _TaxItemWidget(
                                 tax: tax,
                                 enabled: canSelect,
@@ -422,7 +331,15 @@ class _TaxItemWidget extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    '${tax.numberParameter?.toStringAsFixed(tax.numberParameter! % 1 == 0 ? 0 : 2)}%',
+                    () {
+                      final pct = double.tryParse(tax.percentageCode ?? '');
+                      if (pct != null) {
+                        final formatted =
+                            pct.toStringAsFixed(pct % 1 == 0 ? 0 : 2);
+                        return '$formatted%';
+                      }
+                      return tax.percentageCode ?? '';
+                    }(),
                     style: TextStyle(
                       color: enabled ? AppTheme.primaryButton : Colors.white38,
                       fontSize: 14,

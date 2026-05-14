@@ -102,26 +102,27 @@ class ItemListProvider extends ChangeNotifier {
       // await ItemService.updatePrice(itemId, newPrice, newCost);
 
       await Future.delayed(const Duration(milliseconds: 500));
-      final index = _items.indexWhere((i) => i.itemId == itemId);
+      final index = _items.indexWhere((i) => i.id == itemId);
       if (index != -1) {
         final original = _items[index];
         _items[index] = ItemModel(
-          itemId: original.itemId,
+          id: original.id,
           name: original.name,
           description: original.description,
           searchKey: original.searchKey,
           isService: original.isService,
           barCode: original.barCode,
           qrCode: original.qrCode,
-          price: newPrice,
-          cost: newCost,
-          discount: original.discount,
-          stock: original.stock,
-          image: original.image,
-          imageName: original.imageName,
           state: original.state,
-          itemTaxList: original.itemTaxList,
           createdAt: original.createdAt,
+          media: original.media,
+          stock: original.stock,
+          pricing: ItemPricingModel(
+            price: newPrice,
+            cost: newCost,
+            discount: original.pricing?.discount,
+          ),
+          itemTaxes: original.itemTaxes,
         );
         _filterItems();
         notifyListeners();
@@ -140,26 +141,23 @@ class ItemListProvider extends ChangeNotifier {
 
       // Actualizar localmente
       await Future.delayed(const Duration(milliseconds: 500));
-      final index = _items.indexWhere((i) => i.itemId == itemId);
+      final index = _items.indexWhere((i) => i.id == itemId);
       if (index != -1) {
         final original = _items[index];
         _items[index] = ItemModel(
-          itemId: original.itemId,
+          id: original.id,
           name: original.name,
           description: original.description,
           searchKey: original.searchKey,
           isService: original.isService,
           barCode: original.barCode,
           qrCode: original.qrCode,
-          price: original.price,
-          cost: original.cost,
-          discount: original.discount,
-          stock: newStock,
-          image: original.image,
-          imageName: original.imageName,
           state: original.state,
-          itemTaxList: original.itemTaxList,
           createdAt: original.createdAt,
+          media: original.media,
+          stock: ItemStockModel(stock: newStock),
+          pricing: original.pricing,
+          itemTaxes: original.itemTaxes,
         );
         _filterItems();
         notifyListeners();
@@ -181,7 +179,7 @@ class ItemListProvider extends ChangeNotifier {
       // Simulación temporal
       await Future.delayed(const Duration(milliseconds: 500));
 
-      _items.removeWhere((item) => item.itemId == itemId);
+      _items.removeWhere((item) => item.id == itemId);
       _filterItems();
       return true;
     } catch (e) {
@@ -204,61 +202,56 @@ class ItemListProvider extends ChangeNotifier {
   List<ItemModel> _getMockItems() {
     return [
       ItemModel(
-        itemId: "1",
+        id: "1",
         name: "Laptop HP",
         description: "Laptop HP 15.6 pulgadas, 8GB RAM",
         searchKey: "LAP001",
-        price: 899.99,
-        cost: 650.00,
-        stock: 10,
         barCode: "7501234567890",
         state: 'A',
         isService: 'N',
+        pricing: ItemPricingModel(price: 899.99, cost: 650.00, discount: 0),
+        stock: ItemStockModel(stock: 10),
       ),
       ItemModel(
-        itemId: "2",
+        id: "2",
         name: "Mouse Logitech",
         description: "Mouse inalámbrico Logitech M185",
         searchKey: "MOU001",
-        price: 19.99,
-        cost: 12.00,
-        stock: 50,
         barCode: "7501234567891",
         state: 'A',
         isService: 'N',
+        pricing: ItemPricingModel(price: 19.99, cost: 12.00, discount: 0),
+        stock: ItemStockModel(stock: 50),
       ),
       ItemModel(
-        itemId: "3",
+        id: "3",
         name: "Teclado Mecánico",
         description: "Teclado mecánico RGB",
         searchKey: "TEC001",
-        price: 79.99,
-        cost: 45.00,
-        stock: 25,
         state: 'A',
         isService: 'N',
+        pricing: ItemPricingModel(price: 79.99, cost: 45.00, discount: 0),
+        stock: ItemStockModel(stock: 25),
       ),
       ItemModel(
-        itemId: "4",
+        id: "4",
         name: "Servicio de Instalación",
         description: "Instalación de software y configuración",
         searchKey: "SRV001",
-        price: 50.00,
-        cost: 0.00,
-        stock: 0,
         state: 'A',
         isService: 'Y',
+        pricing: ItemPricingModel(price: 50.00, cost: 0.00, discount: 0),
+        stock: ItemStockModel(stock: 0),
       ),
       ItemModel(
-        itemId: "5",
-        name: "Monitor Samsung 24\"",
+        id: "5",
+        name: 'Monitor Samsung 24"',
         description: "Monitor LED Full HD",
         searchKey: "MON001",
-        price: 179.99,
-        cost: 120.00,
-        stock: 15,
         state: 'A',
         isService: 'N',
+        pricing: ItemPricingModel(price: 179.99, cost: 120.00, discount: 0),
+        stock: ItemStockModel(stock: 15),
       ),
     ];
   }

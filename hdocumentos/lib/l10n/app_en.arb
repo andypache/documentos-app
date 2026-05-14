@@ -632,6 +632,8 @@
 
   "itemCreatedSuccess": "Product saved successfully",
   "@itemCreatedSuccess": { "description": "Success message when creating product" },
+  "itemDataProcessError": "Error processing the product operation",
+  "@itemDataProcessError": { "description": "Generic error processing item" },
 
   "itemUpdatedSuccess": "Product updated successfully",
   "@itemUpdatedSuccess": { "description": "Success message when updating product" },

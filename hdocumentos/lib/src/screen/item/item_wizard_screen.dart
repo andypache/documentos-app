@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/provider/form/item_form_provider.dart';
+import 'package:hdocumentos/src/service/item_service.dart';
 import 'package:hdocumentos/src/service/notification_service.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/item/item_wizard_step1_widget.dart';
@@ -517,22 +518,18 @@ class _WizardNavigationButtons extends StatelessWidget {
     itemForm.isLoading = true;
 
     try {
-      // Construir el modelo
-      final item = itemForm.buildItemModel();
-
-      // TODO: Aquí llamar al servicio para guardar el item
-      // await ItemService.createItem(item);
-      debugPrint('Item guardado: ${item.name}');
-
-      // Simulación temporal
-      await Future.delayed(const Duration(seconds: 2));
+      // Llamar al servicio según modo crear o editar
+      if (itemForm.isEditing) {
+        await ItemService.updateItem(context, itemForm);
+      } else {
+        await ItemService.createItem(context, itemForm);
+      }
 
       itemForm.isLoading = false;
 
       if (context.mounted) {
-        // Primero volver a la pantalla anterior, luego mostrar notificación
         itemForm.reset();
-        Navigator.pop(context, true); // Retorna true para indicar que se guardó
+        Navigator.pop(context, true);
 
         NotificationService.showSuccess(
             AppLocalizations.of(context).itemCreatedSuccess);

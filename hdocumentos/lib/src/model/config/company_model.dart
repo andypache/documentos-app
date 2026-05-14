@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:hdocumentos/src/model/config/company_sale_parameter_model.dart';
+
 // ─── Sub-modelos ──────────────────────────────────────────────────────────────
 class CompanyAdditionalInformationModel {
   final String? id;
@@ -282,38 +284,6 @@ class CompanyPaymentMethodModel {
     if (companyId != null) result['company_id'] = companyId;
     if (paymentMethodId != null) result['payment_method_id'] = paymentMethodId;
     if (name != null) result['name'] = name;
-    if (state != null) result['state'] = state;
-    return result;
-  }
-}
-
-/// Parámetro de venta habilitado para la empresa
-class CompanySaleParameterModel {
-  final String? id;
-  final String? companyId;
-  final String? saleParameterId;
-  final String? state;
-
-  const CompanySaleParameterModel({
-    this.id,
-    this.companyId,
-    this.saleParameterId,
-    this.state,
-  });
-
-  factory CompanySaleParameterModel.fromJson(Map<String, dynamic> json) =>
-      CompanySaleParameterModel(
-        id: json['id'],
-        companyId: json['company_id'],
-        saleParameterId: json['sale_parameter_id'],
-        state: json['state'],
-      );
-
-  Map<String, dynamic> toJson() {
-    final result = <String, dynamic>{};
-    if (id != null) result['id'] = id;
-    if (companyId != null) result['company_id'] = companyId;
-    if (saleParameterId != null) result['sale_parameter_id'] = saleParameterId;
     if (state != null) result['state'] = state;
     return result;
   }

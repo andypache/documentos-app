@@ -73,8 +73,8 @@ class _ProductEditDialogState extends State<ProductEditDialog> {
   double _calculateTotalTax() {
     final subtotal = _calculateSubtotal();
     double totalTax = 0.0;
-    if (widget.billItem.item.itemTaxList != null) {
-      for (var tax in widget.billItem.item.itemTaxList!) {
+    if (widget.billItem.item.itemTaxes != null) {
+      for (var tax in widget.billItem.item.itemTaxes!) {
         totalTax += subtotal * (tax.percentage / 100);
       }
     }
@@ -97,7 +97,7 @@ class _ProductEditDialogState extends State<ProductEditDialog> {
   @override
   Widget build(BuildContext context) {
     final item = widget.billItem.item;
-    final hasTaxes = item.itemTaxList != null && item.itemTaxList!.isNotEmpty;
+    final hasTaxes = item.itemTaxes != null && item.itemTaxes!.isNotEmpty;
 
     return Dialog(
       backgroundColor: AppTheme.primary,
@@ -247,7 +247,7 @@ class _ProductEditDialogState extends State<ProductEditDialog> {
                                 ],
                               ),
                               const SizedBox(height: 8),
-                              ...item.itemTaxList!.map((tax) {
+                              ...item.itemTaxes!.map((tax) {
                                 final taxAmount = _calculateSubtotal() *
                                     (tax.percentage / 100);
                                 return Padding(
