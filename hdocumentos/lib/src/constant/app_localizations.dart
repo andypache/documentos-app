@@ -1767,6 +1767,12 @@ abstract class AppLocalizations {
   /// **'Código de barras'**
   String get labelBarCode;
 
+  /// Etiqueta código QR
+  ///
+  /// In es, this message translates to:
+  /// **'Código QR'**
+  String get labelQrCode;
+
   /// Etiqueta precio
   ///
   /// In es, this message translates to:
@@ -1916,6 +1922,300 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Mostrar Alerta'**
   String get alertDemoButton;
+
+  /// Título paso 1 wizard item
+  ///
+  /// In es, this message translates to:
+  /// **'Información Básica'**
+  String get stepBasicTitle;
+
+  /// Label campo nombre de producto
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre del producto *'**
+  String get labelProductName;
+
+  /// Hint campo nombre de producto
+  ///
+  /// In es, this message translates to:
+  /// **'Ingrese el nombre'**
+  String get hintProductName;
+
+  /// Hint campo descripción opcional
+  ///
+  /// In es, this message translates to:
+  /// **'Descripción detallada (opcional)'**
+  String get hintDescriptionOptional;
+
+  /// Hint campo clave de búsqueda opcional
+  ///
+  /// In es, this message translates to:
+  /// **'Clave única para buscar (opcional)'**
+  String get hintSearchKeyOptional;
+
+  /// Label checkbox es servicio
+  ///
+  /// In es, this message translates to:
+  /// **'¿Es un servicio?'**
+  String get labelIsService;
+
+  /// Hint checkbox es servicio
+  ///
+  /// In es, this message translates to:
+  /// **'Marque si es un servicio en lugar de un producto'**
+  String get hintIsService;
+
+  /// Validador campo nombre requerido
+  ///
+  /// In es, this message translates to:
+  /// **'Este campo es requerido'**
+  String get validatorNameRequired;
+
+  /// Validador longitud mínima nombre
+  ///
+  /// In es, this message translates to:
+  /// **'Mínimo 3 caracteres'**
+  String get validatorNameMinLength;
+
+  /// Título paso 2 wizard item
+  ///
+  /// In es, this message translates to:
+  /// **'Precios y Stock'**
+  String get stepPricesTitle;
+
+  /// Label campo precio de venta
+  ///
+  /// In es, this message translates to:
+  /// **'Precio de venta *'**
+  String get labelSalePrice;
+
+  /// Hint campo precio de venta
+  ///
+  /// In es, this message translates to:
+  /// **'Ingrese el precio'**
+  String get hintSalePrice;
+
+  /// Label campo costo requerido
+  ///
+  /// In es, this message translates to:
+  /// **'Costo *'**
+  String get labelCostRequired;
+
+  /// Hint campo costo
+  ///
+  /// In es, this message translates to:
+  /// **'Ingrese el costo'**
+  String get hintCost;
+
+  /// Label campo descuento porcentaje
+  ///
+  /// In es, this message translates to:
+  /// **'Descuento (%)'**
+  String get labelDiscountPct;
+
+  /// Hint campo descuento porcentaje
+  ///
+  /// In es, this message translates to:
+  /// **'Descuento opcional (0-100)'**
+  String get hintDiscountPct;
+
+  /// Label campo stock disponible
+  ///
+  /// In es, this message translates to:
+  /// **'Stock disponible *'**
+  String get labelAvailableStock;
+
+  /// Hint campo stock disponible
+  ///
+  /// In es, this message translates to:
+  /// **'Cantidad en inventario'**
+  String get hintAvailableStock;
+
+  /// Validador precio requerido
+  ///
+  /// In es, this message translates to:
+  /// **'El precio es requerido'**
+  String get validatorPriceRequired;
+
+  /// Validador precio inválido
+  ///
+  /// In es, this message translates to:
+  /// **'Ingrese un precio válido'**
+  String get validatorPriceInvalid;
+
+  /// Validador costo requerido
+  ///
+  /// In es, this message translates to:
+  /// **'El costo es requerido'**
+  String get validatorCostRequired;
+
+  /// Validador costo inválido
+  ///
+  /// In es, this message translates to:
+  /// **'Ingrese un costo válido'**
+  String get validatorCostInvalid;
+
+  /// Validador rango descuento
+  ///
+  /// In es, this message translates to:
+  /// **'El descuento debe estar entre 0 y 100'**
+  String get validatorDiscountRange;
+
+  /// Validador stock requerido
+  ///
+  /// In es, this message translates to:
+  /// **'El stock es requerido'**
+  String get validatorStockRequired;
+
+  /// Validador stock inválido
+  ///
+  /// In es, this message translates to:
+  /// **'Ingrese un stock válido'**
+  String get validatorStockInvalid;
+
+  /// Título paso 3 wizard item
+  ///
+  /// In es, this message translates to:
+  /// **'Códigos e Imagen'**
+  String get stepCodesTitle;
+
+  /// Hint campo código de barras
+  ///
+  /// In es, this message translates to:
+  /// **'Ingrese código de barras (opcional)'**
+  String get hintBarCode;
+
+  /// Hint campo código QR
+  ///
+  /// In es, this message translates to:
+  /// **'Ingrese código QR (opcional)'**
+  String get hintQrCode;
+
+  /// Badge de servicio en tarjeta
+  ///
+  /// In es, this message translates to:
+  /// **'SERV.'**
+  String get labelServiceBadge;
+
+  /// Prefijo clave de búsqueda en tarjeta
+  ///
+  /// In es, this message translates to:
+  /// **'Clave: {key}'**
+  String labelSearchKeyPrefix(String key);
+
+  /// Prefijo stock en tarjeta
+  ///
+  /// In es, this message translates to:
+  /// **'Stock: {qty}'**
+  String labelStockPrefix(Object qty);
+
+  /// Título pantalla cambiar stock
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar Stock'**
+  String get itemStockTitle;
+
+  /// Label stock actual
+  ///
+  /// In es, this message translates to:
+  /// **'Stock actual'**
+  String get labelCurrentStock;
+
+  /// Label nuevo stock
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo stock'**
+  String get labelNewStock;
+
+  /// Label campo cantidad inventario
+  ///
+  /// In es, this message translates to:
+  /// **'Cantidad en inventario *'**
+  String get labelStockField;
+
+  /// Hint campo nueva cantidad stock
+  ///
+  /// In es, this message translates to:
+  /// **'Ingrese la nueva cantidad'**
+  String get hintStockNew;
+
+  /// Mensaje éxito al actualizar stock
+  ///
+  /// In es, this message translates to:
+  /// **'Stock actualizado correctamente'**
+  String get itemStockSuccess;
+
+  /// Mensaje error al actualizar stock
+  ///
+  /// In es, this message translates to:
+  /// **'Error al actualizar el stock'**
+  String get itemStockError;
+
+  /// Título pantalla actualizar precio
+  ///
+  /// In es, this message translates to:
+  /// **'Actualizar Precio'**
+  String get itemPriceTitle;
+
+  /// Label precio actual
+  ///
+  /// In es, this message translates to:
+  /// **'Precio actual'**
+  String get labelCurrentPrice;
+
+  /// Label costo actual
+  ///
+  /// In es, this message translates to:
+  /// **'Costo actual'**
+  String get labelCurrentCost;
+
+  /// Label nuevo precio de venta
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo precio de venta'**
+  String get labelNewSalePrice;
+
+  /// Label nuevo costo
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo costo'**
+  String get labelNewCost;
+
+  /// Hint ejemplo precio
+  ///
+  /// In es, this message translates to:
+  /// **'Ej: 99.99'**
+  String get hintPriceExample;
+
+  /// Hint ejemplo costo
+  ///
+  /// In es, this message translates to:
+  /// **'Ej: 60.00'**
+  String get hintCostExample;
+
+  /// Validador valor numérico inválido
+  ///
+  /// In es, this message translates to:
+  /// **'Ingrese un valor válido (0 o mayor)'**
+  String get validatorValueInvalid;
+
+  /// Mensaje éxito al actualizar precio
+  ///
+  /// In es, this message translates to:
+  /// **'Precio actualizado correctamente'**
+  String get itemPriceSuccess;
+
+  /// Mensaje error al actualizar precio
+  ///
+  /// In es, this message translates to:
+  /// **'Error al actualizar el precio'**
+  String get itemPriceError;
+
+  /// Mensaje de error genérico
+  ///
+  /// In es, this message translates to:
+  /// **'Error: {message}'**
+  String errorGeneric(String message);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

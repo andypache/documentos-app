@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/provider/form/item_form_provider.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
@@ -52,6 +53,7 @@ class _ItemWizardStep1WidgetState extends State<ItemWizardStep1Widget> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final itemForm = Provider.of<ItemFormProvider>(context);
 
     return Form(
@@ -59,9 +61,9 @@ class _ItemWizardStep1WidgetState extends State<ItemWizardStep1Widget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Información Básica',
-            style: TextStyle(
+          Text(
+            l10n.stepBasicTitle,
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -73,14 +75,19 @@ class _ItemWizardStep1WidgetState extends State<ItemWizardStep1Widget> {
             style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.label_outline, color: Colors.blue),
-              labelText: 'Nombre del producto *',
-              hintText: 'Ingrese el nombre',
+              labelText: l10n.labelProductName,
+              hintText: l10n.hintProductName,
               floatingLabelStyle:
                   TextStyle(color: Colors.white.withOpacity(0.8)),
               hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
             ),
             onChanged: (value) => itemForm.name = value,
-            validator: _validatorRequired,
+            validator: FieldValidators.compose([
+              FieldValidators.minLength(l10n, 3),
+              FieldValidators.maxLength(l10n, 200),
+              FieldValidators.alphanumericBasic(l10n),
+              FieldValidators.required(l10n)
+            ]),
             autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
           const SizedBox(height: 20),
@@ -92,12 +99,18 @@ class _ItemWizardStep1WidgetState extends State<ItemWizardStep1Widget> {
             decoration: InputDecoration(
               prefixIcon:
                   const Icon(Icons.description_outlined, color: Colors.blue),
-              labelText: 'Descripción',
-              hintText: 'Descripción detallada (opcional)',
+              labelText: l10n.labelDescription,
+              hintText: l10n.hintDescriptionOptional,
               floatingLabelStyle:
                   TextStyle(color: Colors.white.withOpacity(0.8)),
               hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
             ),
+            validator: FieldValidators.compose([
+              FieldValidators.minLength(l10n, 3),
+              FieldValidators.maxLength(l10n, 500),
+              FieldValidators.alphanumericBasic(l10n),
+              FieldValidators.required(l10n)
+            ]),
             onChanged: (value) => itemForm.description = value,
           ),
           const SizedBox(height: 20),
@@ -106,18 +119,24 @@ class _ItemWizardStep1WidgetState extends State<ItemWizardStep1Widget> {
             style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.search, color: Colors.blue),
-              labelText: 'Clave de búsqueda',
-              hintText: 'Clave única para buscar (opcional)',
+              labelText: l10n.labelSearchKey,
+              hintText: l10n.hintSearchKeyOptional,
               floatingLabelStyle:
                   TextStyle(color: Colors.white.withOpacity(0.8)),
               hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
             ),
+            validator: FieldValidators.compose([
+              FieldValidators.minLength(l10n, 2),
+              FieldValidators.maxLength(l10n, 100),
+              FieldValidators.alphanumericBasic(l10n),
+              FieldValidators.required(l10n)
+            ]),
             onChanged: (value) => itemForm.searchKey = value,
           ),
           const SizedBox(height: 20),
           InputSwitchFieldWidget(
-            label: '¿Es un servicio?',
-            helperText: 'Marque si es un servicio en lugar de un producto',
+            label: l10n.labelIsService,
+            helperText: l10n.hintIsService,
             value: itemForm.isService,
             onChanged: (value) {
               itemForm.isService = value;
@@ -127,15 +146,5 @@ class _ItemWizardStep1WidgetState extends State<ItemWizardStep1Widget> {
         ],
       ),
     );
-  }
-
-  String? _validatorRequired(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Este campo es requerido';
-    }
-    if (value.length < 3) {
-      return 'Mínimo 3 caracteres';
-    }
-    return null;
   }
 }

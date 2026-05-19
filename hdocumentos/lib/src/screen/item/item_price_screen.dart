@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/provider/item_list_provider.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
@@ -41,6 +42,7 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -56,7 +58,7 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
                   children: [
                     SizedBox(height: size.height * 0.02),
                     // Título
-                    const PageTitleWidget(title: 'Actualizar Precio'),
+                    PageTitleWidget(title: l10n.itemPriceTitle),
                     SizedBox(height: size.height * 0.03),
 
                     // Info del producto
@@ -109,7 +111,8 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
                                 if (widget.item.searchKey != null &&
                                     widget.item.searchKey!.isNotEmpty)
                                   Text(
-                                    'Clave: ${widget.item.searchKey}',
+                                    l10n.labelSearchKeyPrefix(
+                                        widget.item.searchKey!),
                                     style: TextStyle(
                                       color: Colors.white60,
                                       fontSize: size.width * 0.032,
@@ -129,7 +132,7 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
                       children: [
                         Expanded(
                           child: _PriceInfoBox(
-                            label: 'Precio actual',
+                            label: l10n.labelCurrentPrice,
                             value:
                                 '\$${(widget.item.pricing?.price ?? 0).toStringAsFixed(2)}',
                             icon: Icons.attach_money_rounded,
@@ -139,7 +142,7 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
                         SizedBox(width: size.width * 0.03),
                         Expanded(
                           child: _PriceInfoBox(
-                            label: 'Costo actual',
+                            label: l10n.labelCurrentCost,
                             value:
                                 '\$${(widget.item.pricing?.cost ?? 0).toStringAsFixed(2)}',
                             icon: Icons.money_off_rounded,
@@ -159,7 +162,7 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
                         children: [
                           // Precio de venta
                           Text(
-                            'Nuevo precio de venta',
+                            l10n.labelNewSalePrice,
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: size.width * 0.038,
@@ -172,19 +175,19 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
                             keyboardType: const TextInputType.numberWithOptions(
                                 decimal: true),
                             autofocus: true,
-                            decoration: const InputDecoration(
-                              prefixIcon: Icon(Icons.attach_money_rounded,
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(Icons.attach_money_rounded,
                                   color: Colors.green),
-                              labelText: 'Precio de venta *',
-                              hintText: 'Ej: 99.99',
+                              labelText: l10n.labelSalePrice,
+                              hintText: l10n.hintPriceExample,
                             ),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
-                                return 'El precio es requerido';
+                                return l10n.validatorPriceRequired;
                               }
                               final n = double.tryParse(value.trim());
                               if (n == null || n < 0) {
-                                return 'Ingrese un valor válido (0 o mayor)';
+                                return l10n.validatorValueInvalid;
                               }
                               return null;
                             },
@@ -196,7 +199,7 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
 
                           // Costo
                           Text(
-                            'Nuevo costo',
+                            l10n.labelNewCost,
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: size.width * 0.038,
@@ -208,11 +211,11 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
                             style: const TextStyle(color: Colors.white),
                             keyboardType: const TextInputType.numberWithOptions(
                                 decimal: true),
-                            decoration: const InputDecoration(
-                              prefixIcon: Icon(Icons.money_off_rounded,
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(Icons.money_off_rounded,
                                   color: Colors.amber),
-                              labelText: 'Costo',
-                              hintText: 'Ej: 60.00',
+                              labelText: l10n.labelCost,
+                              hintText: l10n.hintCostExample,
                             ),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
@@ -220,7 +223,7 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
                               }
                               final n = double.tryParse(value.trim());
                               if (n == null || n < 0) {
-                                return 'Ingrese un valor válido (0 o mayor)';
+                                return l10n.validatorValueInvalid;
                               }
                               return null;
                             },
@@ -241,7 +244,7 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
                             onPressed:
                                 _isSaving ? null : () => Navigator.pop(context),
                             icon: const Icon(Icons.close_rounded),
-                            label: const Text('Cancelar'),
+                            label: Text(l10n.btnCancel),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppTheme.actionDanger,
                               foregroundColor: Colors.white,
@@ -260,7 +263,8 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
                             icon: _isSaving
                                 ? const ButtonLoadingIndicator()
                                 : const Icon(Icons.save_rounded),
-                            label: Text(_isSaving ? 'Guardando...' : 'Guardar'),
+                            label:
+                                Text(_isSaving ? l10n.btnSaving : l10n.btnSave),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppTheme.actionSave,
                               foregroundColor: Colors.white,
@@ -300,13 +304,12 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
           await provider.updatePrice(widget.item.id!, newPrice, newCost);
 
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            success
-                ? 'Precio actualizado correctamente'
-                : 'Error al actualizar el precio',
+            success ? l10n.itemPriceSuccess : l10n.itemPriceError,
             style: const TextStyle(color: Colors.white),
           ),
           backgroundColor:
@@ -323,9 +326,10 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
       }
     } catch (e) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error: $e'),
+          content: Text(l10n.errorGeneric(e.toString())),
           backgroundColor: AppTheme.actionDanger,
         ),
       );

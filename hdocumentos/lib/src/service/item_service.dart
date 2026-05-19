@@ -20,6 +20,8 @@ class ItemService {
       "description": form.description.isEmpty ? null : form.description,
       "search_key": form.searchKey.isEmpty ? null : form.searchKey,
       "is_service": form.isService,
+      if (form.barCode.isNotEmpty) "bar_code": form.barCode,
+      if (form.qrCode.isNotEmpty) "qr_code": form.qrCode,
       "stock": {
         "quantity": form.isService ? 1 : form.stock,
       },

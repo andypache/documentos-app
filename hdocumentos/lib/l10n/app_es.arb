@@ -852,6 +852,9 @@
   "labelBarCode": "Código de barras",
   "@labelBarCode": { "description": "Etiqueta código de barras" },
 
+  "labelQrCode": "Código QR",
+  "@labelQrCode": { "description": "Etiqueta código QR" },
+
   "labelPrice": "Precio",
   "@labelPrice": { "description": "Etiqueta precio" },
 
@@ -928,5 +931,161 @@
   "@alertDemoContent": { "description": "Contenido demo de alerta" },
 
   "alertDemoButton": "Mostrar Alerta",
-  "@alertDemoButton": { "description": "Botón mostrar alerta demo" }
+  "@alertDemoButton": { "description": "Botón mostrar alerta demo" },
+
+  "stepBasicTitle": "Información Básica",
+  "@stepBasicTitle": { "description": "Título paso 1 wizard item" },
+
+  "labelProductName": "Nombre del producto *",
+  "@labelProductName": { "description": "Label campo nombre de producto" },
+
+  "hintProductName": "Ingrese el nombre",
+  "@hintProductName": { "description": "Hint campo nombre de producto" },
+
+  "hintDescriptionOptional": "Descripción detallada (opcional)",
+  "@hintDescriptionOptional": { "description": "Hint campo descripción opcional" },
+
+  "hintSearchKeyOptional": "Clave única para buscar (opcional)",
+  "@hintSearchKeyOptional": { "description": "Hint campo clave de búsqueda opcional" },
+
+  "labelIsService": "¿Es un servicio?",
+  "@labelIsService": { "description": "Label checkbox es servicio" },
+
+  "hintIsService": "Marque si es un servicio en lugar de un producto",
+  "@hintIsService": { "description": "Hint checkbox es servicio" },
+
+  "validatorNameRequired": "Este campo es requerido",
+  "@validatorNameRequired": { "description": "Validador campo nombre requerido" },
+
+  "validatorNameMinLength": "Mínimo 3 caracteres",
+  "@validatorNameMinLength": { "description": "Validador longitud mínima nombre" },
+
+  "stepPricesTitle": "Precios y Stock",
+  "@stepPricesTitle": { "description": "Título paso 2 wizard item" },
+
+  "labelSalePrice": "Precio de venta *",
+  "@labelSalePrice": { "description": "Label campo precio de venta" },
+
+  "hintSalePrice": "Ingrese el precio",
+  "@hintSalePrice": { "description": "Hint campo precio de venta" },
+
+  "labelCostRequired": "Costo *",
+  "@labelCostRequired": { "description": "Label campo costo requerido" },
+
+  "hintCost": "Ingrese el costo",
+  "@hintCost": { "description": "Hint campo costo" },
+
+  "labelDiscountPct": "Descuento (%)",
+  "@labelDiscountPct": { "description": "Label campo descuento porcentaje" },
+
+  "hintDiscountPct": "Descuento opcional (0-100)",
+  "@hintDiscountPct": { "description": "Hint campo descuento porcentaje" },
+
+  "labelAvailableStock": "Stock disponible *",
+  "@labelAvailableStock": { "description": "Label campo stock disponible" },
+
+  "hintAvailableStock": "Cantidad en inventario",
+  "@hintAvailableStock": { "description": "Hint campo stock disponible" },
+
+  "validatorPriceRequired": "El precio es requerido",
+  "@validatorPriceRequired": { "description": "Validador precio requerido" },
+
+  "validatorPriceInvalid": "Ingrese un precio válido",
+  "@validatorPriceInvalid": { "description": "Validador precio inválido" },
+
+  "validatorCostRequired": "El costo es requerido",
+  "@validatorCostRequired": { "description": "Validador costo requerido" },
+
+  "validatorCostInvalid": "Ingrese un costo válido",
+  "@validatorCostInvalid": { "description": "Validador costo inválido" },
+
+  "validatorDiscountRange": "El descuento debe estar entre 0 y 100",
+  "@validatorDiscountRange": { "description": "Validador rango descuento" },
+
+  "validatorStockRequired": "El stock es requerido",
+  "@validatorStockRequired": { "description": "Validador stock requerido" },
+
+  "validatorStockInvalid": "Ingrese un stock válido",
+  "@validatorStockInvalid": { "description": "Validador stock inválido" },
+
+  "stepCodesTitle": "Códigos e Imagen",
+  "@stepCodesTitle": { "description": "Título paso 3 wizard item" },
+
+  "hintBarCode": "Ingrese código de barras (opcional)",
+  "@hintBarCode": { "description": "Hint campo código de barras" },
+
+  "hintQrCode": "Ingrese código QR (opcional)",
+  "@hintQrCode": { "description": "Hint campo código QR" },
+
+  "labelServiceBadge": "SERV.",
+  "@labelServiceBadge": { "description": "Badge de servicio en tarjeta" },
+
+  "labelSearchKeyPrefix": "Clave: {key}",
+  "@labelSearchKeyPrefix": {
+    "description": "Prefijo clave de búsqueda en tarjeta",
+    "placeholders": { "key": { "type": "String" } }
+  },
+
+  "labelStockPrefix": "Stock: {qty}",
+  "@labelStockPrefix": {
+    "description": "Prefijo stock en tarjeta",
+    "placeholders": { "qty": { "type": "Object" } }
+  },
+
+  "itemStockTitle": "Cambiar Stock",
+  "@itemStockTitle": { "description": "Título pantalla cambiar stock" },
+
+  "labelCurrentStock": "Stock actual",
+  "@labelCurrentStock": { "description": "Label stock actual" },
+
+  "labelNewStock": "Nuevo stock",
+  "@labelNewStock": { "description": "Label nuevo stock" },
+
+  "labelStockField": "Cantidad en inventario *",
+  "@labelStockField": { "description": "Label campo cantidad inventario" },
+
+  "hintStockNew": "Ingrese la nueva cantidad",
+  "@hintStockNew": { "description": "Hint campo nueva cantidad stock" },
+
+  "itemStockSuccess": "Stock actualizado correctamente",
+  "@itemStockSuccess": { "description": "Mensaje éxito al actualizar stock" },
+
+  "itemStockError": "Error al actualizar el stock",
+  "@itemStockError": { "description": "Mensaje error al actualizar stock" },
+
+  "itemPriceTitle": "Actualizar Precio",
+  "@itemPriceTitle": { "description": "Título pantalla actualizar precio" },
+
+  "labelCurrentPrice": "Precio actual",
+  "@labelCurrentPrice": { "description": "Label precio actual" },
+
+  "labelCurrentCost": "Costo actual",
+  "@labelCurrentCost": { "description": "Label costo actual" },
+
+  "labelNewSalePrice": "Nuevo precio de venta",
+  "@labelNewSalePrice": { "description": "Label nuevo precio de venta" },
+
+  "labelNewCost": "Nuevo costo",
+  "@labelNewCost": { "description": "Label nuevo costo" },
+
+  "hintPriceExample": "Ej: 99.99",
+  "@hintPriceExample": { "description": "Hint ejemplo precio" },
+
+  "hintCostExample": "Ej: 60.00",
+  "@hintCostExample": { "description": "Hint ejemplo costo" },
+
+  "validatorValueInvalid": "Ingrese un valor válido (0 o mayor)",
+  "@validatorValueInvalid": { "description": "Validador valor numérico inválido" },
+
+  "itemPriceSuccess": "Precio actualizado correctamente",
+  "@itemPriceSuccess": { "description": "Mensaje éxito al actualizar precio" },
+
+  "itemPriceError": "Error al actualizar el precio",
+  "@itemPriceError": { "description": "Mensaje error al actualizar precio" },
+
+  "errorGeneric": "Error: {message}",
+  "@errorGeneric": {
+    "description": "Mensaje de error genérico",
+    "placeholders": { "message": { "type": "String" } }
+  }
 }

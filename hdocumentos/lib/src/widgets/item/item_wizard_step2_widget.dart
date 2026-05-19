@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/provider/form/item_form_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -58,6 +59,7 @@ class _ItemWizardStep2WidgetState extends State<ItemWizardStep2Widget> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final itemForm = Provider.of<ItemFormProvider>(context);
 
     return Form(
@@ -65,9 +67,9 @@ class _ItemWizardStep2WidgetState extends State<ItemWizardStep2Widget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Precios y Stock',
-            style: TextStyle(
+          Text(
+            l10n.stepPricesTitle,
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -80,8 +82,8 @@ class _ItemWizardStep2WidgetState extends State<ItemWizardStep2Widget> {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.attach_money, color: Colors.blue),
-              labelText: 'Precio de venta *',
-              hintText: 'Ingrese el precio',
+              labelText: l10n.labelSalePrice,
+              hintText: l10n.hintSalePrice,
               floatingLabelStyle:
                   TextStyle(color: Colors.white.withOpacity(0.8)),
               hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
@@ -89,7 +91,7 @@ class _ItemWizardStep2WidgetState extends State<ItemWizardStep2Widget> {
             onChanged: (value) {
               itemForm.price = double.tryParse(value) ?? 0.0;
             },
-            validator: _validatorPrice,
+            validator: (v) => _validatorPrice(context, v),
             autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
           const SizedBox(height: 20),
@@ -99,8 +101,8 @@ class _ItemWizardStep2WidgetState extends State<ItemWizardStep2Widget> {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.money_off, color: Colors.blue),
-              labelText: 'Costo *',
-              hintText: 'Ingrese el costo',
+              labelText: l10n.labelCostRequired,
+              hintText: l10n.hintCost,
               floatingLabelStyle:
                   TextStyle(color: Colors.white.withOpacity(0.8)),
               hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
@@ -108,7 +110,7 @@ class _ItemWizardStep2WidgetState extends State<ItemWizardStep2Widget> {
             onChanged: (value) {
               itemForm.cost = double.tryParse(value) ?? 0.0;
             },
-            validator: _validatorCost,
+            validator: (v) => _validatorCost(context, v),
             autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
           const SizedBox(height: 20),
@@ -119,8 +121,8 @@ class _ItemWizardStep2WidgetState extends State<ItemWizardStep2Widget> {
             decoration: InputDecoration(
               prefixIcon:
                   const Icon(Icons.discount_outlined, color: Colors.blue),
-              labelText: 'Descuento (%)',
-              hintText: 'Descuento opcional (0-100)',
+              labelText: l10n.labelDiscountPct,
+              hintText: l10n.hintDiscountPct,
               floatingLabelStyle:
                   TextStyle(color: Colors.white.withOpacity(0.8)),
               hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
@@ -128,7 +130,7 @@ class _ItemWizardStep2WidgetState extends State<ItemWizardStep2Widget> {
             onChanged: (value) {
               itemForm.discount = double.tryParse(value) ?? 0;
             },
-            validator: _validatorDiscount,
+            validator: (v) => _validatorDiscount(context, v),
             autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
           const SizedBox(height: 20),
@@ -141,8 +143,8 @@ class _ItemWizardStep2WidgetState extends State<ItemWizardStep2Widget> {
               decoration: InputDecoration(
                 prefixIcon:
                     const Icon(Icons.inventory_2_outlined, color: Colors.blue),
-                labelText: 'Stock disponible *',
-                hintText: 'Cantidad en inventario',
+                labelText: l10n.labelAvailableStock,
+                hintText: l10n.hintAvailableStock,
                 floatingLabelStyle:
                     TextStyle(color: Colors.white.withOpacity(0.8)),
                 hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
@@ -150,7 +152,7 @@ class _ItemWizardStep2WidgetState extends State<ItemWizardStep2Widget> {
               onChanged: (value) {
                 itemForm.stock = int.tryParse(value) ?? 0;
               },
-              validator: _validatorStock,
+              validator: (v) => _validatorStock(context, v),
               autovalidateMode: AutovalidateMode.onUserInteraction,
             ),
           const SizedBox(height: 20),
@@ -159,45 +161,49 @@ class _ItemWizardStep2WidgetState extends State<ItemWizardStep2Widget> {
     );
   }
 
-  String? _validatorPrice(String? value) {
+  String? _validatorPrice(BuildContext context, String? value) {
+    final l10n = AppLocalizations.of(context);
     if (value == null || value.isEmpty) {
-      return 'El precio es requerido';
+      return l10n.validatorPriceRequired;
     }
     final price = double.tryParse(value);
     if (price == null || price < 0) {
-      return 'Ingrese un precio válido';
+      return l10n.validatorPriceInvalid;
     }
     return null;
   }
 
-  String? _validatorCost(String? value) {
+  String? _validatorCost(BuildContext context, String? value) {
+    final l10n = AppLocalizations.of(context);
     if (value == null || value.isEmpty) {
-      return 'El costo es requerido';
+      return l10n.validatorCostRequired;
     }
     final cost = double.tryParse(value);
     if (cost == null || cost < 0) {
-      return 'Ingrese un costo válido';
+      return l10n.validatorCostInvalid;
     }
     return null;
   }
 
-  String? _validatorDiscount(String? value) {
+  String? _validatorDiscount(BuildContext context, String? value) {
+    final l10n = AppLocalizations.of(context);
     if (value != null && value.isNotEmpty) {
       final discount = double.tryParse(value);
       if (discount == null || discount < 0 || discount > 100) {
-        return 'El descuento debe estar entre 0 y 100';
+        return l10n.validatorDiscountRange;
       }
     }
     return null;
   }
 
-  String? _validatorStock(String? value) {
+  String? _validatorStock(BuildContext context, String? value) {
+    final l10n = AppLocalizations.of(context);
     if (value == null || value.isEmpty) {
-      return 'El stock es requerido';
+      return l10n.validatorStockRequired;
     }
     final stock = int.tryParse(value);
     if (stock == null || stock < 0) {
-      return 'Ingrese un stock válido';
+      return l10n.validatorStockInvalid;
     }
     return null;
   }

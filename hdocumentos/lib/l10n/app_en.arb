@@ -851,6 +851,9 @@
   "labelBarCode": "Barcode",
   "@labelBarCode": { "description": "Barcode label" },
 
+  "labelQrCode": "QR Code",
+  "@labelQrCode": { "description": "QR code label" },
+
   "labelPrice": "Price",
   "@labelPrice": { "description": "Price label" },
 
@@ -927,5 +930,161 @@
   "@alertDemoContent": { "description": "Demo alert content" },
 
   "alertDemoButton": "Show Alert",
-  "@alertDemoButton": { "description": "Button to show demo alert" }
+  "@alertDemoButton": { "description": "Button to show demo alert" },
+
+  "stepBasicTitle": "Basic Information",
+  "@stepBasicTitle": { "description": "Title step 1 item wizard" },
+
+  "labelProductName": "Product name *",
+  "@labelProductName": { "description": "Product name field label" },
+
+  "hintProductName": "Enter name",
+  "@hintProductName": { "description": "Product name field hint" },
+
+  "hintDescriptionOptional": "Detailed description (optional)",
+  "@hintDescriptionOptional": { "description": "Optional description field hint" },
+
+  "hintSearchKeyOptional": "Unique search key (optional)",
+  "@hintSearchKeyOptional": { "description": "Optional search key field hint" },
+
+  "labelIsService": "Is it a service?",
+  "@labelIsService": { "description": "Is service checkbox label" },
+
+  "hintIsService": "Check if it's a service instead of a product",
+  "@hintIsService": { "description": "Is service checkbox hint" },
+
+  "validatorNameRequired": "This field is required",
+  "@validatorNameRequired": { "description": "Name field required validator" },
+
+  "validatorNameMinLength": "Minimum 3 characters",
+  "@validatorNameMinLength": { "description": "Name minimum length validator" },
+
+  "stepPricesTitle": "Prices & Stock",
+  "@stepPricesTitle": { "description": "Title step 2 item wizard" },
+
+  "labelSalePrice": "Sale price *",
+  "@labelSalePrice": { "description": "Sale price field label" },
+
+  "hintSalePrice": "Enter price",
+  "@hintSalePrice": { "description": "Sale price field hint" },
+
+  "labelCostRequired": "Cost *",
+  "@labelCostRequired": { "description": "Required cost field label" },
+
+  "hintCost": "Enter cost",
+  "@hintCost": { "description": "Cost field hint" },
+
+  "labelDiscountPct": "Discount (%)",
+  "@labelDiscountPct": { "description": "Discount percentage field label" },
+
+  "hintDiscountPct": "Optional discount (0-100)",
+  "@hintDiscountPct": { "description": "Discount percentage field hint" },
+
+  "labelAvailableStock": "Available stock *",
+  "@labelAvailableStock": { "description": "Available stock field label" },
+
+  "hintAvailableStock": "Inventory quantity",
+  "@hintAvailableStock": { "description": "Available stock field hint" },
+
+  "validatorPriceRequired": "Price is required",
+  "@validatorPriceRequired": { "description": "Price required validator" },
+
+  "validatorPriceInvalid": "Enter a valid price",
+  "@validatorPriceInvalid": { "description": "Invalid price validator" },
+
+  "validatorCostRequired": "Cost is required",
+  "@validatorCostRequired": { "description": "Cost required validator" },
+
+  "validatorCostInvalid": "Enter a valid cost",
+  "@validatorCostInvalid": { "description": "Invalid cost validator" },
+
+  "validatorDiscountRange": "Discount must be between 0 and 100",
+  "@validatorDiscountRange": { "description": "Discount range validator" },
+
+  "validatorStockRequired": "Stock is required",
+  "@validatorStockRequired": { "description": "Stock required validator" },
+
+  "validatorStockInvalid": "Enter a valid stock value",
+  "@validatorStockInvalid": { "description": "Invalid stock validator" },
+
+  "stepCodesTitle": "Codes & Image",
+  "@stepCodesTitle": { "description": "Title step 3 item wizard" },
+
+  "hintBarCode": "Enter barcode (optional)",
+  "@hintBarCode": { "description": "Barcode field hint" },
+
+  "hintQrCode": "Enter QR code (optional)",
+  "@hintQrCode": { "description": "QR code field hint" },
+
+  "labelServiceBadge": "SERV.",
+  "@labelServiceBadge": { "description": "Service badge on card" },
+
+  "labelSearchKeyPrefix": "Key: {key}",
+  "@labelSearchKeyPrefix": {
+    "description": "Search key prefix on card",
+    "placeholders": { "key": { "type": "String" } }
+  },
+
+  "labelStockPrefix": "Stock: {qty}",
+  "@labelStockPrefix": {
+    "description": "Stock prefix on card",
+    "placeholders": { "qty": { "type": "Object" } }
+  },
+
+  "itemStockTitle": "Update Stock",
+  "@itemStockTitle": { "description": "Update stock screen title" },
+
+  "labelCurrentStock": "Current stock",
+  "@labelCurrentStock": { "description": "Current stock label" },
+
+  "labelNewStock": "New stock",
+  "@labelNewStock": { "description": "New stock label" },
+
+  "labelStockField": "Inventory quantity *",
+  "@labelStockField": { "description": "Inventory quantity field label" },
+
+  "hintStockNew": "Enter the new quantity",
+  "@hintStockNew": { "description": "New stock quantity hint" },
+
+  "itemStockSuccess": "Stock updated successfully",
+  "@itemStockSuccess": { "description": "Success message when updating stock" },
+
+  "itemStockError": "Error updating stock",
+  "@itemStockError": { "description": "Error message when updating stock" },
+
+  "itemPriceTitle": "Update Price",
+  "@itemPriceTitle": { "description": "Update price screen title" },
+
+  "labelCurrentPrice": "Current price",
+  "@labelCurrentPrice": { "description": "Current price label" },
+
+  "labelCurrentCost": "Current cost",
+  "@labelCurrentCost": { "description": "Current cost label" },
+
+  "labelNewSalePrice": "New sale price",
+  "@labelNewSalePrice": { "description": "New sale price label" },
+
+  "labelNewCost": "New cost",
+  "@labelNewCost": { "description": "New cost label" },
+
+  "hintPriceExample": "E.g.: 99.99",
+  "@hintPriceExample": { "description": "Price example hint" },
+
+  "hintCostExample": "E.g.: 60.00",
+  "@hintCostExample": { "description": "Cost example hint" },
+
+  "validatorValueInvalid": "Enter a valid value (0 or more)",
+  "@validatorValueInvalid": { "description": "Invalid numeric value validator" },
+
+  "itemPriceSuccess": "Price updated successfully",
+  "@itemPriceSuccess": { "description": "Success message when updating price" },
+
+  "itemPriceError": "Error updating price",
+  "@itemPriceError": { "description": "Error message when updating price" },
+
+  "errorGeneric": "Error: {message}",
+  "@errorGeneric": {
+    "description": "Generic error message",
+    "placeholders": { "message": { "type": "String" } }
+  }
 }

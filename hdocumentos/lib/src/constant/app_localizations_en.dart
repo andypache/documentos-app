@@ -882,6 +882,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get labelBarCode => 'Barcode';
 
   @override
+  String get labelQrCode => 'QR Code';
+
+  @override
   String get labelPrice => 'Price';
 
   @override
@@ -957,4 +960,157 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get alertDemoButton => 'Show Alert';
+
+  @override
+  String get stepBasicTitle => 'Basic Information';
+
+  @override
+  String get labelProductName => 'Product name *';
+
+  @override
+  String get hintProductName => 'Enter name';
+
+  @override
+  String get hintDescriptionOptional => 'Detailed description (optional)';
+
+  @override
+  String get hintSearchKeyOptional => 'Unique search key (optional)';
+
+  @override
+  String get labelIsService => 'Is it a service?';
+
+  @override
+  String get hintIsService => 'Check if it\'s a service instead of a product';
+
+  @override
+  String get validatorNameRequired => 'This field is required';
+
+  @override
+  String get validatorNameMinLength => 'Minimum 3 characters';
+
+  @override
+  String get stepPricesTitle => 'Prices & Stock';
+
+  @override
+  String get labelSalePrice => 'Sale price *';
+
+  @override
+  String get hintSalePrice => 'Enter price';
+
+  @override
+  String get labelCostRequired => 'Cost *';
+
+  @override
+  String get hintCost => 'Enter cost';
+
+  @override
+  String get labelDiscountPct => 'Discount (%)';
+
+  @override
+  String get hintDiscountPct => 'Optional discount (0-100)';
+
+  @override
+  String get labelAvailableStock => 'Available stock *';
+
+  @override
+  String get hintAvailableStock => 'Inventory quantity';
+
+  @override
+  String get validatorPriceRequired => 'Price is required';
+
+  @override
+  String get validatorPriceInvalid => 'Enter a valid price';
+
+  @override
+  String get validatorCostRequired => 'Cost is required';
+
+  @override
+  String get validatorCostInvalid => 'Enter a valid cost';
+
+  @override
+  String get validatorDiscountRange => 'Discount must be between 0 and 100';
+
+  @override
+  String get validatorStockRequired => 'Stock is required';
+
+  @override
+  String get validatorStockInvalid => 'Enter a valid stock value';
+
+  @override
+  String get stepCodesTitle => 'Codes & Image';
+
+  @override
+  String get hintBarCode => 'Enter barcode (optional)';
+
+  @override
+  String get hintQrCode => 'Enter QR code (optional)';
+
+  @override
+  String get labelServiceBadge => 'SERV.';
+
+  @override
+  String labelSearchKeyPrefix(String key) {
+    return 'Key: $key';
+  }
+
+  @override
+  String labelStockPrefix(Object qty) {
+    return 'Stock: $qty';
+  }
+
+  @override
+  String get itemStockTitle => 'Update Stock';
+
+  @override
+  String get labelCurrentStock => 'Current stock';
+
+  @override
+  String get labelNewStock => 'New stock';
+
+  @override
+  String get labelStockField => 'Inventory quantity *';
+
+  @override
+  String get hintStockNew => 'Enter the new quantity';
+
+  @override
+  String get itemStockSuccess => 'Stock updated successfully';
+
+  @override
+  String get itemStockError => 'Error updating stock';
+
+  @override
+  String get itemPriceTitle => 'Update Price';
+
+  @override
+  String get labelCurrentPrice => 'Current price';
+
+  @override
+  String get labelCurrentCost => 'Current cost';
+
+  @override
+  String get labelNewSalePrice => 'New sale price';
+
+  @override
+  String get labelNewCost => 'New cost';
+
+  @override
+  String get hintPriceExample => 'E.g.: 99.99';
+
+  @override
+  String get hintCostExample => 'E.g.: 60.00';
+
+  @override
+  String get validatorValueInvalid => 'Enter a valid value (0 or more)';
+
+  @override
+  String get itemPriceSuccess => 'Price updated successfully';
+
+  @override
+  String get itemPriceError => 'Error updating price';
+
+  @override
+  String errorGeneric(String message) {
+    return 'Error: $message';
+  }
 }

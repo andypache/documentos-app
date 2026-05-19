@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/provider/item_list_provider.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
@@ -37,6 +38,7 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -52,7 +54,7 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
                   children: [
                     SizedBox(height: size.height * 0.02),
                     // Título
-                    PageTitleWidget(title: 'Cambiar Stock'),
+                    PageTitleWidget(title: l10n.itemStockTitle),
                     SizedBox(height: size.height * 0.03),
 
                     // Info del producto
@@ -105,7 +107,8 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
                                 if (widget.item.searchKey != null &&
                                     widget.item.searchKey!.isNotEmpty)
                                   Text(
-                                    'Clave: ${widget.item.searchKey}',
+                                    l10n.labelSearchKeyPrefix(
+                                        widget.item.searchKey!),
                                     style: TextStyle(
                                       color: Colors.white60,
                                       fontSize: size.width * 0.032,
@@ -122,8 +125,8 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
 
                     // Stock actual
                     _StockInfoRow(
-                      label: 'Stock actual',
-                      value: '${widget.item.stock ?? 0} unidades',
+                      label: l10n.labelCurrentStock,
+                      value: l10n.labelStockPrefix(widget.item.stock ?? 0),
                       icon: Icons.inventory_rounded,
                       color: Colors.orange,
                     ),
@@ -137,7 +140,7 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Nuevo stock',
+                            l10n.labelNewStock,
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: size.width * 0.038,
@@ -153,8 +156,8 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
                             decoration: InputDecoration(
                               prefixIcon: const Icon(Icons.inventory_2_outlined,
                                   color: Colors.orange),
-                              labelText: 'Cantidad en inventario *',
-                              hintText: 'Ingrese la nueva cantidad',
+                              labelText: l10n.labelStockField,
+                              hintText: l10n.hintStockNew,
                               floatingLabelStyle: TextStyle(
                                   color: Colors.white.withOpacity(0.8)),
                               hintStyle: TextStyle(
@@ -162,11 +165,11 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
                             ),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
-                                return 'El stock es requerido';
+                                return l10n.validatorStockRequired;
                               }
                               final n = int.tryParse(value.trim());
                               if (n == null || n < 0) {
-                                return 'Ingrese un valor válido (0 o mayor)';
+                                return l10n.validatorValueInvalid;
                               }
                               return null;
                             },
@@ -187,7 +190,7 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
                             onPressed:
                                 _isSaving ? null : () => Navigator.pop(context),
                             icon: const Icon(Icons.close_rounded),
-                            label: const Text('Cancelar'),
+                            label: Text(l10n.btnCancel),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppTheme.actionDanger,
                               foregroundColor: Colors.white,
@@ -206,7 +209,8 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
                             icon: _isSaving
                                 ? const ButtonLoadingIndicator()
                                 : const Icon(Icons.save_rounded),
-                            label: Text(_isSaving ? 'Guardando...' : 'Guardar'),
+                            label:
+                                Text(_isSaving ? l10n.btnSaving : l10n.btnSave),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppTheme.actionSave,
                               foregroundColor: Colors.white,
@@ -244,13 +248,12 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
       final success = await provider.updateStock(widget.item.id!, newStock);
 
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            success
-                ? 'Stock actualizado correctamente'
-                : 'Error al actualizar el stock',
+            success ? l10n.itemStockSuccess : l10n.itemStockError,
             style: const TextStyle(color: Colors.white),
           ),
           backgroundColor:
@@ -267,9 +270,10 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
       }
     } catch (e) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error: $e'),
+          content: Text(l10n.errorGeneric(e.toString())),
           backgroundColor: AppTheme.actionDanger,
         ),
       );

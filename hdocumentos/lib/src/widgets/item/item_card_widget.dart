@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 
@@ -23,6 +24,7 @@ class ItemCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Card(
       color: AppTheme.white.withOpacity(0.1),
       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
@@ -88,8 +90,8 @@ class ItemCardWidget extends StatelessWidget {
                               color: Colors.blue,
                               borderRadius: BorderRadius.circular(6),
                             ),
-                            child: const Text('SERV.',
-                                style: TextStyle(
+                            child: Text(l10n.labelServiceBadge,
+                                style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 9,
                                     fontWeight: FontWeight.bold)),
@@ -100,7 +102,7 @@ class ItemCardWidget extends StatelessWidget {
                         item.searchKey!.isNotEmpty) ...[
                       const SizedBox(height: 2),
                       Text(
-                        'Clave: ${item.searchKey}',
+                        l10n.labelSearchKeyPrefix(item.searchKey!),
                         style: TextStyle(
                             color: Colors.white.withOpacity(0.65),
                             fontSize: 11),
@@ -124,7 +126,7 @@ class ItemCardWidget extends StatelessWidget {
                               color: Colors.orange[300], size: 13),
                           const SizedBox(width: 2),
                           Text(
-                            'Stock: ${item.stock ?? 0}',
+                            l10n.labelStockPrefix(item.stock ?? 0),
                             style: TextStyle(
                                 color: Colors.orange[300], fontSize: 11),
                           ),

@@ -78,10 +78,10 @@ class ItemWizardStep4Widget extends StatelessWidget {
               itemBuilder: (context, index) {
                 final tax = itemForm.itemTaxList[index];
                 final saleParam = tax.companySaleParameter?.saleParameter;
-                final numberParam = saleParam?.numberParameter ?? 0.0;
-                final percentage = numberParam % 1 == 0
-                    ? numberParam.toStringAsFixed(0)
-                    : numberParam.toStringAsFixed(2);
+                final pct = double.tryParse(saleParam?.percentageCode ?? '');
+                final percentage = pct != null
+                    ? '${pct.toStringAsFixed(pct % 1 == 0 ? 0 : 2)}%'
+                    : (saleParam?.percentageCode ?? '');
                 final taxName = saleParam?.name ?? 'Impuesto ${index + 1}';
                 final taxDescription = saleParam?.description;
 
@@ -97,7 +97,7 @@ class ItemWizardStep4Widget extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text(
-                          '$percentage%',
+                          percentage,
                           style: const TextStyle(
                             color: AppTheme.primaryButton,
                             fontWeight: FontWeight.bold,

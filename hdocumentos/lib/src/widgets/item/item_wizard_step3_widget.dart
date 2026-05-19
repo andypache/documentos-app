@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/provider/form/item_form_provider.dart';
 import 'package:hdocumentos/src/widgets/common/image_picker_field_widget.dart';
 import 'package:provider/provider.dart';
@@ -46,6 +47,7 @@ class _ItemWizardStep3WidgetState extends State<ItemWizardStep3Widget> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final itemForm = Provider.of<ItemFormProvider>(context);
 
     return Form(
@@ -53,9 +55,9 @@ class _ItemWizardStep3WidgetState extends State<ItemWizardStep3Widget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Códigos e Imagen',
-            style: TextStyle(
+          Text(
+            l10n.stepCodesTitle,
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -67,8 +69,8 @@ class _ItemWizardStep3WidgetState extends State<ItemWizardStep3Widget> {
             style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.qr_code, color: Colors.blue),
-              labelText: 'Código de barras',
-              hintText: 'Ingrese código de barras (opcional)',
+              labelText: l10n.labelBarCode,
+              hintText: l10n.hintBarCode,
               floatingLabelStyle:
                   TextStyle(color: Colors.white.withOpacity(0.8)),
               hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
@@ -81,8 +83,8 @@ class _ItemWizardStep3WidgetState extends State<ItemWizardStep3Widget> {
             style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.qr_code_2, color: Colors.blue),
-              labelText: 'Código QR',
-              hintText: 'Ingrese código QR (opcional)',
+              labelText: l10n.labelQrCode,
+              hintText: l10n.hintQrCode,
               floatingLabelStyle:
                   TextStyle(color: Colors.white.withOpacity(0.8)),
               hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),

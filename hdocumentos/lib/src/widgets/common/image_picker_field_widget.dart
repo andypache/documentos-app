@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -117,16 +118,22 @@ class ImagePickerFieldWidget extends StatelessWidget {
   Future<void> _pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
     try {
-      final XFile? image = await picker.pickImage(
-        source: source,
-        maxWidth: 1024,
-        maxHeight: 1024,
-        imageQuality: 85,
-      );
+      final XFile? image = await picker.pickImage(source: source);
 
       if (image != null) {
-        final Uint8List imageData = await image.readAsBytes();
-        onImagePicked(imageData, image.name);
+        final Uint8List imageBytes = await image.readAsBytes();
+
+        // Comprimir con FlutterImageCompress: JPEG 75%, máx 800×800
+        final Uint8List? compressed =
+            await FlutterImageCompress.compressWithList(
+          imageBytes,
+          quality: 75,
+          minWidth: 800,
+          minHeight: 800,
+          format: CompressFormat.jpeg,
+        );
+
+        onImagePicked(compressed, image.name);
       }
     } catch (e) {
       debugPrint('Error picking image: $e');
