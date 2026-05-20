@@ -25,11 +25,11 @@ class ItemWizardScreen extends StatelessWidget {
         children: [
           const BrackgroundWidget(),
           ChangeNotifierProvider(
-            create: (_) {
+            create: (ctx) {
               final provider = ItemFormProvider();
-              // Si hay un item para editar, cargarlo
+              // Si hay un item para editar, cargarlo con enriquecimiento de taxes
               if (itemToEdit != null) {
-                provider.loadItem(itemToEdit!);
+                provider.loadItem(itemToEdit!, ctx);
               }
               return provider;
             },

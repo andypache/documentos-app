@@ -1,6 +1,10 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/model/model.dart';
+import 'package:hdocumentos/src/model/common/catalog_model.dart';
+import 'package:hdocumentos/src/model/common/sale_parameter_model.dart';
+import 'package:hdocumentos/src/service/company_service.dart';
+import 'package:hdocumentos/src/share/preference.dart';
 
 ///Provider for management item form wizard
 class ItemFormProvider extends ChangeNotifier {
@@ -135,7 +139,7 @@ class ItemFormProvider extends ChangeNotifier {
   }
 
   // Cargar un item existente para edición
-  void loadItem(ItemModel existingItem) {
+  Future<void> loadItem(ItemModel existingItem, BuildContext context) async {
     _item = existingItem;
     _isEditing = true;
     name = existingItem.name;
@@ -151,8 +155,71 @@ class ItemFormProvider extends ChangeNotifier {
     qrCode = existingItem.qrCode ?? "";
     image = existingItem.media?.image;
     imageName = null;
-    itemTaxList = existingItem.itemTaxes ?? [];
+    itemTaxList = await _enrichTaxes(existingItem.itemTaxes ?? [], context);
     notifyListeners();
+  }
+
+  /// Enriquece cada [ItemTaxModel] con los datos de presentación del catálogo
+  /// (nombre, porcentaje, taxCode, percentageCode) usando la misma lógica
+  /// que [TaxSelectionDialogWidget._loadTaxes].
+  Future<List<ItemTaxModel>> _enrichTaxes(
+    List<ItemTaxModel> rawTaxes,
+    BuildContext context,
+  ) async {
+    if (rawTaxes.isEmpty) return rawTaxes;
+
+    final companySaleParams =
+        Preferences.userSession.company?.saleParameters ?? [];
+    if (companySaleParams.isEmpty) return rawTaxes;
+
+    final catalog =
+        await CompanyService().getCatalogs(context) ?? CatalogModelList();
+
+    // Índices O(1) — igual que en el diálogo de selección
+    final saleParamByCode = {
+      for (final sp in catalog.saleParameters) sp.code: sp,
+    };
+    final systemParamByCode = {
+      for (final sp in catalog.systemParameters) sp.code: sp,
+    };
+    final companySaleById = {
+      for (final csp in companySaleParams) csp.id: csp,
+    };
+
+    return rawTaxes.map((tax) {
+      // Si ya viene con el árbol completo de presentación, no toca nada
+      if (tax.companySaleParameter?.saleParameter?.name != null) return tax;
+
+      final csp = companySaleById[tax.idCompanySaleParameter];
+      if (csp == null) return tax;
+
+      final catalogSaleParam = saleParamByCode[csp.saleParameterId];
+      if (catalogSaleParam == null) return tax;
+
+      final systemParamId =
+          catalogSaleParam.value?['system_parameter_id'] as String?;
+      final systemParam = systemParamByCode[systemParamId ?? ''];
+
+      final enrichedSaleParam = SaleParameterModel(
+        id: csp.saleParameterId,
+        name: catalogSaleParam.description,
+        description: systemParam?.description,
+        numberParameter: double.tryParse(
+            catalogSaleParam.value?['number_parameter']?.toString() ?? ''),
+        taxCode: systemParamId,
+        percentageCode: catalogSaleParam.value?['percentage_code'] as String?,
+      );
+
+      return ItemTaxModel(
+        itemId: tax.itemId,
+        idCompanySaleParameter: tax.idCompanySaleParameter,
+        companySaleParameter: CompanySaleParameterModel(
+          id: csp.id,
+          saleParameterId: csp.saleParameterId,
+          saleParameter: enrichedSaleParam,
+        ),
+      );
+    }).toList();
   }
 
   // Resetear el formulario

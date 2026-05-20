@@ -76,44 +76,50 @@ class _ItemWizardStep2WidgetState extends State<ItemWizardStep2Widget> {
             ),
           ),
           const SizedBox(height: 20),
-          TextFormField(
-            controller: _priceController,
-            style: const TextStyle(color: Colors.white),
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.attach_money, color: Colors.blue),
-              labelText: l10n.labelSalePrice,
-              hintText: l10n.hintSalePrice,
-              floatingLabelStyle:
-                  TextStyle(color: Colors.white.withOpacity(0.8)),
-              hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
-            ),
-            onChanged: (value) {
-              itemForm.price = double.tryParse(value) ?? 0.0;
-            },
-            validator: (v) => _validatorPrice(context, v),
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-          ),
-          const SizedBox(height: 20),
-          TextFormField(
-            controller: _costController,
-            style: const TextStyle(color: Colors.white),
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.money_off, color: Colors.blue),
-              labelText: l10n.labelCostRequired,
-              hintText: l10n.hintCost,
-              floatingLabelStyle:
-                  TextStyle(color: Colors.white.withOpacity(0.8)),
-              hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
-            ),
-            onChanged: (value) {
-              itemForm.cost = double.tryParse(value) ?? 0.0;
-            },
-            validator: (v) => _validatorCost(context, v),
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-          ),
-          const SizedBox(height: 20),
+          if (!itemForm.isEditing)
+            ...([
+              TextFormField(
+                controller: _priceController,
+                style: const TextStyle(color: Colors.white),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                decoration: InputDecoration(
+                  prefixIcon:
+                      const Icon(Icons.attach_money, color: Colors.blue),
+                  labelText: l10n.labelSalePrice,
+                  hintText: l10n.hintSalePrice,
+                  floatingLabelStyle:
+                      TextStyle(color: Colors.white.withOpacity(0.8)),
+                  hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
+                ),
+                onChanged: (value) {
+                  itemForm.price = double.tryParse(value) ?? 0.0;
+                },
+                validator: (v) => _validatorPrice(context, v),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _costController,
+                style: const TextStyle(color: Colors.white),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.money_off, color: Colors.blue),
+                  labelText: l10n.labelCostRequired,
+                  hintText: l10n.hintCost,
+                  floatingLabelStyle:
+                      TextStyle(color: Colors.white.withOpacity(0.8)),
+                  hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
+                ),
+                onChanged: (value) {
+                  itemForm.cost = double.tryParse(value) ?? 0.0;
+                },
+                validator: (v) => _validatorCost(context, v),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+              ),
+              const SizedBox(height: 20),
+            ]),
           TextFormField(
             controller: _discountController,
             style: const TextStyle(color: Colors.white),

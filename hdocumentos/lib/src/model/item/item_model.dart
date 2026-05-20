@@ -74,13 +74,15 @@ class ItemPricingModel {
 }
 
 class ItemTaxModel {
-  String? iteTaxId;
+  String? id;
+  String? itemId;
   String? idCompanySaleParameter;
   CompanySaleParameterModel? companySaleParameter;
 
   //Constructor class
   ItemTaxModel({
-    this.iteTaxId,
+    this.id,
+    this.itemId,
     this.idCompanySaleParameter,
     this.companySaleParameter,
   });
@@ -92,8 +94,9 @@ class ItemTaxModel {
 
   //Load from json response
   factory ItemTaxModel.fromJson(Map<String, dynamic> json) => ItemTaxModel(
-        iteTaxId: json["ite_tax_id"],
-        idCompanySaleParameter: json["id_company_sale_parameter"],
+        id: json["id"],
+        itemId: json["item_id"],
+        idCompanySaleParameter: json["company_sale_parameter_id"],
         companySaleParameter: json["company_sale_parameter"] != null
             ? CompanySaleParameterModel.fromJson(json["company_sale_parameter"])
             : null,
@@ -101,7 +104,8 @@ class ItemTaxModel {
 
   //Create object map with property to json
   Map<String, dynamic> toJson() => {
-        "ite_tax_id": iteTaxId,
+        "id": id,
+        "item_id": itemId,
         "id_company_sale_parameter": idCompanySaleParameter,
         "company_sale_parameter": companySaleParameter?.toJson(),
       };
@@ -187,9 +191,9 @@ class ItemModel {
         pricing: json["pricing"] != null
             ? ItemPricingModel.fromJson(json["pricing"])
             : null,
-        itemTaxes: json["item_tax_list"] != null
+        itemTaxes: json["item_taxes"] != null
             ? List<ItemTaxModel>.from(
-                json["item_tax_list"].map((x) => ItemTaxModel.fromJson(x)))
+                json["item_taxes"].map((x) => ItemTaxModel.fromJson(x)))
             : null,
       );
 
