@@ -2,6 +2,15 @@ import 'dart:typed_data';
 
 import 'package:hdocumentos/src/model/model.dart';
 
+/// Convierte un valor numérico o string a double.
+/// Soporta formatos: 30, 30.00, 30.000, 30.000000, "30.000000", etc.
+double? _toDouble(dynamic value) {
+  if (value == null) return null;
+  if (value is num) return value.toDouble();
+  if (value is String) return double.tryParse(value);
+  return null;
+}
+
 class ItemMediaModel {
   String? id;
   String? itemId;
@@ -51,9 +60,9 @@ class ItemPricingModel {
       ItemPricingModel(
         id: json["id"],
         itemId: json["item_id"],
-        price: json["price"]?.toDouble(),
-        cost: json["cost"]?.toDouble(),
-        discount: json["discount"]?.toDouble(),
+        price: _toDouble(json["price"]),
+        cost: _toDouble(json["cost"]),
+        discount: _toDouble(json["discount"]),
       );
   Map<String, dynamic> toJson() => {
         "id": id,

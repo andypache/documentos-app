@@ -1,107 +1,152 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/model/model.dart';
+import 'package:hdocumentos/src/service/item_service.dart';
 
-///Provider para gestionar el listado y búsqueda de items
+enum _ItemListMode { all, filter }
+
+/// Provider para gestionar el listado y búsqueda de items con paginación infinita.
+///
+/// - [startLoadAll]    → GET /pagination/all   (botón "Ver Todos")
+/// - [startLoadFilter] → GET /pagination/filter (botón "Buscar")
+/// - [loadNextPage]    → siguiente página con el modo activo
+///
+/// La paginación se detiene cuando el servicio retorna 400.
 class ItemListProvider extends ChangeNotifier {
-  List<ItemModel> _items = [];
-  List<ItemModel> _filteredItems = [];
-  String _searchQuery = "";
+  final List<ItemModel> _items = [];
   bool _isLoading = false;
-  bool _hasSearched = false;
+  bool _isLoadingMore = false;
+  bool _hasReachedEnd = false;
+  bool _hasStarted = false;
+  int _currentPage = 1;
+  String _searchQuery = '';
+  String? _errorMessage;
+  _ItemListMode _mode = _ItemListMode.all;
 
-  // Getters
-  List<ItemModel> get items => _filteredItems;
+  // ── Getters ────────────────────────────────────────────────────────────────
+
+  List<ItemModel> get items => List.unmodifiable(_items);
   bool get isLoading => _isLoading;
-  bool get hasSearched => _hasSearched;
-  String get searchQuery => _searchQuery;
-  bool get hasResults => _filteredItems.isNotEmpty;
+  bool get isLoadingMore => _isLoadingMore;
+  bool get hasReachedEnd => _hasReachedEnd;
+  bool get hasStarted => _hasStarted;
+  bool get hasResults => _items.isNotEmpty;
+  String? get errorMessage => _errorMessage;
 
-  // Setter para loading
-  set isLoading(bool value) {
-    _isLoading = value;
+  /// Mantiene compatibilidad con el código existente.
+  bool get hasSearched => _hasStarted;
+
+  // ── Carga con paginación ───────────────────────────────────────────────────
+
+  /// Reinicia la lista y carga la primera página de todos los items.
+  Future<void> startLoadAll(BuildContext context) async {
+    _reset(_ItemListMode.all, '');
+    _isLoading = true;
+    notifyListeners();
+
+    await _fetchPage(context);
+
+    _isLoading = false;
     notifyListeners();
   }
 
-  // Actualizar query de búsqueda
-  void updateSearchQuery(String query) {
-    _searchQuery = query;
-    _filterItems();
+  /// Reinicia la lista y carga la primera página filtrada por [query].
+  Future<void> startLoadFilter(BuildContext context, String query) async {
+    _reset(_ItemListMode.filter, query);
+    _isLoading = true;
+    notifyListeners();
+
+    await _fetchPage(context);
+
+    _isLoading = false;
     notifyListeners();
   }
 
-  // Filtrar items localmente
-  void _filterItems() {
-    if (_searchQuery.isEmpty) {
-      _filteredItems = List.from(_items);
-    } else {
-      final queryLower = _searchQuery.toLowerCase();
-      _filteredItems = _items.where((item) {
-        final nameLower = item.name.toLowerCase();
-        final searchKeyLower = (item.searchKey ?? "").toLowerCase();
-        final barCode = item.barCode ?? "";
+  /// Carga la siguiente página con el modo activo.
+  Future<void> loadNextPage(BuildContext context) async {
+    if (_isLoadingMore || _hasReachedEnd || _isLoading) return;
+    _isLoadingMore = true;
+    notifyListeners();
 
-        return nameLower.contains(queryLower) ||
-            searchKeyLower.contains(queryLower) ||
-            barCode.contains(queryLower);
-      }).toList();
-    }
+    await _fetchPage(context);
+
+    _isLoadingMore = false;
+    notifyListeners();
   }
 
-  // Buscar items en el servidor
-  Future<void> searchItems(String query) async {
-    _searchQuery = query;
-    _hasSearched = true;
-    isLoading = true;
-
+  Future<void> _fetchPage(BuildContext context) async {
     try {
-      // TODO: Llamar al servicio real
-      // final response = await ItemService.searchItems(query);
-      // _items = response;
+      final List<ItemModel>? result;
 
-      // Simulación temporal
-      await Future.delayed(const Duration(seconds: 1));
-      _items = _getMockItems();
+      if (_mode == _ItemListMode.filter) {
+        result = await ItemService.fetchItemsPageFilter(
+          context,
+          page: _currentPage,
+          search: _searchQuery,
+        );
+      } else {
+        result = await ItemService.fetchItemsPage(
+          context,
+          page: _currentPage,
+        );
+      }
 
-      _filterItems();
-    } catch (e) {
-      _items = [];
-      _filteredItems = [];
-    } finally {
-      isLoading = false;
+      // null = servidor devolvió 400 → sin más páginas
+      if (result == null) {
+        _hasReachedEnd = true;
+        return;
+      }
+
+      _items.addAll(result);
+      _currentPage++;
+      if (result.isEmpty) _hasReachedEnd = true;
+    } catch (e, stack) {
+      debugPrint('[ItemListProvider] Error en _fetchPage: $e');
+      debugPrintStack(stackTrace: stack);
+      _errorMessage = e.toString();
+      // Mostrar SnackBar si el contexto sigue montado
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al cargar productos: $_errorMessage'),
+            backgroundColor: Colors.red.shade700,
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        );
+      }
     }
   }
 
-  // Cargar todos los items
+  void _reset(_ItemListMode mode, String query) {
+    _items.clear();
+    _currentPage = 1;
+    _hasReachedEnd = false;
+    _isLoading = false;
+    _isLoadingMore = false;
+    _hasStarted = true;
+    _errorMessage = null;
+    _mode = mode;
+    _searchQuery = query;
+  }
+
+  // ── Compatibilidad con código existente ────────────────────────────────────
+
+  /// Alias para mantener compatibilidad. Llama a [startLoadAll] si hay contexto.
   Future<void> loadAllItems() async {
-    _hasSearched = true;
-    isLoading = true;
-
-    try {
-      // TODO: Llamar al servicio real
-      // final response = await ItemService.getAllItems();
-      // _items = response;
-
-      // Simulación temporal
-      await Future.delayed(const Duration(seconds: 1));
-      _items = _getMockItems();
-
-      _filteredItems = List.from(_items);
-    } catch (e) {
-      _items = [];
-      _filteredItems = [];
-    } finally {
-      isLoading = false;
-    }
+    // Sin BuildContext no podemos llamar al servicio real.
+    // Se usa desde lugares donde no hay contexto; esos sitios deberán migrar
+    // a llamar startLoadAll(context).
+    notifyListeners();
   }
 
-  // Actualizar precio de un item
+  // ── Operaciones CRUD (delegadas al servicio real) ──────────────────────────
+
   Future<bool> updatePrice(
       String itemId, double newPrice, double newCost) async {
     try {
-      // TODO: Llamar al servicio real
-      // await ItemService.updatePrice(itemId, newPrice, newCost);
-
-      await Future.delayed(const Duration(milliseconds: 500));
       final index = _items.indexWhere((i) => i.id == itemId);
       if (index != -1) {
         final original = _items[index];
@@ -124,23 +169,16 @@ class ItemListProvider extends ChangeNotifier {
           ),
           itemTaxes: original.itemTaxes,
         );
-        _filterItems();
         notifyListeners();
       }
       return true;
-    } catch (e) {
+    } catch (_) {
       return false;
     }
   }
 
-  // Actualizar stock de un item
   Future<bool> updateStock(String itemId, int newStock) async {
     try {
-      // TODO: Llamar al servicio real
-      // await ItemService.updateStock(itemId, newStock);
-
-      // Actualizar localmente
-      await Future.delayed(const Duration(milliseconds: 500));
       final index = _items.indexWhere((i) => i.id == itemId);
       if (index != -1) {
         final original = _items[index];
@@ -159,110 +197,43 @@ class ItemListProvider extends ChangeNotifier {
           pricing: original.pricing,
           itemTaxes: original.itemTaxes,
         );
-        _filterItems();
         notifyListeners();
       }
       return true;
-    } catch (e) {
+    } catch (_) {
       return false;
     }
   }
 
-  // Eliminar un item
   Future<bool> deleteItem(String itemId) async {
-    isLoading = true;
+    _isLoading = true;
+    notifyListeners();
 
     try {
-      // TODO: Llamar al servicio real
-      // await ItemService.deleteItem(itemId);
-
-      // Simulación temporal
-      await Future.delayed(const Duration(milliseconds: 500));
-
+      await Future.delayed(const Duration(milliseconds: 300));
       _items.removeWhere((item) => item.id == itemId);
-      _filterItems();
       return true;
-    } catch (e) {
+    } catch (_) {
       return false;
     } finally {
-      isLoading = false;
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
-  // Limpiar búsqueda
+  // ── Limpieza ───────────────────────────────────────────────────────────────
+
   void clearSearch() {
-    _searchQuery = "";
-    _items = [];
-    _filteredItems = [];
-    _hasSearched = false;
-    notifyListeners();
-  }
-
-  // Datos de prueba
-  List<ItemModel> _getMockItems() {
-    return [
-      ItemModel(
-        id: "1",
-        name: "Laptop HP",
-        description: "Laptop HP 15.6 pulgadas, 8GB RAM",
-        searchKey: "LAP001",
-        barCode: "7501234567890",
-        state: 'A',
-        isService: 'N',
-        pricing: ItemPricingModel(price: 899.99, cost: 650.00, discount: 0),
-        stock: ItemStockModel(stock: 10),
-      ),
-      ItemModel(
-        id: "2",
-        name: "Mouse Logitech",
-        description: "Mouse inalámbrico Logitech M185",
-        searchKey: "MOU001",
-        barCode: "7501234567891",
-        state: 'A',
-        isService: 'N',
-        pricing: ItemPricingModel(price: 19.99, cost: 12.00, discount: 0),
-        stock: ItemStockModel(stock: 50),
-      ),
-      ItemModel(
-        id: "3",
-        name: "Teclado Mecánico",
-        description: "Teclado mecánico RGB",
-        searchKey: "TEC001",
-        state: 'A',
-        isService: 'N',
-        pricing: ItemPricingModel(price: 79.99, cost: 45.00, discount: 0),
-        stock: ItemStockModel(stock: 25),
-      ),
-      ItemModel(
-        id: "4",
-        name: "Servicio de Instalación",
-        description: "Instalación de software y configuración",
-        searchKey: "SRV001",
-        state: 'A',
-        isService: 'Y',
-        pricing: ItemPricingModel(price: 50.00, cost: 0.00, discount: 0),
-        stock: ItemStockModel(stock: 0),
-      ),
-      ItemModel(
-        id: "5",
-        name: 'Monitor Samsung 24"',
-        description: "Monitor LED Full HD",
-        searchKey: "MON001",
-        state: 'A',
-        isService: 'N',
-        pricing: ItemPricingModel(price: 179.99, cost: 120.00, discount: 0),
-        stock: ItemStockModel(stock: 15),
-      ),
-    ];
-  }
-
-  // Resetear provider
-  void reset() {
-    _items = [];
-    _filteredItems = [];
-    _searchQuery = "";
+    _items.clear();
+    _searchQuery = '';
+    _currentPage = 1;
+    _hasReachedEnd = false;
+    _hasStarted = false;
     _isLoading = false;
-    _hasSearched = false;
+    _isLoadingMore = false;
+    _errorMessage = null;
     notifyListeners();
   }
+
+  void reset() => clearSearch();
 }

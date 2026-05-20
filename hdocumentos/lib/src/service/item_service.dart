@@ -111,6 +111,80 @@ class ItemService {
     throw Exception(await _parseResponseError(response));
   }
 
+  /// Obtiene una página de items sin filtro → /pagination/all
+  /// Retorna null cuando el servidor responde 400 (sin más páginas).
+  static Future<List<ItemModel>?> fetchItemsPage(
+    BuildContext context, {
+    required int page,
+    int size = 20,
+  }) async {
+    final companyId = Preferences.userSession.company?.companyId ?? '';
+
+    final response = await getFetch(
+      context: context,
+      url: apiItemPaginationAll,
+      params: {
+        'company_id': companyId,
+        'page': page,
+        'size': size,
+      },
+    );
+
+    if (response.statusHttp == 400) return null;
+
+    if (response.statusHttp == 200 || response.statusHttp == 201) {
+      final data = response.createDataResponse();
+      final body = data.response;
+      if (body == null) return [];
+      final rawItems = body is Map ? body['items'] : null;
+      if (rawItems == null) return [];
+      final list = rawItems as List<dynamic>;
+      return list
+          .map((e) => ItemModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+    }
+
+    return null;
+  }
+
+  /// Obtiene una página de items con filtro de texto → /pagination/filter
+  /// Retorna null cuando el servidor responde 400 (sin más páginas).
+  static Future<List<ItemModel>?> fetchItemsPageFilter(
+    BuildContext context, {
+    required int page,
+    required String search,
+    int size = 20,
+  }) async {
+    final companyId = Preferences.userSession.company?.companyId ?? '';
+
+    final response = await getFetch(
+      context: context,
+      url: apiItemPaginationFilter,
+      params: {
+        'company_id': companyId,
+        'search': search,
+        'page': page,
+        'size': size,
+      },
+    );
+
+    if (response.statusHttp == 400) return null;
+
+    if (response.statusHttp == 200 || response.statusHttp == 201) {
+      final data = response.createDataResponse();
+      final body = data.response;
+      if (body == null) return [];
+      final rawItems = body is Map ? body['items'] : null;
+      if (rawItems == null) return [];
+      final list = rawItems as List<dynamic>;
+      return list
+          .map((e) => ItemModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+    }
+
+    return null;
+  }
+
   static Future<String> _parseResponseError(
       ServiceResponseModel response) async {
     try {

@@ -56,8 +56,8 @@ class _ItemScreenContent extends StatelessWidget {
     // Si se guardó un item, recargar la lista
     if (result == true && context.mounted) {
       final provider = Provider.of<ItemListProvider>(context, listen: false);
-      if (provider.hasSearched) {
-        provider.loadAllItems();
+      if (provider.hasStarted) {
+        provider.startLoadAll(context);
       }
     }
   }
@@ -159,20 +159,12 @@ class _ItemScreenBody extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
           child: const PageTitleWidget(title: ''),
         ),
-        // Resto del contenido
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: size.height * 0.02),
-                const _SearchSection(),
-                SizedBox(height: size.height * 0.025),
-                const _ItemListSection(),
-                SizedBox(height: size.height * 0.02),
-              ],
-            ),
-          ),
-        ),
+        SizedBox(height: size.height * 0.02),
+        // Sección de búsqueda (fija arriba)
+        const _SearchSection(),
+        SizedBox(height: size.height * 0.025),
+        // Lista con scroll infinito (ocupa el espacio restante)
+        const Expanded(child: _ItemListSection()),
       ],
     );
   }
@@ -245,7 +237,7 @@ class _SearchSectionState extends State<_SearchSection> {
               },
               onSubmitted: (value) {
                 if (value.trim().isNotEmpty) {
-                  provider.searchItems(value.trim());
+                  provider.startLoadFilter(context, value.trim());
                 }
               },
             ),
@@ -258,7 +250,8 @@ class _SearchSectionState extends State<_SearchSection> {
                 child: ElevatedButton.icon(
                   onPressed: () {
                     if (_searchController.text.trim().isNotEmpty) {
-                      provider.searchItems(_searchController.text.trim());
+                      provider.startLoadFilter(
+                          context, _searchController.text.trim());
                     }
                   },
                   icon: Icon(Icons.search, size: size.width * 0.045),
@@ -279,7 +272,7 @@ class _SearchSectionState extends State<_SearchSection> {
               SizedBox(width: size.width * 0.025),
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed: () => provider.loadAllItems(),
+                  onPressed: () => provider.startLoadAll(context),
                   icon: Icon(Icons.list, size: size.width * 0.045),
                   label: Text(AppLocalizations.of(context).btnLoadAll,
                       style: TextStyle(fontSize: fontSize)),
@@ -303,18 +296,44 @@ class _SearchSectionState extends State<_SearchSection> {
   }
 }
 
-///Sección de listado de items
-class _ItemListSection extends StatelessWidget {
+///Sección de listado de items con paginación infinita
+class _ItemListSection extends StatefulWidget {
   const _ItemListSection({Key? key}) : super(key: key);
+
+  @override
+  State<_ItemListSection> createState() => _ItemListSectionState();
+}
+
+class _ItemListSectionState extends State<_ItemListSection> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 100) {
+      final provider = Provider.of<ItemListProvider>(context, listen: false);
+      provider.loadNextPage(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ItemListProvider>(context);
-
     final size = MediaQuery.of(context).size;
 
-    // Estado inicial
-    if (!provider.hasSearched) {
+    // Estado inicial (nada cargado aún)
+    if (!provider.hasStarted) {
       return Builder(
         builder: (ctx) => _EmptyStateWidget(
           icon: Icons.search_rounded,
@@ -324,9 +343,20 @@ class _ItemListSection extends StatelessWidget {
       );
     }
 
-    // Cargando
+    // Cargando primera página
     if (provider.isLoading) {
       return const ContentLoadingWidget();
+    }
+
+    // Error de carga
+    if (provider.errorMessage != null && !provider.hasResults) {
+      return Builder(
+        builder: (ctx) => _EmptyStateWidget(
+          icon: Icons.wifi_off_rounded,
+          title: 'Error al cargar',
+          message: provider.errorMessage!,
+        ),
+      );
     }
 
     // Sin resultados
@@ -340,14 +370,18 @@ class _ItemListSection extends StatelessWidget {
       );
     }
 
-    // Lista de items
+    // Lista con paginación infinita
+    final items = provider.items;
+    final itemCount = items.length +
+        (provider.hasReachedEnd ? 0 : (provider.isLoadingMore ? 1 : 0));
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
           child: Text(
-            AppLocalizations.of(context).itemsFound(provider.items.length),
+            AppLocalizations.of(context).itemsFound(items.length),
             style: TextStyle(
               color: Colors.white70,
               fontSize: size.width * 0.032,
@@ -355,23 +389,41 @@ class _ItemListSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: size.height * 0.012),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: provider.items.length,
-          itemBuilder: (context, index) {
-            final item = provider.items[index];
-            return ItemCardWidget(
-              item: item,
-              onTap: () => _showItemDetail(context, item),
-              onEdit: () => _navigateToEditItem(context, item),
-              onPriceChange: () => _navigateToPriceChange(context, item),
-              onDelete: () => _confirmDelete(context, provider, item),
-              onStockChange: item.isService == 'N'
-                  ? () => _navigateToStockChange(context, item)
-                  : null,
-            );
-          },
+        Expanded(
+          child: ListView.builder(
+            controller: _scrollController,
+            padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+            itemCount: itemCount,
+            itemBuilder: (context, index) {
+              // Spinner de carga de página siguiente
+              if (index == items.length) {
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  child: Center(
+                    child: SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppTheme.primaryButton,
+                      ),
+                    ),
+                  ),
+                );
+              }
+              final item = items[index];
+              return ItemCardWidget(
+                item: item,
+                onTap: () => _showItemDetail(context, item),
+                onEdit: () => _navigateToEditItem(context, item),
+                onPriceChange: () => _navigateToPriceChange(context, item),
+                onDelete: () => _confirmDelete(context, provider, item),
+                onStockChange: item.isService == 'N'
+                    ? () => _navigateToStockChange(context, item)
+                    : null,
+              );
+            },
+          ),
         ),
       ],
     );
@@ -403,8 +455,8 @@ class _ItemListSection extends StatelessWidget {
     );
 
     if (result == true && context.mounted) {
-      if (provider.hasSearched) {
-        provider.loadAllItems();
+      if (provider.hasStarted) {
+        provider.startLoadAll(context);
       }
     }
   }
@@ -424,8 +476,8 @@ class _ItemListSection extends StatelessWidget {
 
     // Si se guardó el stock, recargar la lista
     if (result == true && context.mounted) {
-      if (provider.hasSearched) {
-        provider.loadAllItems();
+      if (provider.hasStarted) {
+        provider.startLoadAll(context);
       }
     }
   }
@@ -441,8 +493,8 @@ class _ItemListSection extends StatelessWidget {
     // Si se guardó el item, recargar la lista
     if (result == true && context.mounted) {
       final provider = Provider.of<ItemListProvider>(context, listen: false);
-      if (provider.hasSearched) {
-        provider.loadAllItems();
+      if (provider.hasStarted) {
+        provider.startLoadAll(context);
       }
     }
   }

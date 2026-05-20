@@ -126,7 +126,7 @@ class ItemCardWidget extends StatelessWidget {
                               color: Colors.orange[300], size: 13),
                           const SizedBox(width: 2),
                           Text(
-                            l10n.labelStockPrefix(item.stock ?? 0),
+                            l10n.labelStockPrefix(item.stock?.stock ?? 0),
                             style: TextStyle(
                                 color: Colors.orange[300], fontSize: 11),
                           ),
