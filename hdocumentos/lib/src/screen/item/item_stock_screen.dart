@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/provider/item_list_provider.dart';
+import 'package:hdocumentos/src/service/service.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
@@ -20,19 +21,22 @@ class ItemStockScreen extends StatefulWidget {
 
 class _ItemStockScreenState extends State<ItemStockScreen> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _stockController;
+  TextEditingController _stockController = TextEditingController();
+  TextEditingController _locationController = TextEditingController();
   bool _isSaving = false;
 
   @override
   void initState() {
     super.initState();
-    _stockController =
-        TextEditingController(text: (widget.item.stock ?? 0).toString());
+    _stockController = TextEditingController(text: '1');
+    _locationController =
+        TextEditingController(text: widget.item.stock?.location ?? '');
   }
 
   @override
   void dispose() {
     _stockController.dispose();
+    _locationController.dispose();
     super.dispose();
   }
 
@@ -126,7 +130,8 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
                     // Stock actual
                     _StockInfoRow(
                       label: l10n.labelCurrentStock,
-                      value: l10n.labelStockPrefix(widget.item.stock ?? 0),
+                      value:
+                          l10n.labelStockPrefix(widget.item.stock?.stock ?? 0),
                       icon: Icons.inventory_rounded,
                       color: Colors.orange,
                     ),
@@ -170,6 +175,35 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
                               final n = int.tryParse(value.trim());
                               if (n == null || n < 0) {
                                 return l10n.validatorValueInvalid;
+                              }
+                              return null;
+                            },
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                          ),
+
+                          SizedBox(height: size.height * 0.025),
+
+                          // Ubicación
+                          TextFormField(
+                            controller: _locationController,
+                            style: const TextStyle(color: Colors.white),
+                            keyboardType: TextInputType.text,
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(Icons.location_on_outlined,
+                                  color: Colors.orange),
+                              labelText: l10n.labelStockLocation,
+                              hintText: l10n.hintStockLocation,
+                              floatingLabelStyle: TextStyle(
+                                  color: Colors.white.withOpacity(0.8)),
+                              hintStyle: TextStyle(
+                                  color: Colors.white.withOpacity(0.3)),
+                            ),
+                            validator: (value) {
+                              if (value != null &&
+                                  value.trim().isNotEmpty &&
+                                  value.trim().length < 3) {
+                                return l10n.validatorMinLength(3);
                               }
                               return null;
                             },
@@ -240,43 +274,32 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     final newStock = int.parse(_stockController.text.trim());
+    final location = _locationController.text.trim();
 
     setState(() => _isSaving = true);
 
     try {
       final provider = Provider.of<ItemListProvider>(context, listen: false);
-      final success = await provider.updateStock(widget.item.id!, newStock);
+      final success = await provider.updateStock(
+        widget.item.id!,
+        newStock,
+        context,
+        location: location.isEmpty ? null : location,
+      );
 
       if (!mounted) return;
       final l10n = AppLocalizations.of(context);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            success ? l10n.itemStockSuccess : l10n.itemStockError,
-            style: const TextStyle(color: Colors.white),
-          ),
-          backgroundColor:
-              success ? AppTheme.actionSave : AppTheme.actionDanger,
-          behavior: SnackBarBehavior.floating,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        ),
-      );
-
       if (success) {
+        NotificationService.showSnackbarSuccess(l10n.itemStockSuccess);
         Navigator.pop(context, true);
+      } else {
+        NotificationService.showSnackbarError(l10n.itemStockError);
       }
     } catch (e) {
       if (!mounted) return;
       final l10n = AppLocalizations.of(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(l10n.errorGeneric(e.toString())),
-          backgroundColor: AppTheme.actionDanger,
-        ),
-      );
+      NotificationService.showSnackbarError(l10n.errorGeneric(e.toString()));
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }

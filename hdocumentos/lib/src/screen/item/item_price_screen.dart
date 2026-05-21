@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/provider/item_list_provider.dart';
+import 'package:hdocumentos/src/service/service.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
@@ -338,33 +339,16 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
       if (!mounted) return;
       final l10n = AppLocalizations.of(context);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            success ? l10n.itemPriceSuccess : l10n.itemPriceError,
-            style: const TextStyle(color: Colors.white),
-          ),
-          backgroundColor:
-              success ? AppTheme.actionSave : AppTheme.actionDanger,
-          behavior: SnackBarBehavior.floating,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        ),
-      );
-
       if (success) {
+        NotificationService.showSnackbarSuccess(l10n.itemPriceSuccess);
         Navigator.pop(context, true);
+      } else {
+        NotificationService.showSnackbarError(l10n.itemPriceError);
       }
     } catch (e) {
       if (!mounted) return;
       final l10n = AppLocalizations.of(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(l10n.errorGeneric(e.toString())),
-          backgroundColor: AppTheme.actionDanger,
-        ),
-      );
+      NotificationService.showSnackbarError(l10n.errorGeneric(e.toString()));
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }

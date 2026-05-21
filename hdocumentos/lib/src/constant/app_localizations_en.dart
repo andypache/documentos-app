@@ -1065,13 +1065,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get labelCurrentStock => 'Current stock';
 
   @override
-  String get labelNewStock => 'New stock';
+  String get labelNewStock => 'Add to stock';
 
   @override
-  String get labelStockField => 'Inventory quantity *';
+  String get labelStockLocation => 'Location (optional)';
 
   @override
-  String get hintStockNew => 'Enter the new quantity';
+  String get hintStockLocation => 'E.g. Main Warehouse, Branch XYZ';
+
+  @override
+  String get labelStockField => 'Quantity to add *';
+
+  @override
+  String get hintStockNew => 'Quantity to add to stock';
 
   @override
   String get itemStockSuccess => 'Stock updated successfully';

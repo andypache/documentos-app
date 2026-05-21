@@ -44,6 +44,29 @@ class ItemService {
     };
   }
 
+  /// Actualiza stock de un item → PATCH /items/update/<item_id>/stock
+  static Future<void> updateItemStock(
+    BuildContext context, {
+    required String itemId,
+    required int quantity,
+    String? location,
+  }) async {
+    final payload = <String, dynamic>{
+      'quantity': quantity,
+      if (location != null && location.isNotEmpty) 'location': location,
+    };
+
+    final response = await patchFetch(
+      context: context,
+      url: '$apiItemUpdateStock/$itemId/stock',
+      body: payload,
+    );
+
+    if (response.statusHttp == 200 || response.statusHttp == 201) return;
+
+    throw Exception(await _parseResponseError(response));
+  }
+
   /// Actualiza precio y costo de un item → PATCH /items/update/<item_id>/price
   static Future<void> updateItemPrice(
     BuildContext context, {

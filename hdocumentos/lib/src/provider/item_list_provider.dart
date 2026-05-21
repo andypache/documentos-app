@@ -184,8 +184,16 @@ class ItemListProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateStock(String itemId, int newStock) async {
+  Future<bool> updateStock(String itemId, int newStock, BuildContext context,
+      {String? location}) async {
     try {
+      await ItemService.updateItemStock(
+        context,
+        itemId: itemId,
+        quantity: newStock,
+        location: location,
+      );
+
       final index = _items.indexWhere((i) => i.id == itemId);
       if (index != -1) {
         final original = _items[index];

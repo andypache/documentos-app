@@ -1038,13 +1038,17 @@
   "labelCurrentStock": "Stock actual",
   "@labelCurrentStock": { "description": "Label stock actual" },
 
-  "labelNewStock": "Nuevo stock",
+  "labelNewStock": "Adicionar al stock",
   "@labelNewStock": { "description": "Label nuevo stock" },
+  "labelStockLocation": "Ubicación (opcional)",
+  "@labelStockLocation": { "description": "Label ubicación de stock" },
+  "hintStockLocation": "Ej. Almacén Principal, Sucursal XYZ",
+  "@hintStockLocation": { "description": "Hint ubicación de stock" },
 
-  "labelStockField": "Cantidad en inventario *",
+  "labelStockField": "Cantidad para adicionar *",
   "@labelStockField": { "description": "Label campo cantidad inventario" },
 
-  "hintStockNew": "Ingrese la nueva cantidad",
+  "hintStockNew": "Cantidad para adicionar al stock",
   "@hintStockNew": { "description": "Hint campo nueva cantidad stock" },
 
   "itemStockSuccess": "Stock actualizado correctamente",

@@ -2124,19 +2124,31 @@ abstract class AppLocalizations {
   /// Label nuevo stock
   ///
   /// In es, this message translates to:
-  /// **'Nuevo stock'**
+  /// **'Adicionar al stock'**
   String get labelNewStock;
+
+  /// Label ubicación de stock
+  ///
+  /// In es, this message translates to:
+  /// **'Ubicación (opcional)'**
+  String get labelStockLocation;
+
+  /// Hint ubicación de stock
+  ///
+  /// In es, this message translates to:
+  /// **'Ej. Almacén Principal, Sucursal XYZ'**
+  String get hintStockLocation;
 
   /// Label campo cantidad inventario
   ///
   /// In es, this message translates to:
-  /// **'Cantidad en inventario *'**
+  /// **'Cantidad para adicionar *'**
   String get labelStockField;
 
   /// Hint campo nueva cantidad stock
   ///
   /// In es, this message translates to:
-  /// **'Ingrese la nueva cantidad'**
+  /// **'Cantidad para adicionar al stock'**
   String get hintStockNew;
 
   /// Mensaje éxito al actualizar stock
