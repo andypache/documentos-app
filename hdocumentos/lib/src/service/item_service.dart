@@ -242,4 +242,14 @@ class ItemService {
     return NotificationService.l10n?.itemDataProcessError ??
         'Error al procesar la operación de item';
   }
+
+  /// DELETE /items/delete/<item_id>
+  static Future<bool> deleteItem(
+    BuildContext context,
+    String itemId,
+  ) async {
+    final url = '$apiItemDelete/$itemId';
+    final response = await deleteFetch(context: context, url: url);
+    return response.statusHttp == 200 || response.statusHttp == 204;
+  }
 }

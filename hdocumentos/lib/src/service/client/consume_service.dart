@@ -94,6 +94,23 @@ Future<ServiceResponseModel> patchFetch({
       result;
 }
 
+/// Realiza una petición DELETE autenticada.
+Future<ServiceResponseModel> deleteFetch({
+  required BuildContext context,
+  required String url,
+}) async {
+  final result = await _HttpClient.delete(url: url);
+  if (!context.mounted) return result;
+  return await _TokenRefreshHandler.handle(
+        context: context,
+        result: result,
+        url: url,
+        body: {},
+        method: _HttpMethod.delete,
+      ) ??
+      result;
+}
+
 /// Realiza una petición POST con form-data (sin token Bearer).
 /// Usado para autenticación OAuth.
 Future<ServiceResponseModel> postFormFetch({
@@ -277,6 +294,26 @@ class _HttpClient {
     }
   }
 
+  /// Ejecuta DELETE autenticado sin body.
+  static Future<ServiceResponseModel> delete({
+    required String url,
+  }) async {
+    try {
+      final headers = await _authHeaders();
+      final response = await http
+          .delete(
+            Uri.parse(url),
+            headers: headers,
+          )
+          .timeout(_timeout);
+      return getResponse(response);
+    } on Exception catch (e) {
+      // ignore: avoid_print
+      print(e);
+      return _errorResponse();
+    }
+  }
+
   /// Ejecuta POST con form-data (OAuth).
   static Future<ServiceResponseModel> postForm({
     required String url,
@@ -302,7 +339,7 @@ class _HttpClient {
 
 // ─── Tipo de petición HTTP ───────────────────────────────────────────────────
 
-enum _HttpMethod { get, post, put, patch }
+enum _HttpMethod { get, post, put, patch, delete }
 
 // ─── Manejador de refresco de token ──────────────────────────────────────────
 
@@ -361,6 +398,8 @@ class _TokenRefreshHandler {
       return await _HttpClient.put(url: url, body: body);
     } else if (method == _HttpMethod.patch) {
       return await _HttpClient.patch(url: url, body: body);
+    } else if (method == _HttpMethod.delete) {
+      return await _HttpClient.delete(url: url);
     } else {
       return await _HttpClient.post(url: url, body: body);
     }

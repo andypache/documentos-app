@@ -220,14 +220,16 @@ class ItemListProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> deleteItem(String itemId) async {
+  Future<bool> deleteItem(String itemId, BuildContext context) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      await Future.delayed(const Duration(milliseconds: 300));
-      _items.removeWhere((item) => item.id == itemId);
-      return true;
+      final success = await ItemService.deleteItem(context, itemId);
+      if (success) {
+        _items.removeWhere((item) => item.id == itemId);
+      }
+      return success;
     } catch (_) {
       return false;
     } finally {

@@ -7,6 +7,7 @@ import 'package:hdocumentos/src/screen/item/item_stock_screen.dart';
 import 'package:hdocumentos/src/screen/item/item_wizard_screen.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/item/item_card_widget.dart';
+import 'package:hdocumentos/src/service/service.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -587,24 +588,12 @@ class _ItemListSectionState extends State<_ItemListSection> {
     );
 
     if (confirmed == true && context.mounted) {
-      final success = await provider.deleteItem(item.id!);
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              success
-                  ? AppLocalizations.of(context).itemDeletedSuccess
-                  : AppLocalizations.of(context).itemDeletedError,
-              style: const TextStyle(color: Colors.white),
-            ),
-            backgroundColor:
-                success ? AppTheme.actionSave : AppTheme.actionDanger,
-            behavior: SnackBarBehavior.floating,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          ),
-        );
+      final l10n = AppLocalizations.of(context);
+      final success = await provider.deleteItem(item.id!, context);
+      if (success) {
+        NotificationService.showSuccess(l10n.itemDeletedSuccess);
+      } else {
+        NotificationService.showError(l10n.itemDeletedError);
       }
     }
   }
