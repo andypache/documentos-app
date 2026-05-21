@@ -1057,6 +1057,8 @@
 
   "labelCurrentPrice": "Current price",
   "@labelCurrentPrice": { "description": "Current price label" },
+  "infoPriceWithoutDiscountOrTax": "The sale price is the base value of the product. It does not include discounts or taxes; these are calculated and applied when generating the invoice.",
+  "@infoPriceWithoutDiscountOrTax": { "description": "Info panel price without discount or tax" },
 
   "labelCurrentCost": "Current cost",
   "@labelCurrentCost": { "description": "Current cost label" },

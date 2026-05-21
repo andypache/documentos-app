@@ -2163,6 +2163,12 @@ abstract class AppLocalizations {
   /// **'Precio actual'**
   String get labelCurrentPrice;
 
+  /// Info panel precio sin descuento ni impuesto
+  ///
+  /// In es, this message translates to:
+  /// **'El precio de venta es el valor base del producto. No incluye descuentos ni impuestos; estos se calculan y aplican al momento de generar la factura.'**
+  String get infoPriceWithoutDiscountOrTax;
+
   /// Label costo actual
   ///
   /// In es, this message translates to:

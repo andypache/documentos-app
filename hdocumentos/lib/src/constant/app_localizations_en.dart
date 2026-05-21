@@ -1086,6 +1086,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get labelCurrentPrice => 'Current price';
 
   @override
+  String get infoPriceWithoutDiscountOrTax => 'The sale price is the base value of the product. It does not include discounts or taxes; these are calculated and applied when generating the invoice.';
+
+  @override
   String get labelCurrentCost => 'Current cost';
 
   @override

@@ -152,7 +152,39 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
                       ],
                     ),
 
-                    SizedBox(height: size.height * 0.03),
+                    SizedBox(height: size.height * 0.02),
+
+                    // Panel informativo
+                    Container(
+                      padding: EdgeInsets.all(size.width * 0.04),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                            color: Colors.blue.withOpacity(0.4), width: 1),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(Icons.info_outline_rounded,
+                              color: Colors.blue.shade300,
+                              size: size.width * 0.05),
+                          SizedBox(width: size.width * 0.03),
+                          Expanded(
+                            child: Text(
+                              l10n.infoPriceWithoutDiscountOrTax,
+                              style: TextStyle(
+                                color: Colors.blue.shade200,
+                                fontSize: size.width * 0.032,
+                                height: 1.4,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(height: size.height * 0.025),
 
                     // Formulario
                     Form(

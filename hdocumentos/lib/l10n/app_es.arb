@@ -1058,6 +1058,8 @@
 
   "labelCurrentPrice": "Precio actual",
   "@labelCurrentPrice": { "description": "Label precio actual" },
+  "infoPriceWithoutDiscountOrTax": "El precio de venta es el valor base del producto. No incluye descuentos ni impuestos; estos se calculan y aplican al momento de generar la factura.",
+  "@infoPriceWithoutDiscountOrTax": { "description": "Info panel precio sin descuento ni impuesto" },
 
   "labelCurrentCost": "Costo actual",
   "@labelCurrentCost": { "description": "Label costo actual" },

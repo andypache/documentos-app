@@ -76,9 +76,6 @@ class ItemService {
       "description": form.description.isEmpty ? null : form.description,
       "search_key": form.searchKey.isEmpty ? null : form.searchKey,
       "is_service": form.isService,
-      "stock": {
-        "quantity": form.isService ? 0 : form.stock,
-      },
       if (form.image != null)
         "media": {
           "image":
@@ -99,7 +96,7 @@ class ItemService {
 
     final response = await putFetch(
       context: context,
-      url: apiItemUpdate,
+      url: '$apiItemUpdate/${form.item.id}',
       body: payload,
     );
 

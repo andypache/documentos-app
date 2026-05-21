@@ -142,7 +142,7 @@ class _ItemStepperIndicator extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final stepLabels = [
       l10n.stepBasic,
-      l10n.stepPrices,
+      itemForm.isEditing ? l10n.labelDiscount : l10n.stepPrices,
       l10n.stepCodes,
       l10n.stepTaxes,
     ];

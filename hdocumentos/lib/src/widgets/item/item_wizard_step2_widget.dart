@@ -67,15 +67,45 @@ class _ItemWizardStep2WidgetState extends State<ItemWizardStep2Widget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            l10n.stepPricesTitle,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+          if (!itemForm.isEditing) ...[
+            Text(
+              l10n.stepPricesTitle,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+                border:
+                    Border.all(color: Colors.blue.withOpacity(0.4), width: 1),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.info_outline_rounded,
+                      color: Colors.blue.shade300, size: 20),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      l10n.infoPriceWithoutDiscountOrTax,
+                      style: TextStyle(
+                        color: Colors.blue.shade200,
+                        fontSize: 12.5,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
           if (!itemForm.isEditing)
             ...([
               TextFormField(

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:hdocumentos/src/model/model.dart';
@@ -19,7 +20,11 @@ class ItemMediaModel {
   factory ItemMediaModel.fromJson(Map<String, dynamic> json) => ItemMediaModel(
         id: json["id"],
         itemId: json["item_id"],
-        image: json["image"] != null ? Uint8List.fromList(json["image"]) : null,
+        image: json["image"] != null
+            ? (json["image"] is String
+                ? base64Decode(json["image"])
+                : Uint8List.fromList(List<int>.from(json["image"])))
+            : null,
       );
   Map<String, dynamic> toJson() => {
         "id": id,
