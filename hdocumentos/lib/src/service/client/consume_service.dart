@@ -75,6 +75,25 @@ Future<ServiceResponseModel> putFetch({
       result;
 }
 
+/// Realiza una petición PATCH autenticada.
+/// Maneja refresco de token automático ante 401.
+Future<ServiceResponseModel> patchFetch({
+  required BuildContext context,
+  required String url,
+  required Object body,
+}) async {
+  final result = await _HttpClient.patch(url: url, body: body);
+  if (!context.mounted) return result;
+  return await _TokenRefreshHandler.handle(
+        context: context,
+        result: result,
+        url: url,
+        body: body,
+        method: _HttpMethod.patch,
+      ) ??
+      result;
+}
+
 /// Realiza una petición POST con form-data (sin token Bearer).
 /// Usado para autenticación OAuth.
 Future<ServiceResponseModel> postFormFetch({
@@ -236,6 +255,28 @@ class _HttpClient {
     }
   }
 
+  /// Ejecuta PATCH autenticado con body JSON.
+  static Future<ServiceResponseModel> patch({
+    required String url,
+    required Object body,
+  }) async {
+    try {
+      final headers = await _authHeaders();
+      final response = await http
+          .patch(
+            Uri.parse(url),
+            headers: headers,
+            body: jsonEncode(body),
+          )
+          .timeout(_timeout);
+      return getResponse(response);
+    } on Exception catch (e) {
+      // ignore: avoid_print
+      print(e);
+      return _errorResponse();
+    }
+  }
+
   /// Ejecuta POST con form-data (OAuth).
   static Future<ServiceResponseModel> postForm({
     required String url,
@@ -261,7 +302,7 @@ class _HttpClient {
 
 // ─── Tipo de petición HTTP ───────────────────────────────────────────────────
 
-enum _HttpMethod { get, post, put }
+enum _HttpMethod { get, post, put, patch }
 
 // ─── Manejador de refresco de token ──────────────────────────────────────────
 
@@ -318,6 +359,8 @@ class _TokenRefreshHandler {
       return await _HttpClient.get(url: url, params: body);
     } else if (method == _HttpMethod.put) {
       return await _HttpClient.put(url: url, body: body);
+    } else if (method == _HttpMethod.patch) {
+      return await _HttpClient.patch(url: url, body: body);
     } else {
       return await _HttpClient.post(url: url, body: body);
     }

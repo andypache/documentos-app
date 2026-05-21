@@ -44,6 +44,29 @@ class ItemService {
     };
   }
 
+  /// Actualiza precio y costo de un item → PATCH /items/update/<item_id>/price
+  static Future<void> updateItemPrice(
+    BuildContext context, {
+    required String itemId,
+    required double price,
+    double? cost,
+  }) async {
+    final payload = <String, dynamic>{
+      'price': price,
+      if (cost != null) 'cost': cost,
+    };
+
+    final response = await patchFetch(
+      context: context,
+      url: '$apiItemUpdatePrice/$itemId/price',
+      body: payload,
+    );
+
+    if (response.statusHttp == 200 || response.statusHttp == 201) return;
+
+    throw Exception(await _parseResponseError(response));
+  }
+
   /// Crea un nuevo item.
   /// Retorna el [ItemModel] creado o lanza excepción.
   static Future<ItemModel> createItem(

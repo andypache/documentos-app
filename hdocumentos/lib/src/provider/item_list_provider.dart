@@ -144,9 +144,16 @@ class ItemListProvider extends ChangeNotifier {
 
   // ── Operaciones CRUD (delegadas al servicio real) ──────────────────────────
 
-  Future<bool> updatePrice(
-      String itemId, double newPrice, double newCost) async {
+  Future<bool> updatePrice(String itemId, double newPrice, double newCost,
+      BuildContext context) async {
     try {
+      await ItemService.updateItemPrice(
+        context,
+        itemId: itemId,
+        price: newPrice,
+        cost: newCost > 0 ? newCost : null,
+      );
+
       final index = _items.indexWhere((i) => i.id == itemId);
       if (index != -1) {
         final original = _items[index];

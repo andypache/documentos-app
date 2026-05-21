@@ -332,8 +332,8 @@ class _ItemPriceScreenState extends State<ItemPriceScreen> {
 
     try {
       final provider = Provider.of<ItemListProvider>(context, listen: false);
-      final success =
-          await provider.updatePrice(widget.item.id!, newPrice, newCost);
+      final success = await provider.updatePrice(
+          widget.item.id!, newPrice, newCost, context);
 
       if (!mounted) return;
       final l10n = AppLocalizations.of(context);

@@ -36,6 +36,7 @@ String apiItem =
     '${Environment.protocol}://${Environment.host}${Environment.portItem}/${Environment.baseUrl}/';
 String apiItemCreate = '${apiItem}item-service/items/create';
 String apiItemUpdate = '${apiItem}item-service/items/update';
+String apiItemUpdatePrice = '${apiItem}item-service/items/update';
 String apiItemPaginationAll = '${apiItem}item-service/items/pagination/all';
 String apiItemPaginationFilter =
     '${apiItem}item-service/items/pagination/filter';
