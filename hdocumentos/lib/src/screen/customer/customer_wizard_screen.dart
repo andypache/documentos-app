@@ -39,24 +39,64 @@ class _CustomerWizardBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final l10n = AppLocalizations.of(context);
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
     return Scaffold(
       body: Stack(
         children: [
           const BrackgroundWidget(),
           SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const SizedBox(height: 16),
-                  PageTitleWidget(
-                    title: isEditing
-                        ? AppLocalizations.of(context).customerEditTitle
-                        : AppLocalizations.of(context).customerCreateTitle,
+            child: Column(
+              children: [
+                // ── Encabezado ────────────────────────────────────────
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.05,
+                    vertical: isLandscape ? 4 : 8,
                   ),
-                  const SizedBox(height: 20),
-                  const _CustomerWizardContainer(),
-                ],
-              ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              isEditing
+                                  ? l10n.customerEditTitle
+                                  : l10n.customerCreateTitle,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: isLandscape ? 16 : size.width * 0.052,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: Icon(
+                          Icons.close_rounded,
+                          color: Colors.white.withOpacity(0.8),
+                          size: isLandscape ? 22 : size.width * 0.07,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // ── Contenido scrollable ──────────────────────────────
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: _CustomerWizardContainer(),
+                  ),
+                ),
+                // ── Barra fija de botones ─────────────────────────────
+                const _NavigationButtons(),
+              ],
             ),
           ),
         ],
@@ -82,8 +122,6 @@ class _CustomerWizardContainer extends StatelessWidget {
           SizedBox(height: 20),
           _WizardContent(currentStep: customerForm.currentStep),
           SizedBox(height: 20),
-          const _NavigationButtons(),
-          SizedBox(height: 32),
         ],
       ),
     );
@@ -223,93 +261,121 @@ class _NavigationButtons extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
+    final double iconSize = isLandscape ? 18.0 : size.width * 0.045;
+    final double fontSize = isLandscape ? 13.0 : size.width * 0.034;
     final btnPadding = EdgeInsets.symmetric(
       horizontal: isLandscape ? 16.0 : size.width * 0.05,
       vertical: isLandscape ? 10.0 : 12.0,
     );
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // Botón Anterior / Cancelar
-        if (customerForm.currentStep > 0)
-          ElevatedButton.icon(
-            onPressed: customerForm.isLoading
-                ? null
-                : () => customerForm.previousStep(),
-            icon: const Icon(Icons.arrow_back_rounded),
-            label: Text(l10n.btnPrevious),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.grey,
-              foregroundColor: Colors.white,
-              elevation: 0,
-              padding: btnPadding,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: isLandscape ? 16.0 : size.width * 0.05,
+        vertical: 10,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.2),
+        border: Border(
+          top: BorderSide(color: Colors.white.withOpacity(0.1), width: 1),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Botón Anterior / Cancelar
+          if (customerForm.currentStep > 0)
+            ElevatedButton.icon(
+              onPressed: customerForm.isLoading
+                  ? null
+                  : () => customerForm.previousStep(),
+              icon: Icon(Icons.arrow_back_rounded, size: iconSize),
+              label:
+                  Text(l10n.btnPrevious, style: TextStyle(fontSize: fontSize)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.grey,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                padding: btnPadding,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
+            )
+          else
+            ElevatedButton.icon(
+              onPressed: () => Navigator.pop(context),
+              icon: Icon(Icons.close_rounded, size: iconSize),
+              label: Text(l10n.btnCancel, style: TextStyle(fontSize: fontSize)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.actionDanger,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                padding: btnPadding,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
             ),
-          )
-        else
-          ElevatedButton.icon(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.close_rounded),
-            label: Text(l10n.btnCancel),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.actionDanger,
-              foregroundColor: Colors.white,
-              elevation: 0,
-              padding: btnPadding,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+
+          // Indicador de paso
+          Text(
+            '${customerForm.currentStep + 1} de 3',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.5),
+              fontSize: isLandscape ? 12.0 : size.width * 0.032,
             ),
           ),
 
-        // Botón Siguiente / Guardar
-        if (customerForm.currentStep < 2)
-          ElevatedButton.icon(
-            onPressed: customerForm.isLoading
-                ? null
-                : () {
-                    if (customerForm.nextStep()) {
-                      // Paso validado y avanzado
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(l10n.msgRequiredFields),
-                          backgroundColor: AppTheme.actionDanger,
-                        ),
-                      );
-                    }
-                  },
-            icon: const Icon(Icons.arrow_forward_rounded),
-            label: Text(l10n.btnNext),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.primaryButton,
-              foregroundColor: AppTheme.secondary,
-              elevation: 0,
-              padding: btnPadding,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+          // Botón Siguiente / Guardar
+          if (customerForm.currentStep < 2)
+            ElevatedButton.icon(
+              onPressed: customerForm.isLoading
+                  ? null
+                  : () {
+                      if (!customerForm.nextStep()) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(l10n.msgRequiredFields),
+                            backgroundColor: AppTheme.actionDanger,
+                          ),
+                        );
+                      }
+                    },
+              icon: Icon(Icons.arrow_forward_rounded, size: iconSize),
+              label: Text(l10n.btnNext,
+                  style: TextStyle(
+                      fontSize: fontSize, fontWeight: FontWeight.bold)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primaryButton,
+                foregroundColor: AppTheme.secondary,
+                elevation: 0,
+                padding: btnPadding,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
+            )
+          else
+            ElevatedButton.icon(
+              onPressed: customerForm.isLoading
+                  ? null
+                  : () => _handleSaveCustomer(context, customerForm),
+              icon: customerForm.isLoading
+                  ? ButtonLoadingIndicator(size: iconSize)
+                  : Icon(Icons.save_rounded, size: iconSize),
+              label: Text(
+                customerForm.isLoading ? l10n.btnSaving : l10n.btnSave,
+                style:
+                    TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.actionSave,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                padding: btnPadding,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
             ),
-          )
-        else
-          ElevatedButton.icon(
-            onPressed: customerForm.isLoading
-                ? null
-                : () => _handleSaveCustomer(context, customerForm),
-            icon: customerForm.isLoading
-                ? const ButtonLoadingIndicator()
-                : const Icon(Icons.save_rounded),
-            label: Text(customerForm.isLoading ? l10n.btnSaving : l10n.btnSave),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.actionSave,
-              foregroundColor: Colors.white,
-              elevation: 0,
-              padding: btnPadding,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 
