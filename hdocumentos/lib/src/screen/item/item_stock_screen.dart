@@ -51,9 +51,16 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
         children: [
           const BrackgroundWidget(),
           SafeArea(
-            child: isLandscape
-                ? _buildLandscape(context, l10n)
-                : _buildPortrait(context, l10n),
+            child: Column(
+              children: [
+                Expanded(
+                  child: isLandscape
+                      ? _buildLandscape(context, l10n)
+                      : _buildPortrait(context, l10n),
+                ),
+                _actionButtons(context, l10n),
+              ],
+            ),
           ),
         ],
       ),
@@ -74,8 +81,6 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
           _stockInfoRow(l10n),
           const SizedBox(height: 20),
           _form(l10n),
-          const SizedBox(height: 28),
-          _actionButtons(context, l10n),
           const SizedBox(height: 20),
         ],
       ),
@@ -113,8 +118,7 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _form(l10n),
-                const SizedBox(height: 20),
-                _actionButtons(context, l10n),
+                const SizedBox(height: 16),
               ],
             ),
           ),
@@ -202,7 +206,6 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
             controller: _stockController,
             style: const TextStyle(color: Colors.white),
             keyboardType: const TextInputType.numberWithOptions(decimal: false),
-            autofocus: true,
             decoration: InputDecoration(
               prefixIcon:
                   const Icon(Icons.inventory_2_outlined, color: Colors.orange),
@@ -252,42 +255,57 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
   }
 
   Widget _actionButtons(BuildContext context, AppLocalizations l10n) {
-    return Row(
-      children: [
-        Expanded(
-          child: ElevatedButton.icon(
-            onPressed: _isSaving ? null : () => Navigator.pop(context),
-            icon: const Icon(Icons.close_rounded),
-            label: Text(l10n.btnCancel),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.actionDanger,
-              foregroundColor: Colors.white,
-              elevation: 0,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final size = MediaQuery.of(context).size;
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: isLandscape ? 16.0 : size.width * 0.05,
+        vertical: 10,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.2),
+        border: Border(
+          top: BorderSide(color: Colors.white.withOpacity(0.1), width: 1),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: ElevatedButton.icon(
+              onPressed: _isSaving ? null : () => Navigator.pop(context),
+              icon: const Icon(Icons.close_rounded),
+              label: Text(l10n.btnCancel),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.actionDanger,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
             ),
           ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: ElevatedButton.icon(
-            onPressed: _isSaving ? null : _onSave,
-            icon: _isSaving
-                ? const ButtonLoadingIndicator()
-                : const Icon(Icons.save_rounded),
-            label: Text(_isSaving ? l10n.btnSaving : l10n.btnSave),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.actionSave,
-              foregroundColor: Colors.white,
-              elevation: 0,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: ElevatedButton.icon(
+              onPressed: _isSaving ? null : _onSave,
+              icon: _isSaving
+                  ? const ButtonLoadingIndicator()
+                  : const Icon(Icons.save_rounded),
+              label: Text(_isSaving ? l10n.btnSaving : l10n.btnSave),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.actionSave,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
