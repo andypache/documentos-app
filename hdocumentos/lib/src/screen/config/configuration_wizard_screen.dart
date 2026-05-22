@@ -361,6 +361,15 @@ class _CompanyNavigationButtons extends StatelessWidget {
     final provider = Provider.of<CompanyFormProvider>(context);
     final l10n = AppLocalizations.of(context);
     final bool busy = provider.isLoading || provider.isSavingStep;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final double iconSize = isLandscape ? 18.0 : size.width * 0.045;
+    final double fontSize = isLandscape ? 13.0 : size.width * 0.034;
+    final double counterFontSize = isLandscape ? 12.0 : size.width * 0.032;
+    final EdgeInsets btnPadding = EdgeInsets.symmetric(
+      horizontal: isLandscape ? 16.0 : size.width * 0.05,
+      vertical: 10,
+    );
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -395,11 +404,11 @@ class _CompanyNavigationButtons extends StatelessWidget {
                   provider.currentStep > 0
                       ? Icons.arrow_back_rounded
                       : Icons.close_rounded,
-                  size: size.width * 0.045,
+                  size: iconSize,
                 ),
                 label: Text(
                   provider.currentStep > 0 ? l10n.btnPrevious : l10n.btnCancel,
-                  style: TextStyle(fontSize: size.width * 0.034),
+                  style: TextStyle(fontSize: fontSize),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: provider.currentStep > 0
@@ -407,10 +416,7 @@ class _CompanyNavigationButtons extends StatelessWidget {
                       : AppTheme.actionDanger,
                   foregroundColor: Colors.white,
                   elevation: 0,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: size.width * 0.05,
-                    vertical: 10,
-                  ),
+                  padding: btnPadding,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                 ),
@@ -421,7 +427,7 @@ class _CompanyNavigationButtons extends StatelessWidget {
                 l10n.stepCounter(provider.currentStep + 1, 6),
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.5),
-                  fontSize: size.width * 0.032,
+                  fontSize: counterFontSize,
                 ),
               ),
 
@@ -436,20 +442,15 @@ class _CompanyNavigationButtons extends StatelessWidget {
                                     l10n.msgRequiredFields);
                               }
                             },
-                      icon: Icon(Icons.arrow_forward_rounded,
-                          size: size.width * 0.045),
+                      icon: Icon(Icons.arrow_forward_rounded, size: iconSize),
                       label: Text(l10n.btnNext,
                           style: TextStyle(
-                              fontSize: size.width * 0.034,
-                              fontWeight: FontWeight.bold)),
+                              fontSize: fontSize, fontWeight: FontWeight.bold)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.primaryButton,
                         foregroundColor: AppTheme.secondary,
                         elevation: 0,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: size.width * 0.05,
-                          vertical: 10,
-                        ),
+                        padding: btnPadding,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                       ),
@@ -461,31 +462,25 @@ class _CompanyNavigationButtons extends StatelessWidget {
                               ? null
                               : () => _handleSave(context, provider),
                           icon: busy
-                              ? ButtonLoadingIndicator(
-                                  size: size.width * 0.045,
-                                )
-                              : Icon(Icons.save_rounded,
-                                  size: size.width * 0.045),
+                              ? ButtonLoadingIndicator(size: iconSize)
+                              : Icon(Icons.save_rounded, size: iconSize),
                           label: Text(
                             busy ? l10n.btnSaving : l10n.btnSave,
                             style: TextStyle(
-                                fontSize: size.width * 0.034,
+                                fontSize: fontSize,
                                 fontWeight: FontWeight.bold),
                           ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppTheme.actionSave,
                             foregroundColor: Colors.white,
                             elevation: 0,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: size.width * 0.05,
-                              vertical: 10,
-                            ),
+                            padding: btnPadding,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
                           ),
                         )
-                      // Paso final en edición: placeholder invisible para mantener layout
-                      : SizedBox(width: size.width * 0.28),
+                      // Paso final en edición: placeholder invisible
+                      : SizedBox(width: isLandscape ? 80.0 : size.width * 0.28),
             ],
           ),
 
@@ -497,15 +492,12 @@ class _CompanyNavigationButtons extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: busy ? null : () => provider.saveStep(context),
                 icon: provider.isSavingStep
-                    ? ButtonLoadingIndicator(
-                        size: size.width * 0.042,
-                      )
-                    : Icon(Icons.save_outlined, size: size.width * 0.042),
+                    ? ButtonLoadingIndicator(size: iconSize)
+                    : Icon(Icons.save_outlined, size: iconSize),
                 label: Text(
                   provider.isSavingStep ? l10n.btnSaving : l10n.btnSaveStep,
                   style: TextStyle(
-                      fontSize: size.width * 0.034,
-                      fontWeight: FontWeight.bold),
+                      fontSize: fontSize, fontWeight: FontWeight.bold),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.actionSaveDark,

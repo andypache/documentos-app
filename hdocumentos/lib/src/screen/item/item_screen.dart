@@ -173,9 +173,9 @@ class _ItemScreenBody extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
           child: const PageTitleWidget(title: ''),
         ),
-        SizedBox(height: size.height * 0.02),
+        const SizedBox(height: 16),
         const _SearchSection(),
-        SizedBox(height: size.height * 0.025),
+        const SizedBox(height: 20),
         const Expanded(child: _ItemListSection()),
       ],
     );
@@ -407,11 +407,11 @@ class _ItemListSectionState extends State<_ItemListSection> {
             AppLocalizations.of(context).itemsFound(items.length),
             style: TextStyle(
               color: Colors.white70,
-              fontSize: size.width * 0.032,
+              fontSize: (size.width * 0.032).clamp(11.0, 14.0),
             ),
           ),
         ),
-        SizedBox(height: size.height * 0.012),
+        const SizedBox(height: 8),
         Expanded(
           child: ListView.builder(
             controller: _scrollController,
@@ -690,7 +690,7 @@ class _ItemDetailSheet extends StatelessWidget {
         children: [
           Center(
             child: Container(
-              width: size.width * 0.1,
+              width: 48,
               height: 4,
               decoration: BoxDecoration(
                 color: Colors.white30,
@@ -698,16 +698,18 @@ class _ItemDetailSheet extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: size.height * 0.025),
+          const SizedBox(height: 20),
           Text(
             item.name,
             style: TextStyle(
               color: Colors.white,
-              fontSize: size.width * 0.052,
+              fontSize: (size.width * 0.052).clamp(16.0, 22.0),
               fontWeight: FontWeight.bold,
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
-          SizedBox(height: size.height * 0.018),
+          const SizedBox(height: 14),
           _DetailRow(
             icon: Icons.label_rounded,
             label: AppLocalizations.of(context).labelSearchKey,
@@ -742,7 +744,7 @@ class _ItemDetailSheet extends StatelessWidget {
               label: AppLocalizations.of(context).labelBarCode,
               value: item.barCode!,
             ),
-          SizedBox(height: size.height * 0.025),
+          const SizedBox(height: 20),
         ],
       ),
     );
@@ -767,11 +769,13 @@ class _DetailRow extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          Icon(icon, color: AppTheme.primaryButton, size: size.width * 0.048),
-          SizedBox(width: size.width * 0.025),
+          Icon(icon,
+              color: AppTheme.primaryButton,
+              size: (size.width * 0.048).clamp(18.0, 24.0)),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -780,14 +784,14 @@ class _DetailRow extends StatelessWidget {
                   label,
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.7),
-                    fontSize: size.width * 0.03,
+                    fontSize: (size.width * 0.03).clamp(11.0, 14.0),
                   ),
                 ),
                 Text(
                   value,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: size.width * 0.038,
+                    fontSize: (size.width * 0.038).clamp(13.0, 17.0),
                   ),
                 ),
               ],

@@ -161,9 +161,9 @@ class _StepperIndicator extends StatelessWidget {
     final isActive = stepNumber == currentStep;
     final isCompleted = stepNumber < currentStep;
     final size = MediaQuery.of(context).size;
-    final circleSize = size.shortestSide * 0.1;
-    final iconSize = size.shortestSide * 0.05;
-    final labelFontSize = size.shortestSide * 0.028;
+    final circleSize = (size.shortestSide * 0.1).clamp(32.0, 48.0);
+    final iconSize = (size.shortestSide * 0.05).clamp(16.0, 24.0);
+    final labelFontSize = (size.shortestSide * 0.028).clamp(10.0, 13.0);
 
     return Expanded(
       child: Column(

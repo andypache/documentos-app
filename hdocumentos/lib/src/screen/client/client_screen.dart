@@ -811,7 +811,7 @@ class _CustomerDetailSheet extends StatelessWidget {
         children: [
           Center(
             child: Container(
-              width: size.width * 0.1,
+              width: 48,
               height: 4,
               decoration: BoxDecoration(
                 color: Colors.white30,
@@ -824,9 +824,11 @@ class _CustomerDetailSheet extends StatelessWidget {
             displayName,
             style: TextStyle(
               color: Colors.white,
-              fontSize: size.width * 0.052,
+              fontSize: (size.width * 0.052).clamp(16.0, 22.0),
               fontWeight: FontWeight.bold,
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 14),
           _DetailRow(
@@ -888,8 +890,10 @@ class _DetailRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          Icon(icon, color: AppTheme.primaryButton, size: size.width * 0.048),
-          SizedBox(width: size.width * 0.025),
+          Icon(icon,
+              color: AppTheme.primaryButton,
+              size: (size.width * 0.048).clamp(18.0, 24.0)),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -898,7 +902,7 @@ class _DetailRow extends StatelessWidget {
                   label,
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.7),
-                    fontSize: size.width * 0.03,
+                    fontSize: (size.width * 0.03).clamp(11.0, 14.0),
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -906,7 +910,7 @@ class _DetailRow extends StatelessWidget {
                   value,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: size.width * 0.038,
+                    fontSize: (size.width * 0.038).clamp(13.0, 17.0),
                   ),
                 ),
               ],

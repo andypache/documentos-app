@@ -185,8 +185,8 @@ class _ItemStepperIndicator extends StatelessWidget {
               children: [
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 250),
-                  width: size.width * 0.065,
-                  height: size.width * 0.065,
+                  width: (size.width * 0.065).clamp(24.0, 44.0),
+                  height: (size.width * 0.065).clamp(24.0, 44.0),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: isActive || isCompleted
@@ -202,13 +202,14 @@ class _ItemStepperIndicator extends StatelessWidget {
                   child: Center(
                     child: isCompleted
                         ? Icon(Icons.check_rounded,
-                            color: Colors.white, size: size.width * 0.038)
+                            color: Colors.white,
+                            size: (size.width * 0.038).clamp(12.0, 22.0))
                         : Icon(
                             _stepIcons[stepIndex],
                             color: isActive
                                 ? Colors.white
                                 : Colors.white.withOpacity(0.4),
-                            size: size.width * 0.038,
+                            size: (size.width * 0.038).clamp(12.0, 22.0),
                           ),
                   ),
                 ),
@@ -218,7 +219,7 @@ class _ItemStepperIndicator extends StatelessWidget {
                   style: TextStyle(
                     color:
                         isActive || isCompleted ? Colors.white : Colors.white54,
-                    fontSize: size.shortestSide * 0.026,
+                    fontSize: (size.shortestSide * 0.026).clamp(10.0, 13.0),
                   ),
                   textAlign: TextAlign.center,
                 ),
