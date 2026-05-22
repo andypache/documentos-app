@@ -84,7 +84,7 @@ class _ConfigurationWizardScreenState extends State<ConfigurationWizardScreen> {
                     children: [
                       Icon(Icons.cloud_off_rounded,
                           color: Colors.white54, size: size.width * 0.15),
-                      SizedBox(height: size.height * 0.02),
+                      const SizedBox(height: 16),
                       Text(
                         l10n.couldNotLoadInfo,
                         style: TextStyle(
@@ -92,7 +92,7 @@ class _ConfigurationWizardScreenState extends State<ConfigurationWizardScreen> {
                             fontSize: size.width * 0.04,
                             fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: size.height * 0.015),
+                      SizedBox(height: 12),
                       ElevatedButton.icon(
                         onPressed: _load,
                         icon: const Icon(Icons.refresh_rounded),
@@ -103,7 +103,7 @@ class _ConfigurationWizardScreenState extends State<ConfigurationWizardScreen> {
                               borderRadius: BorderRadius.circular(10)),
                         ),
                       ),
-                      SizedBox(height: size.height * 0.01),
+                      const SizedBox(height: 8),
                       TextButton(
                         onPressed: () => Navigator.pop(context),
                         child: Text(l10n.btnCancel,
@@ -137,6 +137,8 @@ class _ConfigurationWizardBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final l10n = AppLocalizations.of(context);
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
     return Scaffold(
       body: Stack(
@@ -145,12 +147,10 @@ class _ConfigurationWizardBody extends StatelessWidget {
           SafeArea(
             child: Column(
               children: [
-                const UserSessionTitle(),
+                if (!isLandscape) const UserSessionTitle(),
                 Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: size.width * 0.05,
-                    vertical: size.height * 0.01,
-                  ),
+                      horizontal: size.width * 0.05, vertical: 8),
                   child: Row(
                     children: [
                       Expanded(
@@ -196,7 +196,7 @@ class _ConfigurationWizardBody extends StatelessWidget {
                   child: SingleChildScrollView(
                     padding: EdgeInsets.symmetric(
                       horizontal: size.width * 0.05,
-                      vertical: size.height * 0.015,
+                      vertical: 12,
                     ),
                     child: const _CompanyWizardContent(),
                   ),
@@ -240,10 +240,7 @@ class _CompanyStepperIndicator extends StatelessWidget {
     ];
 
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: size.width * 0.04,
-        vertical: size.height * 0.01,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: size.width * 0.04, vertical: 8),
       child: Row(
         children: List.generate(_stepIcons.length * 2 - 1, (i) {
           if (i.isOdd) {
@@ -251,7 +248,7 @@ class _CompanyStepperIndicator extends StatelessWidget {
             return Expanded(
               child: Container(
                 height: 2,
-                margin: EdgeInsets.only(bottom: size.height * 0.03),
+                margin: const EdgeInsets.only(bottom: 24),
                 decoration: BoxDecoration(
                   color: stepIndex < current
                       ? AppTheme.primaryButton
@@ -304,7 +301,7 @@ class _CompanyStepperIndicator extends StatelessWidget {
                             size: size.width * 0.04),
                   ),
                 ),
-                SizedBox(height: size.height * 0.005),
+                SizedBox(height: 4),
                 Text(
                   stepLabels[stepIndex],
                   style: TextStyle(
@@ -368,7 +365,7 @@ class _CompanyNavigationButtons extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: size.width * 0.05,
-        vertical: size.height * 0.015,
+        vertical: 12,
       ),
       decoration: BoxDecoration(
         color: Colors.black.withOpacity(0.2),
@@ -412,7 +409,7 @@ class _CompanyNavigationButtons extends StatelessWidget {
                   elevation: 0,
                   padding: EdgeInsets.symmetric(
                     horizontal: size.width * 0.05,
-                    vertical: size.height * 0.012,
+                    vertical: 10,
                   ),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
@@ -451,7 +448,7 @@ class _CompanyNavigationButtons extends StatelessWidget {
                         elevation: 0,
                         padding: EdgeInsets.symmetric(
                           horizontal: size.width * 0.05,
-                          vertical: size.height * 0.012,
+                          vertical: 10,
                         ),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
@@ -481,7 +478,7 @@ class _CompanyNavigationButtons extends StatelessWidget {
                             elevation: 0,
                             padding: EdgeInsets.symmetric(
                               horizontal: size.width * 0.05,
-                              vertical: size.height * 0.012,
+                              vertical: 10,
                             ),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
@@ -494,7 +491,7 @@ class _CompanyNavigationButtons extends StatelessWidget {
 
           // ── Botón guardar paso (solo edición) ──────────────────────────────
           if (isEditing) ...[
-            SizedBox(height: size.height * 0.01),
+            const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
@@ -514,7 +511,7 @@ class _CompanyNavigationButtons extends StatelessWidget {
                   backgroundColor: AppTheme.actionSaveDark,
                   foregroundColor: Colors.white,
                   elevation: 0,
-                  padding: EdgeInsets.symmetric(vertical: size.height * 0.013),
+                  padding: EdgeInsets.symmetric(vertical: 10),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                 ),

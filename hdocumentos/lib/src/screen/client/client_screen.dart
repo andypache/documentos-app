@@ -9,18 +9,22 @@ import 'package:hdocumentos/src/widgets/widgets.dart';
 class ClientScreen extends StatelessWidget {
   const ClientScreen({Key? key}) : super(key: key);
 
-  //Render principal widgets load background, body and float buttom
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Stack(children: [BrackgroundWidget(), _ClientScreenBody()]),
-      floatingActionButton: FloatingActionButton.extended(
-        elevation: 4,
-        backgroundColor: AppTheme.primaryButton,
-        foregroundColor: AppTheme.secondary,
-        icon: const Icon(Icons.person_add_rounded),
-        label: Text(AppLocalizations.of(context).customerCreateTitle),
-        onPressed: () => _navigateToCreateCustomer(context),
+      body: Stack(
+        children: [
+          const BrackgroundWidget(),
+          Column(
+            children: [
+              const Expanded(child: _ClientScreenBody()),
+              _BottomActionBar(
+                onNewCustomer: () => _navigateToCreateCustomer(context),
+                onCancel: () => Navigator.pop(context),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -31,7 +35,6 @@ class ClientScreen extends StatelessWidget {
       MaterialPageRoute(builder: (context) => const CustomerWizardScreen()),
     );
 
-    // Si se guardó un cliente, mostrar mensaje
     if (result == true && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -50,6 +53,73 @@ class ClientScreen extends StatelessWidget {
   }
 }
 
+/// Barra inferior con botón Cancelar y Nuevo Cliente
+class _BottomActionBar extends StatelessWidget {
+  final VoidCallback onNewCustomer;
+  final VoidCallback onCancel;
+
+  const _BottomActionBar({
+    Key? key,
+    required this.onNewCustomer,
+    required this.onCancel,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final hPad = isLandscape ? 16.0 : MediaQuery.of(context).size.width * 0.05;
+    final vPad = isLandscape ? 6.0 : 12.0;
+    final iconSize = isLandscape ? 18.0 : 22.0;
+    final fontSize = isLandscape ? 13.0 : 14.0;
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: hPad, vertical: vPad),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.2),
+        border: Border(
+          top: BorderSide(color: Colors.white.withOpacity(0.1), width: 1),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          ElevatedButton.icon(
+            onPressed: onCancel,
+            icon: Icon(Icons.close_rounded, size: iconSize),
+            label: Text(l10n.btnCancel, style: TextStyle(fontSize: fontSize)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.actionDanger,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              padding:
+                  EdgeInsets.symmetric(horizontal: hPad, vertical: vPad + 2),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+          ),
+          ElevatedButton.icon(
+            onPressed: onNewCustomer,
+            icon: Icon(Icons.person_add_rounded, size: iconSize),
+            label: Text(l10n.customerCreateTitle,
+                style: TextStyle(fontSize: fontSize)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primaryButton,
+              foregroundColor: AppTheme.secondary,
+              elevation: 0,
+              padding:
+                  EdgeInsets.symmetric(horizontal: hPad, vertical: vPad + 2),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 ///Body for bill into sroll view
 class _ClientScreenBody extends StatefulWidget {
   const _ClientScreenBody({Key? key}) : super(key: key);
@@ -59,70 +129,8 @@ class _ClientScreenBody extends StatefulWidget {
 }
 
 class _ClientScreenBodyState extends State<_ClientScreenBody> {
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
-    return Column(
-      children: [
-        // Widget de información del usuario
-        const UserSessionTitle(),
-        // Header con título y botón de cerrar
-        Container(
-          padding: EdgeInsets.only(
-            top: 0,
-            left: size.width * 0.05,
-            right: size.width * 0.05,
-            bottom: 0,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Builder(
-                  builder: (ctx) => PageTitleWidget(
-                      title: AppLocalizations.of(ctx).pageClientsTitle),
-                ),
-              ),
-              IconButton(
-                icon: Icon(Icons.close,
-                    color: Colors.white, size: size.width * 0.07),
-                onPressed: () => Navigator.pop(context),
-                tooltip: 'Cerrar',
-              ),
-            ],
-          ),
-        ),
-        // Resto del contenido
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: size.height * 0.02),
-                const _SearchSection(),
-                SizedBox(height: size.height * 0.025),
-                const _CustomerListSection(),
-                SizedBox(height: size.height * 0.1), // Espacio para el FAB
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-///Sección de búsqueda
-class _SearchSection extends StatefulWidget {
-  const _SearchSection({Key? key}) : super(key: key);
-
-  @override
-  State<_SearchSection> createState() => _SearchSectionState();
-}
-
-class _SearchSectionState extends State<_SearchSection> {
   final TextEditingController _searchController = TextEditingController();
-  List<Map<String, dynamic>> _customers = [];
+  List<Map<String, dynamic>> _allCustomers = [];
   List<Map<String, dynamic>> _displayedCustomers = [];
   bool _isLoading = false;
   bool _hasSearched = false;
@@ -134,7 +142,7 @@ class _SearchSectionState extends State<_SearchSection> {
   }
 
   void _initializeMockData() {
-    _customers = [
+    _allCustomers = [
       {
         'customerId': '1',
         'identificationTypeId': '1',
@@ -205,36 +213,25 @@ class _SearchSectionState extends State<_SearchSection> {
 
   Future<void> _searchCustomers() async {
     final query = _searchController.text.trim();
-    if (query.isEmpty) {
-      return;
-    }
+    if (query.isEmpty) return;
+    if (_allCustomers.isEmpty) _initializeMockData();
 
     setState(() {
       _isLoading = true;
       _hasSearched = true;
     });
 
-    // Asegurar que hay datos inicializados
-    if (_customers.isEmpty) {
-      _initializeMockData();
-    }
-
-    // TODO: Implementar búsqueda en el servicio
     await Future.delayed(const Duration(seconds: 1));
 
     if (mounted) {
+      final queryLower = query.toLowerCase();
       setState(() {
-        // Filtrar clientes
-        final queryLower = query.toLowerCase();
-        _displayedCustomers = _customers.where((customer) {
-          final firstName = (customer['firstName'] ?? '').toLowerCase();
-          final lastName = (customer['lastName'] ?? '').toLowerCase();
-          final businessName = (customer['businessName'] ?? '').toLowerCase();
-          final name = '$firstName $lastName $businessName'.trim();
-          final identification =
-              (customer['identification'] ?? '').toLowerCase();
-          return name.contains(queryLower) ||
-              identification.contains(queryLower);
+        _displayedCustomers = _allCustomers.where((c) {
+          final name =
+              '${c['firstName'] ?? ''} ${c['lastName'] ?? ''} ${c['businessName'] ?? ''}'
+                  .toLowerCase();
+          final id = (c['identification'] ?? '').toLowerCase();
+          return name.contains(queryLower) || id.contains(queryLower);
         }).toList();
         _isLoading = false;
       });
@@ -242,23 +239,18 @@ class _SearchSectionState extends State<_SearchSection> {
   }
 
   Future<void> _loadAllCustomers() async {
+    if (_allCustomers.isEmpty) _initializeMockData();
     setState(() {
       _isLoading = true;
       _hasSearched = true;
       _searchController.clear();
     });
 
-    // Asegurar que hay datos inicializados
-    if (_customers.isEmpty) {
-      _initializeMockData();
-    }
-
-    // TODO: Implementar carga de todos los clientes desde el servicio
     await Future.delayed(const Duration(seconds: 1));
 
     if (mounted) {
       setState(() {
-        _displayedCustomers = _customers.take(20).toList();
+        _displayedCustomers = _allCustomers.take(20).toList();
         _isLoading = false;
       });
     }
@@ -273,111 +265,206 @@ class _SearchSectionState extends State<_SearchSection> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final horizontalPadding = size.width * 0.05;
-    final fontSize = size.width * 0.035;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-      child: Column(
+    final searchWidget = _SearchSection(
+      controller: _searchController,
+      onSearch: _searchCustomers,
+      onLoadAll: _loadAllCustomers,
+      onClear: _clearSearch,
+    );
+
+    final resultWidget = _CustomerResultSection(
+      isLoading: _isLoading,
+      hasSearched: _hasSearched,
+      customers: _displayedCustomers,
+      onRefresh: _loadAllCustomers,
+    );
+
+    if (isLandscape) {
+      return Row(
         children: [
-          // Campo de búsqueda
-          Container(
-            decoration: BoxDecoration(
-              color: AppTheme.white.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(15),
-              border: Border.all(color: AppTheme.primaryButton, width: 1),
-            ),
-            child: TextField(
-              controller: _searchController,
-              style: TextStyle(color: Colors.white, fontSize: fontSize),
-              decoration: InputDecoration(
-                hintText: AppLocalizations.of(context).searchCustomersHint,
-                hintStyle: TextStyle(
-                    color: Colors.white.withOpacity(0.5), fontSize: fontSize),
-                prefixIcon: Icon(Icons.search,
-                    color: AppTheme.primaryButton, size: size.width * 0.06),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: Icon(Icons.clear,
-                            color: AppTheme.primaryButton,
-                            size: size.width * 0.06),
-                        onPressed: () {
-                          _searchController.clear();
-                          _clearSearch();
-                          setState(() {});
-                        },
-                      )
-                    : null,
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: size.width * 0.05,
-                  vertical: size.height * 0.018,
-                ),
-              ),
-              onChanged: (value) {
-                setState(() {});
-              },
-              onSubmitted: (value) {
-                if (value.trim().isNotEmpty) {
-                  _searchCustomers();
-                }
-              },
+          SizedBox(
+            width: 300,
+            child: Column(
+              children: [
+                const SizedBox(height: 8),
+                searchWidget,
+                const SizedBox(height: 8),
+              ],
             ),
           ),
-          SizedBox(height: size.height * 0.018),
-          // Botones de acción
-          Row(
+          const VerticalDivider(width: 1, color: Colors.white12, thickness: 1),
+          Expanded(child: resultWidget),
+        ],
+      );
+    }
+
+    // Portrait
+    final size = MediaQuery.of(context).size;
+    return Column(
+      children: [
+        const UserSessionTitle(),
+        Container(
+          padding: EdgeInsets.only(
+            left: size.width * 0.05,
+            right: size.width * 0.05,
+          ),
+          child: Row(
             children: [
               Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    if (_searchController.text.trim().isNotEmpty) {
-                      _searchCustomers();
-                    }
-                  },
-                  icon: Icon(Icons.search, size: size.width * 0.045),
-                  label: Text(AppLocalizations.of(context).btnSearch,
-                      style: TextStyle(fontSize: fontSize)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primaryButton,
-                    foregroundColor: AppTheme.secondary,
-                    elevation: 0,
-                    padding:
-                        EdgeInsets.symmetric(vertical: size.height * 0.018),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(width: size.width * 0.025),
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: _loadAllCustomers,
-                  icon: Icon(Icons.list, size: size.width * 0.045),
-                  label: Text(AppLocalizations.of(context).btnLoadLast,
-                      style: TextStyle(fontSize: fontSize)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.secondaryButton,
-                    foregroundColor: AppTheme.secondary,
-                    elevation: 0,
-                    padding:
-                        EdgeInsets.symmetric(vertical: size.height * 0.018),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
+                child: Builder(
+                  builder: (ctx) => PageTitleWidget(
+                      title: AppLocalizations.of(ctx).pageClientsTitle),
                 ),
               ),
             ],
           ),
-          // Pasar datos a la sección de lista
-          _CustomerListContent(
-            isLoading: _isLoading,
-            hasSearched: _hasSearched,
-            customers: _displayedCustomers,
-            onRefresh: _loadAllCustomers,
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 16),
+                searchWidget,
+                const SizedBox(height: 20),
+                resultWidget,
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+///Sección de búsqueda (sin estado propio — estado en _ClientScreenBodyState)
+class _SearchSection extends StatefulWidget {
+  final TextEditingController controller;
+  final VoidCallback onSearch;
+  final VoidCallback onLoadAll;
+  final VoidCallback onClear;
+
+  const _SearchSection({
+    Key? key,
+    required this.controller,
+    required this.onSearch,
+    required this.onLoadAll,
+    required this.onClear,
+  }) : super(key: key);
+
+  @override
+  State<_SearchSection> createState() => _SearchSectionState();
+}
+
+class _SearchSectionState extends State<_SearchSection> {
+  @override
+  Widget build(BuildContext context) {
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final size = MediaQuery.of(context).size;
+    final hPad = isLandscape ? 12.0 : size.width * 0.05;
+    final fontSize = isLandscape ? 13.0 : size.width * 0.035;
+    final btnVPad = isLandscape ? 10.0 : 14.0;
+
+    final searchField = Container(
+      decoration: BoxDecoration(
+        color: AppTheme.white.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppTheme.primaryButton, width: 1),
+      ),
+      child: TextField(
+        controller: widget.controller,
+        style: TextStyle(color: Colors.white, fontSize: fontSize),
+        decoration: InputDecoration(
+          hintText: AppLocalizations.of(context).searchCustomersHint,
+          hintStyle: TextStyle(
+              color: Colors.white.withOpacity(0.5), fontSize: fontSize),
+          prefixIcon:
+              Icon(Icons.search, color: AppTheme.primaryButton, size: 20),
+          suffixIcon: widget.controller.text.isNotEmpty
+              ? IconButton(
+                  icon: const Icon(Icons.clear,
+                      color: AppTheme.primaryButton, size: 18),
+                  onPressed: () {
+                    widget.controller.clear();
+                    widget.onClear();
+                    setState(() {});
+                  },
+                )
+              : null,
+          border: InputBorder.none,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          isDense: isLandscape,
+        ),
+        onChanged: (_) => setState(() {}),
+        onSubmitted: (value) {
+          if (value.trim().isNotEmpty) widget.onSearch();
+        },
+      ),
+    );
+
+    final btnSearch = ElevatedButton.icon(
+      onPressed: () {
+        if (widget.controller.text.trim().isNotEmpty) widget.onSearch();
+      },
+      icon: const Icon(Icons.search, size: 18),
+      label: Text(AppLocalizations.of(context).btnSearch,
+          style: TextStyle(fontSize: fontSize)),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppTheme.primaryButton,
+        foregroundColor: AppTheme.secondary,
+        elevation: 0,
+        padding: EdgeInsets.symmetric(vertical: btnVPad, horizontal: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+
+    final btnAll = ElevatedButton.icon(
+      onPressed: widget.onLoadAll,
+      icon: const Icon(Icons.list, size: 18),
+      label: Text(AppLocalizations.of(context).btnLoadLast,
+          style: TextStyle(fontSize: fontSize)),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppTheme.secondaryButton,
+        foregroundColor: AppTheme.secondary,
+        elevation: 0,
+        padding: EdgeInsets.symmetric(vertical: btnVPad, horizontal: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+
+    if (isLandscape) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            searchField,
+            const SizedBox(height: 8),
+            btnSearch,
+            const SizedBox(height: 6),
+            btnAll,
+          ],
+        ),
+      );
+    }
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: hPad),
+      child: Column(
+        children: [
+          searchField,
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              Expanded(child: btnSearch),
+              const SizedBox(width: 12),
+              Expanded(child: btnAll),
+            ],
           ),
         ],
       ),
@@ -385,26 +472,14 @@ class _SearchSectionState extends State<_SearchSection> {
   }
 }
 
-///Sección de listado de clientes
-class _CustomerListSection extends StatelessWidget {
-  const _CustomerListSection({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    // Este widget solo sirve como contenedor
-    // El contenido real se maneja en _SearchSectionState
-    return const SizedBox.shrink();
-  }
-}
-
 ///Contenido de la lista de clientes
-class _CustomerListContent extends StatelessWidget {
+class _CustomerResultSection extends StatelessWidget {
   final bool isLoading;
   final bool hasSearched;
   final List<Map<String, dynamic>> customers;
   final VoidCallback onRefresh;
 
-  const _CustomerListContent({
+  const _CustomerResultSection({
     Key? key,
     required this.isLoading,
     required this.hasSearched,
@@ -415,6 +490,8 @@ class _CustomerListContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
     // Estado inicial
     if (!hasSearched) {
@@ -444,37 +521,55 @@ class _CustomerListContent extends StatelessWidget {
     }
 
     // Lista de clientes
+    final hPad = isLandscape ? 16.0 : size.width * 0.05;
+    final listView = ListView.builder(
+      shrinkWrap: !isLandscape,
+      physics: isLandscape
+          ? const AlwaysScrollableScrollPhysics()
+          : const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.symmetric(horizontal: hPad),
+      itemCount: customers.length,
+      itemBuilder: (context, index) {
+        final customer = customers[index];
+        return _CustomerCard(
+          customer: customer,
+          onTap: () => _showCustomerDetail(context, customer),
+          onEdit: () => _navigateToEditCustomer(context, customer, onRefresh),
+          onDelete: () => _confirmDeleteCustomer(context, customer, onRefresh),
+        );
+      },
+    );
+
+    if (isLandscape) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(hPad, 10, hPad, 6),
+            child: Text(
+              AppLocalizations.of(context).customersFound(customers.length),
+              style: const TextStyle(color: Colors.white70, fontSize: 12),
+            ),
+          ),
+          Expanded(child: listView),
+        ],
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: size.height * 0.012),
+        const SizedBox(height: 10),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+          padding: EdgeInsets.symmetric(horizontal: hPad),
           child: Text(
             AppLocalizations.of(context).customersFound(customers.length),
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: size.width * 0.032,
-            ),
+            style:
+                TextStyle(color: Colors.white70, fontSize: size.width * 0.032),
           ),
         ),
-        SizedBox(height: size.height * 0.012),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: customers.length,
-          itemBuilder: (context, index) {
-            final customer = customers[index];
-            return _CustomerCard(
-              customer: customer,
-              onTap: () => _showCustomerDetail(context, customer),
-              onEdit: () =>
-                  _navigateToEditCustomer(context, customer, onRefresh),
-              onDelete: () =>
-                  _confirmDeleteCustomer(context, customer, onRefresh),
-            );
-          },
-        ),
+        const SizedBox(height: 10),
+        listView,
       ],
     );
   }
@@ -660,30 +755,32 @@ class _EmptyStateWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
     return Padding(
-      padding: EdgeInsets.all(size.height * 0.05),
+      padding: EdgeInsets.all(isLandscape ? 16 : 32),
       child: Column(
         children: [
           Icon(icon,
-              size: size.width * 0.18,
+              size: isLandscape ? 40.0 : size.width * 0.18,
               color: AppTheme.primaryButton.withOpacity(0.5)),
-          SizedBox(height: size.height * 0.025),
+          SizedBox(height: isLandscape ? 8 : 20),
           Text(
             title,
             style: TextStyle(
               color: Colors.white,
-              fontSize: size.width * 0.048,
+              fontSize: isLandscape ? 14.0 : size.width * 0.048,
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: size.height * 0.012),
+          SizedBox(height: isLandscape ? 4 : 10),
           Text(
             message,
             style: TextStyle(
               color: Colors.white.withOpacity(0.7),
-              fontSize: size.width * 0.035,
+              fontSize: isLandscape ? 11.0 : size.width * 0.035,
             ),
             textAlign: TextAlign.center,
           ),
@@ -722,7 +819,7 @@ class _CustomerDetailSheet extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: size.height * 0.025),
+          const SizedBox(height: 20),
           Text(
             displayName,
             style: TextStyle(
@@ -731,7 +828,7 @@ class _CustomerDetailSheet extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: size.height * 0.018),
+          const SizedBox(height: 14),
           _DetailRow(
             icon: Icons.badge_rounded,
             label: AppLocalizations.of(context).labelIdentificationType,
@@ -763,7 +860,7 @@ class _CustomerDetailSheet extends StatelessWidget {
               label: AppLocalizations.of(context).labelAddress,
               value: customer['address'],
             ),
-          SizedBox(height: size.height * 0.025),
+          const SizedBox(height: 20),
         ],
       ),
     );
@@ -788,7 +885,7 @@ class _DetailRow extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
           Icon(icon, color: AppTheme.primaryButton, size: size.width * 0.048),

@@ -43,230 +43,251 @@ class _ItemStockScreenState extends State<ItemStockScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final size = MediaQuery.of(context).size;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
     return Scaffold(
       body: Stack(
         children: [
           const BrackgroundWidget(),
           SafeArea(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: size.height * 0.02),
-                    // Título
-                    PageTitleWidget(title: l10n.itemStockTitle),
-                    SizedBox(height: size.height * 0.03),
+            child: isLandscape
+                ? _buildLandscape(context, l10n)
+                : _buildPortrait(context, l10n),
+          ),
+        ],
+      ),
+    );
+  }
 
-                    // Info del producto
-                    Container(
-                      padding: EdgeInsets.all(size.width * 0.04),
-                      decoration: BoxDecoration(
-                        color: AppTheme.white.withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(
-                            color: AppTheme.primaryButton.withOpacity(0.4),
-                            width: 1),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: size.width * 0.14,
-                            height: size.width * 0.14,
-                            decoration: BoxDecoration(
-                              color: AppTheme.primaryButton.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                  color: AppTheme.primaryButton, width: 2),
-                            ),
-                            child: widget.item.media?.image != null
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Image.memory(
-                                        widget.item.media?.image ??
-                                            Uint8List(0),
-                                        fit: BoxFit.cover),
-                                  )
-                                : const Icon(Icons.inventory_2,
-                                    color: AppTheme.primaryButton, size: 30),
-                          ),
-                          SizedBox(width: size.width * 0.04),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.item.name,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: size.width * 0.045,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                if (widget.item.searchKey != null &&
-                                    widget.item.searchKey!.isNotEmpty)
-                                  Text(
-                                    l10n.labelSearchKeyPrefix(
-                                        widget.item.searchKey!),
-                                    style: TextStyle(
-                                      color: Colors.white60,
-                                      fontSize: size.width * 0.032,
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+  Widget _buildPortrait(BuildContext context, AppLocalizations l10n) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 16),
+          PageTitleWidget(title: l10n.itemStockTitle),
+          const SizedBox(height: 20),
+          _productInfoCard(l10n),
+          const SizedBox(height: 20),
+          _stockInfoRow(l10n),
+          const SizedBox(height: 20),
+          _form(l10n),
+          const SizedBox(height: 28),
+          _actionButtons(context, l10n),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
 
-                    SizedBox(height: size.height * 0.03),
+  Widget _buildLandscape(BuildContext context, AppLocalizations l10n) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Panel izquierdo: info
+        SizedBox(
+          width: 280,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(16, 12, 12, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                PageTitleWidget(title: l10n.itemStockTitle),
+                const SizedBox(height: 14),
+                _productInfoCard(l10n),
+                const SizedBox(height: 14),
+                _stockInfoRow(l10n),
+              ],
+            ),
+          ),
+        ),
+        // Divisor
+        Container(width: 1, color: Colors.white.withOpacity(0.1)),
+        // Panel derecho: formulario + botones
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _form(l10n),
+                const SizedBox(height: 20),
+                _actionButtons(context, l10n),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
-                    // Stock actual
-                    _StockInfoRow(
-                      label: l10n.labelCurrentStock,
-                      value:
-                          l10n.labelStockPrefix(widget.item.stock?.stock ?? 0),
-                      icon: Icons.inventory_rounded,
-                      color: Colors.orange,
-                    ),
-
-                    SizedBox(height: size.height * 0.03),
-
-                    // Formulario
-                    Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n.labelNewStock,
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: size.width * 0.038,
-                            ),
-                          ),
-                          SizedBox(height: size.height * 0.012),
-                          TextFormField(
-                            controller: _stockController,
-                            style: const TextStyle(color: Colors.white),
-                            keyboardType: const TextInputType.numberWithOptions(
-                                decimal: false),
-                            autofocus: true,
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.inventory_2_outlined,
-                                  color: Colors.orange),
-                              labelText: l10n.labelStockField,
-                              hintText: l10n.hintStockNew,
-                              floatingLabelStyle: TextStyle(
-                                  color: Colors.white.withOpacity(0.8)),
-                              hintStyle: TextStyle(
-                                  color: Colors.white.withOpacity(0.3)),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return l10n.validatorStockRequired;
-                              }
-                              final n = int.tryParse(value.trim());
-                              if (n == null || n < 0) {
-                                return l10n.validatorValueInvalid;
-                              }
-                              return null;
-                            },
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                          ),
-
-                          SizedBox(height: size.height * 0.025),
-
-                          // Ubicación
-                          TextFormField(
-                            controller: _locationController,
-                            style: const TextStyle(color: Colors.white),
-                            keyboardType: TextInputType.text,
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.location_on_outlined,
-                                  color: Colors.orange),
-                              labelText: l10n.labelStockLocation,
-                              hintText: l10n.hintStockLocation,
-                              floatingLabelStyle: TextStyle(
-                                  color: Colors.white.withOpacity(0.8)),
-                              hintStyle: TextStyle(
-                                  color: Colors.white.withOpacity(0.3)),
-                            ),
-                            validator: (value) {
-                              if (value != null &&
-                                  value.trim().isNotEmpty &&
-                                  value.trim().length < 3) {
-                                return l10n.validatorMinLength(3);
-                              }
-                              return null;
-                            },
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    SizedBox(height: size.height * 0.05),
-
-                    // Botones
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed:
-                                _isSaving ? null : () => Navigator.pop(context),
-                            icon: const Icon(Icons.close_rounded),
-                            label: Text(l10n.btnCancel),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppTheme.actionDanger,
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              padding: EdgeInsets.symmetric(
-                                  vertical: size.height * 0.018),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: size.width * 0.04),
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: _isSaving ? null : _onSave,
-                            icon: _isSaving
-                                ? const ButtonLoadingIndicator()
-                                : const Icon(Icons.save_rounded),
-                            label:
-                                Text(_isSaving ? l10n.btnSaving : l10n.btnSave),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppTheme.actionSave,
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              padding: EdgeInsets.symmetric(
-                                  vertical: size.height * 0.018),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    SizedBox(height: size.height * 0.04),
-                  ],
+  Widget _productInfoCard(AppLocalizations l10n) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppTheme.white.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+            color: AppTheme.primaryButton.withOpacity(0.4), width: 1),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              color: AppTheme.primaryButton.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: AppTheme.primaryButton, width: 2),
+            ),
+            child: widget.item.media?.image != null
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.memory(
+                        widget.item.media?.image ?? Uint8List(0),
+                        fit: BoxFit.cover),
+                  )
+                : const Icon(Icons.inventory_2,
+                    color: AppTheme.primaryButton, size: 28),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.item.name,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
+                if (widget.item.searchKey != null &&
+                    widget.item.searchKey!.isNotEmpty)
+                  Text(
+                    l10n.labelSearchKeyPrefix(widget.item.searchKey!),
+                    style: const TextStyle(color: Colors.white60, fontSize: 12),
+                  ),
+              ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _stockInfoRow(AppLocalizations l10n) {
+    return _StockInfoRow(
+      label: l10n.labelCurrentStock,
+      value: l10n.labelStockPrefix(widget.item.stock?.stock ?? 0),
+      icon: Icons.inventory_rounded,
+      color: Colors.orange,
+    );
+  }
+
+  Widget _form(AppLocalizations l10n) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l10n.labelNewStock,
+              style: const TextStyle(color: Colors.white70, fontSize: 14)),
+          const SizedBox(height: 10),
+          TextFormField(
+            controller: _stockController,
+            style: const TextStyle(color: Colors.white),
+            keyboardType: const TextInputType.numberWithOptions(decimal: false),
+            autofocus: true,
+            decoration: InputDecoration(
+              prefixIcon:
+                  const Icon(Icons.inventory_2_outlined, color: Colors.orange),
+              labelText: l10n.labelStockField,
+              hintText: l10n.hintStockNew,
+              floatingLabelStyle:
+                  TextStyle(color: Colors.white.withOpacity(0.8)),
+              hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
+            ),
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return l10n.validatorStockRequired;
+              }
+              final n = int.tryParse(value.trim());
+              if (n == null || n < 0) return l10n.validatorValueInvalid;
+              return null;
+            },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+          ),
+          const SizedBox(height: 16),
+          TextFormField(
+            controller: _locationController,
+            style: const TextStyle(color: Colors.white),
+            keyboardType: TextInputType.text,
+            decoration: InputDecoration(
+              prefixIcon:
+                  const Icon(Icons.location_on_outlined, color: Colors.orange),
+              labelText: l10n.labelStockLocation,
+              hintText: l10n.hintStockLocation,
+              floatingLabelStyle:
+                  TextStyle(color: Colors.white.withOpacity(0.8)),
+              hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
+            ),
+            validator: (value) {
+              if (value != null &&
+                  value.trim().isNotEmpty &&
+                  value.trim().length < 3) {
+                return l10n.validatorMinLength(3);
+              }
+              return null;
+            },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _actionButtons(BuildContext context, AppLocalizations l10n) {
+    return Row(
+      children: [
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: _isSaving ? null : () => Navigator.pop(context),
+            icon: const Icon(Icons.close_rounded),
+            label: Text(l10n.btnCancel),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.actionDanger,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: _isSaving ? null : _onSave,
+            icon: _isSaving
+                ? const ButtonLoadingIndicator()
+                : const Icon(Icons.save_rounded),
+            label: Text(_isSaving ? l10n.btnSaving : l10n.btnSave),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.actionSave,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -323,11 +344,8 @@ class _StockInfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Container(
-      padding: EdgeInsets.symmetric(
-          horizontal: size.width * 0.04, vertical: size.height * 0.018),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
@@ -335,25 +353,17 @@ class _StockInfoRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(icon, color: color, size: size.width * 0.06),
-          SizedBox(width: size.width * 0.03),
+          Icon(icon, color: color, size: 24),
+          const SizedBox(width: 12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                label,
-                style: TextStyle(
-                  color: Colors.white60,
-                  fontSize: size.width * 0.03,
-                ),
-              ),
+              Text(label,
+                  style: const TextStyle(color: Colors.white60, fontSize: 12)),
               Text(
                 value,
                 style: TextStyle(
-                  color: color,
-                  fontSize: size.width * 0.045,
-                  fontWeight: FontWeight.bold,
-                ),
+                    color: color, fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ],
           ),

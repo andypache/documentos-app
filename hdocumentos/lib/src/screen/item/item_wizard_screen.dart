@@ -51,18 +51,20 @@ class _ItemWizardBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final l10n = AppLocalizations.of(context);
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SafeArea(
         child: Column(
           children: [
-            const UserSessionTitle(),
+            if (!isLandscape) const UserSessionTitle(),
             // ── Encabezado: título + subtítulo + botón cerrar ─────────
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: size.width * 0.05,
-                vertical: size.height * 0.01,
+                vertical: isLandscape ? 4 : 8,
               ),
               child: Row(
                 children: [
@@ -74,7 +76,7 @@ class _ItemWizardBody extends StatelessWidget {
                           isEditing ? l10n.itemEditTitle : l10n.itemCreateTitle,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: size.width * 0.052,
+                            fontSize: isLandscape ? 16 : size.width * 0.052,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 0.5,
                           ),
@@ -85,7 +87,7 @@ class _ItemWizardBody extends StatelessWidget {
                               : l10n.itemCreateSubtitle,
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.6),
-                            fontSize: size.width * 0.032,
+                            fontSize: isLandscape ? 11 : size.width * 0.032,
                           ),
                         ),
                       ],
@@ -96,22 +98,27 @@ class _ItemWizardBody extends StatelessWidget {
                     icon: Icon(
                       Icons.close_rounded,
                       color: Colors.white.withOpacity(0.8),
-                      size: size.width * 0.07,
+                      size: isLandscape ? 22 : size.width * 0.07,
                     ),
                   ),
                 ],
               ),
             ),
-            // ── Indicador de pasos ────────────────────────────────────
-            const _ItemStepperIndicator(),
-            // ── Contenido scrollable ──────────────────────────────────
+            // ── Contenido scrollable (stepper + formulario) ───────────
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(
-                  horizontal: size.width * 0.05,
-                  vertical: size.height * 0.015,
+                child: Column(
+                  children: [
+                    const _ItemStepperIndicator(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: size.width * 0.05,
+                        vertical: isLandscape ? 8 : 12,
+                      ),
+                      child: const _ItemWizardContainer(),
+                    ),
+                  ],
                 ),
-                child: const _ItemWizardContainer(),
               ),
             ),
             // ── Botones de navegación ─────────────────────────────────
@@ -150,7 +157,7 @@ class _ItemStepperIndicator extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: size.width * 0.04,
-        vertical: size.height * 0.01,
+        vertical: 6,
       ),
       child: Row(
         children: List.generate(_stepIcons.length * 2 - 1, (i) {
@@ -159,7 +166,7 @@ class _ItemStepperIndicator extends StatelessWidget {
             return Expanded(
               child: Container(
                 height: 2,
-                margin: EdgeInsets.only(bottom: size.height * 0.03),
+                margin: const EdgeInsets.only(bottom: 24),
                 decoration: BoxDecoration(
                   color: stepIndex < current
                       ? AppTheme.primaryButton
@@ -205,7 +212,7 @@ class _ItemStepperIndicator extends StatelessWidget {
                           ),
                   ),
                 ),
-                SizedBox(height: size.height * 0.005),
+                const SizedBox(height: 4),
                 Text(
                   stepLabels[stepIndex],
                   style: TextStyle(
@@ -326,7 +333,7 @@ class _StepCircle extends StatelessWidget {
                   ),
           ),
         ),
-        SizedBox(height: size.height * 0.005),
+        const SizedBox(height: 4),
         Text(
           label,
           style: TextStyle(
@@ -389,11 +396,19 @@ class _WizardNavigationButtons extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final l10n = AppLocalizations.of(context);
     final bool busy = itemForm.isLoading;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final double iconSize = isLandscape ? 18.0 : size.width * 0.045;
+    final double fontSize = isLandscape ? 13.0 : size.width * 0.034;
+    final EdgeInsets btnPadding = EdgeInsets.symmetric(
+      horizontal: isLandscape ? 16.0 : size.width * 0.05,
+      vertical: 10,
+    );
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: size.width * 0.05,
-        vertical: size.height * 0.015,
+        horizontal: isLandscape ? 16.0 : size.width * 0.05,
+        vertical: 10,
       ),
       decoration: BoxDecoration(
         color: Colors.black.withOpacity(0.2),
@@ -419,11 +434,11 @@ class _WizardNavigationButtons extends StatelessWidget {
               itemForm.currentStep > 0
                   ? Icons.arrow_back_rounded
                   : Icons.close_rounded,
-              size: size.width * 0.045,
+              size: iconSize,
             ),
             label: Text(
               itemForm.currentStep > 0 ? l10n.btnPrevious : l10n.btnCancel,
-              style: TextStyle(fontSize: size.width * 0.034),
+              style: TextStyle(fontSize: fontSize),
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: itemForm.currentStep > 0
@@ -431,10 +446,7 @@ class _WizardNavigationButtons extends StatelessWidget {
                   : AppTheme.actionDanger,
               foregroundColor: Colors.white,
               elevation: 0,
-              padding: EdgeInsets.symmetric(
-                horizontal: size.width * 0.05,
-                vertical: size.height * 0.012,
-              ),
+              padding: btnPadding,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
             ),
@@ -445,7 +457,7 @@ class _WizardNavigationButtons extends StatelessWidget {
             l10n.stepCounter(itemForm.currentStep + 1, 4),
             style: TextStyle(
               color: Colors.white.withOpacity(0.5),
-              fontSize: size.width * 0.032,
+              fontSize: isLandscape ? 12.0 : size.width * 0.032,
             ),
           ),
 
@@ -460,20 +472,15 @@ class _WizardNavigationButtons extends StatelessWidget {
                                 l10n.msgRequiredFields);
                           }
                         },
-                  icon: Icon(Icons.arrow_forward_rounded,
-                      size: size.width * 0.045),
+                  icon: Icon(Icons.arrow_forward_rounded, size: iconSize),
                   label: Text(l10n.btnNext,
                       style: TextStyle(
-                          fontSize: size.width * 0.034,
-                          fontWeight: FontWeight.bold)),
+                          fontSize: fontSize, fontWeight: FontWeight.bold)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryButton,
                     foregroundColor: AppTheme.secondary,
                     elevation: 0,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: size.width * 0.05,
-                      vertical: size.height * 0.012,
-                    ),
+                    padding: btnPadding,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                   ),
@@ -481,22 +488,18 @@ class _WizardNavigationButtons extends StatelessWidget {
               : ElevatedButton.icon(
                   onPressed: busy ? null : () => _onSaveItem(context, itemForm),
                   icon: busy
-                      ? ButtonLoadingIndicator(size: size.width * 0.045)
-                      : Icon(Icons.save_rounded, size: size.width * 0.045),
+                      ? ButtonLoadingIndicator(size: iconSize)
+                      : Icon(Icons.save_rounded, size: iconSize),
                   label: Text(
                     busy ? l10n.btnSaving : l10n.btnSave,
                     style: TextStyle(
-                        fontSize: size.width * 0.034,
-                        fontWeight: FontWeight.bold),
+                        fontSize: fontSize, fontWeight: FontWeight.bold),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.actionSave,
                     foregroundColor: Colors.white,
                     elevation: 0,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: size.width * 0.05,
-                      vertical: size.height * 0.012,
-                    ),
+                    padding: btnPadding,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                   ),

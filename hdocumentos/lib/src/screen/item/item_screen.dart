@@ -77,14 +77,16 @@ class _BottomActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final l10n = AppLocalizations.of(context);
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final hPad = isLandscape ? 16.0 : MediaQuery.of(context).size.width * 0.05;
+    final vPad = isLandscape ? 6.0 : 12.0;
+    final iconSize = isLandscape ? 18.0 : 22.0;
+    final fontSize = isLandscape ? 13.0 : 14.0;
 
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: size.width * 0.05,
-        vertical: size.height * 0.015,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: hPad, vertical: vPad),
       decoration: BoxDecoration(
         color: Colors.black.withOpacity(0.2),
         border: Border(
@@ -97,44 +99,32 @@ class _BottomActionBar extends StatelessWidget {
           // Cancelar
           ElevatedButton.icon(
             onPressed: onCancel,
-            icon: Icon(Icons.close_rounded, size: size.width * 0.045),
-            label: Text(
-              l10n.btnCancel,
-              style: TextStyle(fontSize: size.width * 0.034),
-            ),
+            icon: Icon(Icons.close_rounded, size: iconSize),
+            label: Text(l10n.btnCancel, style: TextStyle(fontSize: fontSize)),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.actionDanger,
               foregroundColor: Colors.white,
               elevation: 0,
-              padding: EdgeInsets.symmetric(
-                horizontal: size.width * 0.05,
-                vertical: size.height * 0.012,
-              ),
+              padding:
+                  EdgeInsets.symmetric(horizontal: hPad, vertical: vPad + 2),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
+                  borderRadius: BorderRadius.circular(10)),
             ),
           ),
-
           // Nuevo Producto
           ElevatedButton.icon(
             onPressed: onNewProduct,
-            icon: Icon(Icons.add_rounded, size: size.width * 0.045),
-            label: Text(
-              l10n.btnNewProduct,
-              style: TextStyle(fontSize: size.width * 0.034),
-            ),
+            icon: Icon(Icons.add_rounded, size: iconSize),
+            label:
+                Text(l10n.btnNewProduct, style: TextStyle(fontSize: fontSize)),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.primaryButton,
               foregroundColor: AppTheme.secondary,
               elevation: 0,
-              padding: EdgeInsets.symmetric(
-                horizontal: size.width * 0.05,
-                vertical: size.height * 0.012,
-              ),
+              padding:
+                  EdgeInsets.symmetric(horizontal: hPad, vertical: vPad + 2),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
+                  borderRadius: BorderRadius.circular(10)),
             ),
           ),
         ],
@@ -149,22 +139,43 @@ class _ItemScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
+    if (isLandscape) {
+      // En horizontal: layout de dos columnas — búsqueda | lista
+      return Row(
+        children: [
+          // Panel izquierdo: búsqueda
+          SizedBox(
+            width: 320,
+            child: Column(
+              children: [
+                const SizedBox(height: 8),
+                const _SearchSection(),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+          const VerticalDivider(width: 1, color: Colors.white12, thickness: 1),
+          // Panel derecho: lista
+          const Expanded(child: _ItemListSection()),
+        ],
+      );
+    }
+
+    // Portrait: layout original
+    final size = MediaQuery.of(context).size;
     return Column(
       children: [
-        // Widget de información del usuario
         const UserSessionTitle(),
-        // Header con título
         Padding(
           padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
           child: const PageTitleWidget(title: ''),
         ),
         SizedBox(height: size.height * 0.02),
-        // Sección de búsqueda (fija arriba)
         const _SearchSection(),
         SizedBox(height: size.height * 0.025),
-        // Lista con scroll infinito (ocupa el espacio restante)
         const Expanded(child: _ItemListSection()),
       ],
     );
@@ -191,104 +202,115 @@ class _SearchSectionState extends State<_SearchSection> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ItemListProvider>(context, listen: false);
-    final size = MediaQuery.of(context).size;
-    final horizontalPadding = size.width * 0.05;
-    final fontSize = size.width * 0.035;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final hPad = isLandscape ? 12.0 : MediaQuery.of(context).size.width * 0.05;
+    final fontSize =
+        isLandscape ? 13.0 : MediaQuery.of(context).size.width * 0.035;
+    final btnVPad =
+        isLandscape ? 10.0 : MediaQuery.of(context).size.height * 0.018;
 
+    final searchField = Container(
+      decoration: BoxDecoration(
+        color: AppTheme.white.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppTheme.primaryButton, width: 1),
+      ),
+      child: TextField(
+        controller: _searchController,
+        style: TextStyle(color: Colors.white, fontSize: fontSize),
+        decoration: InputDecoration(
+          hintText: AppLocalizations.of(context).searchItemsHint,
+          hintStyle: TextStyle(
+              color: Colors.white.withOpacity(0.5), fontSize: fontSize),
+          prefixIcon:
+              Icon(Icons.search, color: AppTheme.primaryButton, size: 20),
+          suffixIcon: _searchController.text.isNotEmpty
+              ? IconButton(
+                  icon: Icon(Icons.clear,
+                      color: AppTheme.primaryButton, size: 18),
+                  onPressed: () {
+                    _searchController.clear();
+                    provider.clearSearch();
+                    setState(() {});
+                  },
+                )
+              : null,
+          border: InputBorder.none,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          isDense: isLandscape,
+        ),
+        onChanged: (_) => setState(() {}),
+        onSubmitted: (value) {
+          if (value.trim().isNotEmpty) {
+            provider.startLoadFilter(context, value.trim());
+          }
+        },
+      ),
+    );
+
+    final btnSearch = ElevatedButton.icon(
+      onPressed: () {
+        if (_searchController.text.trim().isNotEmpty) {
+          provider.startLoadFilter(context, _searchController.text.trim());
+        }
+      },
+      icon: const Icon(Icons.search, size: 18),
+      label: Text(AppLocalizations.of(context).btnSearch,
+          style: TextStyle(fontSize: fontSize)),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppTheme.primaryButton,
+        foregroundColor: AppTheme.secondary,
+        elevation: 0,
+        padding: EdgeInsets.symmetric(vertical: btnVPad, horizontal: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+
+    final btnAll = ElevatedButton.icon(
+      onPressed: () => provider.startLoadAll(context),
+      icon: const Icon(Icons.list, size: 18),
+      label: Text(AppLocalizations.of(context).btnLoadAll,
+          style: TextStyle(fontSize: fontSize)),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppTheme.secondaryButton,
+        foregroundColor: AppTheme.secondary,
+        elevation: 0,
+        padding: EdgeInsets.symmetric(vertical: btnVPad, horizontal: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+
+    if (isLandscape) {
+      // Landscape: campo + botones en columna compacta
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            searchField,
+            const SizedBox(height: 8),
+            btnSearch,
+            const SizedBox(height: 6),
+            btnAll,
+          ],
+        ),
+      );
+    }
+
+    // Portrait: layout original en columna
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+      padding: EdgeInsets.symmetric(horizontal: hPad),
       child: Column(
         children: [
-          // Campo de búsqueda
-          Container(
-            decoration: BoxDecoration(
-              color: AppTheme.white.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(15),
-              border: Border.all(color: AppTheme.primaryButton, width: 1),
-            ),
-            child: TextField(
-              controller: _searchController,
-              style: TextStyle(color: Colors.white, fontSize: fontSize),
-              decoration: InputDecoration(
-                hintText: AppLocalizations.of(context).searchItemsHint,
-                hintStyle: TextStyle(
-                    color: Colors.white.withOpacity(0.5), fontSize: fontSize),
-                prefixIcon: Icon(Icons.search,
-                    color: AppTheme.primaryButton, size: size.width * 0.06),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: Icon(Icons.clear,
-                            color: AppTheme.primaryButton,
-                            size: size.width * 0.06),
-                        onPressed: () {
-                          _searchController.clear();
-                          provider.clearSearch();
-                          setState(() {});
-                        },
-                      )
-                    : null,
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: size.width * 0.05,
-                  vertical: size.height * 0.018,
-                ),
-              ),
-              onChanged: (value) {
-                setState(() {});
-              },
-              onSubmitted: (value) {
-                if (value.trim().isNotEmpty) {
-                  provider.startLoadFilter(context, value.trim());
-                }
-              },
-            ),
-          ),
-          SizedBox(height: size.height * 0.018),
-          // Botones de acción
+          searchField,
+          const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    if (_searchController.text.trim().isNotEmpty) {
-                      provider.startLoadFilter(
-                          context, _searchController.text.trim());
-                    }
-                  },
-                  icon: Icon(Icons.search, size: size.width * 0.045),
-                  label: Text(AppLocalizations.of(context).btnSearch,
-                      style: TextStyle(fontSize: fontSize)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primaryButton,
-                    foregroundColor: AppTheme.secondary,
-                    elevation: 0,
-                    padding:
-                        EdgeInsets.symmetric(vertical: size.height * 0.018),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(width: size.width * 0.025),
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () => provider.startLoadAll(context),
-                  icon: Icon(Icons.list, size: size.width * 0.045),
-                  label: Text(AppLocalizations.of(context).btnLoadAll,
-                      style: TextStyle(fontSize: fontSize)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.secondaryButton,
-                    foregroundColor: AppTheme.secondary,
-                    elevation: 0,
-                    padding:
-                        EdgeInsets.symmetric(vertical: size.height * 0.018),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              ),
+              Expanded(child: btnSearch),
+              const SizedBox(width: 12),
+              Expanded(child: btnAll),
             ],
           ),
         ],
@@ -615,30 +637,32 @@ class _EmptyStateWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
     return Padding(
-      padding: EdgeInsets.all(size.height * 0.05),
+      padding: EdgeInsets.all(isLandscape ? 16 : size.height * 0.05),
       child: Column(
         children: [
           Icon(icon,
-              size: size.width * 0.18,
+              size: isLandscape ? 40.0 : size.width * 0.18,
               color: AppTheme.primaryButton.withOpacity(0.5)),
-          SizedBox(height: size.height * 0.025),
+          SizedBox(height: isLandscape ? 8 : size.height * 0.025),
           Text(
             title,
             style: TextStyle(
               color: Colors.white,
-              fontSize: size.width * 0.048,
+              fontSize: isLandscape ? 14.0 : size.width * 0.048,
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: size.height * 0.012),
+          SizedBox(height: isLandscape ? 4 : size.height * 0.012),
           Text(
             message,
             style: TextStyle(
               color: Colors.white.withOpacity(0.7),
-              fontSize: size.width * 0.035,
+              fontSize: isLandscape ? 11.0 : size.width * 0.035,
             ),
             textAlign: TextAlign.center,
           ),

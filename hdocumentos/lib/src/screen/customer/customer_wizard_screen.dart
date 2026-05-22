@@ -39,7 +39,6 @@ class _CustomerWizardBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(
         children: [
@@ -48,13 +47,13 @@ class _CustomerWizardBody extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  SizedBox(height: size.height * 0.02),
+                  const SizedBox(height: 16),
                   PageTitleWidget(
                     title: isEditing
                         ? AppLocalizations.of(context).customerEditTitle
                         : AppLocalizations.of(context).customerCreateTitle,
                   ),
-                  SizedBox(height: size.height * 0.025),
+                  const SizedBox(height: 20),
                   const _CustomerWizardContainer(),
                 ],
               ),
@@ -80,11 +79,11 @@ class _CustomerWizardContainer extends StatelessWidget {
       child: Column(
         children: [
           _StepperIndicator(currentStep: customerForm.currentStep),
-          SizedBox(height: size.height * 0.025),
+          SizedBox(height: 20),
           _WizardContent(currentStep: customerForm.currentStep),
-          SizedBox(height: size.height * 0.025),
+          SizedBox(height: 20),
           const _NavigationButtons(),
-          SizedBox(height: size.height * 0.06),
+          SizedBox(height: 32),
         ],
       ),
     );
@@ -102,8 +101,8 @@ class _StepperIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      padding: EdgeInsets.symmetric(
-          horizontal: size.width * 0.04, vertical: size.height * 0.012),
+      padding:
+          EdgeInsets.symmetric(horizontal: size.width * 0.04, vertical: 10),
       child: Row(
         children: [
           _buildStep(context, 0, AppLocalizations.of(context).stepCustomerData,
@@ -161,7 +160,7 @@ class _StepperIndicator extends StatelessWidget {
                     ),
             ),
           ),
-          SizedBox(height: size.height * 0.005),
+          SizedBox(height: 4),
           Text(
             label,
             style: TextStyle(
@@ -222,9 +221,11 @@ class _NavigationButtons extends StatelessWidget {
     final customerForm = Provider.of<CustomerFormProvider>(context);
     final size = MediaQuery.of(context).size;
     final l10n = AppLocalizations.of(context);
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     final btnPadding = EdgeInsets.symmetric(
-      horizontal: size.width * 0.05,
-      vertical: size.height * 0.015,
+      horizontal: isLandscape ? 16.0 : size.width * 0.05,
+      vertical: isLandscape ? 10.0 : 12.0,
     );
 
     return Row(
