@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/provider/form/customer_form_provider.dart';
+import 'package:hdocumentos/src/service/notification_service.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/customer/customer_wizard_step1_widget.dart';
 import 'package:hdocumentos/src/widgets/customer/customer_wizard_step3_widget.dart';
@@ -331,12 +332,7 @@ class _NavigationButtons extends StatelessWidget {
                   ? null
                   : () {
                       if (!customerForm.nextStep()) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(l10n.msgRequiredFields),
-                            backgroundColor: AppTheme.actionDanger,
-                          ),
-                        );
+                        NotificationService.showError(l10n.msgRequiredFields);
                       }
                     },
               icon: Icon(Icons.arrow_forward_rounded, size: iconSize),
@@ -383,12 +379,8 @@ class _NavigationButtons extends StatelessWidget {
       BuildContext context, CustomerFormProvider customerForm) async {
     // Validar paso actual
     if (!customerForm.isValidCurrentStep()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context).msgRequiredFields),
-          backgroundColor: AppTheme.actionDanger,
-        ),
-      );
+      NotificationService.showError(
+          AppLocalizations.of(context).msgRequiredFields);
       return;
     }
 
@@ -404,27 +396,18 @@ class _NavigationButtons extends StatelessWidget {
 
       if (context.mounted) {
         final l10n = AppLocalizations.of(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              customer.customerId != null
-                  ? l10n.customerUpdatedSuccess
-                  : l10n.customerCreatedSuccess,
-            ),
-            backgroundColor: AppTheme.actionSave,
-          ),
+        NotificationService.showSuccess(
+          customer.customerId != null
+              ? l10n.customerUpdatedSuccess
+              : l10n.customerCreatedSuccess,
         );
         Navigator.pop(context, customer);
       }
     } catch (e) {
       customerForm.isLoading = false;
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context).saveError(e.toString())),
-            backgroundColor: AppTheme.actionDanger,
-          ),
-        );
+        NotificationService.showError(
+            AppLocalizations.of(context).saveError(e.toString()));
       }
     }
   }

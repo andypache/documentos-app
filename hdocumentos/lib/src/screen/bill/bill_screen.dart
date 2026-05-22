@@ -18,36 +18,69 @@ class BillScreen extends StatefulWidget {
 class _BillScreenState extends State<BillScreen> {
   @override
   Widget build(BuildContext context) {
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
     return ChangeNotifierProvider(
       create: (_) => BillFormProvider()..initialize(),
       child: Scaffold(
         body: Stack(
           children: [
             const BrackgroundWidget(),
-            Column(
-              children: [
-                const Expanded(child: _BillScreenBody()),
-                Consumer<BillFormProvider>(
-                  builder: (context, provider, _) {
-                    return TotalsPanelWidget(
-                      subtotal: provider.subtotal,
-                      customerDiscount: provider.customerDiscount,
-                      totalTax: provider.totalTax,
-                      total: provider.total,
-                      isCalculating: provider.isCalculating,
-                      canSave: provider.canSave,
-                      onSave: () => _saveBill(context, provider),
-                      customerDiscountLabel:
-                          provider.customerDiscountInfo != null
-                              ? AppLocalizations.of(context).labelDiscountValue(
-                                  provider.customerDiscountInfo!.percentage
-                                      .toStringAsFixed(0))
-                              : null,
-                    );
-                  },
-                ),
-              ],
-            ),
+            if (isLandscape)
+              Row(
+                children: [
+                  const Expanded(child: _BillScreenBody()),
+                  Consumer<BillFormProvider>(
+                    builder: (context, provider, _) {
+                      return SizedBox(
+                        width: 300,
+                        child: TotalsPanelWidget(
+                          subtotal: provider.subtotal,
+                          customerDiscount: provider.customerDiscount,
+                          totalTax: provider.totalTax,
+                          total: provider.total,
+                          isCalculating: provider.isCalculating,
+                          canSave: provider.canSave,
+                          onSave: () => _saveBill(context, provider),
+                          customerDiscountLabel:
+                              provider.customerDiscountInfo != null
+                                  ? AppLocalizations.of(context)
+                                      .labelDiscountValue(provider
+                                          .customerDiscountInfo!.percentage
+                                          .toStringAsFixed(0))
+                                  : null,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              )
+            else
+              Column(
+                children: [
+                  const Expanded(child: _BillScreenBody()),
+                  Consumer<BillFormProvider>(
+                    builder: (context, provider, _) {
+                      return TotalsPanelWidget(
+                        subtotal: provider.subtotal,
+                        customerDiscount: provider.customerDiscount,
+                        totalTax: provider.totalTax,
+                        total: provider.total,
+                        isCalculating: provider.isCalculating,
+                        canSave: provider.canSave,
+                        onSave: () => _saveBill(context, provider),
+                        customerDiscountLabel: provider.customerDiscountInfo !=
+                                null
+                            ? AppLocalizations.of(context).labelDiscountValue(
+                                provider.customerDiscountInfo!.percentage
+                                    .toStringAsFixed(0))
+                            : null,
+                      );
+                    },
+                  ),
+                ],
+              ),
           ],
         ),
       ),
@@ -326,8 +359,12 @@ class _BillScreenBody extends StatelessWidget {
                             isLoading: provider.isLoading,
                           ),
 
-                          // Espacio para el panel de totales
-                          SizedBox(height: size.height * 0.35),
+                          // Espacio para el panel de totales (solo portrait)
+                          if (MediaQuery.of(context).orientation ==
+                              Orientation.portrait)
+                            SizedBox(height: size.height * 0.35)
+                          else
+                            const SizedBox(height: 16),
                         ],
                       );
                     },

@@ -157,20 +157,11 @@ class _HomeScreenBodyState extends State<_HomeScreenBody> {
 
     if (!context.mounted) return;
     final isSuccess = initProvider.isReady;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          isSuccess ? l10n.reloadSuccess : initProvider.errorMessage,
-          style: const TextStyle(color: AppTheme.textPrimary),
-        ),
-        backgroundColor:
-            isSuccess ? AppTheme.actionSave : AppTheme.actionDanger,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        duration: const Duration(seconds: 3),
-      ),
-    );
+    if (isSuccess) {
+      NotificationService.showSuccess(l10n.reloadSuccess);
+    } else {
+      NotificationService.showError(initProvider.errorMessage);
+    }
   }
 
   @override

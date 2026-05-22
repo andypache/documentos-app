@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/screen/customer/customer_wizard_screen.dart';
+import 'package:hdocumentos/src/service/notification_service.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
 
@@ -36,19 +37,8 @@ class ClientScreen extends StatelessWidget {
     );
 
     if (result == true && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            AppLocalizations.of(context).customerCreatedSuccess,
-            style: const TextStyle(color: Colors.white),
-          ),
-          backgroundColor: AppTheme.actionSave,
-          behavior: SnackBarBehavior.floating,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        ),
-      );
+      NotificationService.showSuccess(
+          AppLocalizations.of(context).customerCreatedSuccess);
     }
   }
 }
@@ -721,19 +711,8 @@ class _CustomerResultSection extends StatelessWidget {
 
     if (confirmed == true && context.mounted) {
       // TODO: Implementar eliminación en el servicio
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            AppLocalizations.of(context).customerDeletedSuccess,
-            style: const TextStyle(color: Colors.white),
-          ),
-          backgroundColor: AppTheme.actionSave,
-          behavior: SnackBarBehavior.floating,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        ),
-      );
+      NotificationService.showSuccess(
+          AppLocalizations.of(context).customerDeletedSuccess);
       onRefresh();
     }
   }
