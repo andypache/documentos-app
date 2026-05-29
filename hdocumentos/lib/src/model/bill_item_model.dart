@@ -5,18 +5,12 @@ class BillItemModel {
   final int quantity;
   final double unitPrice;
   final double discount;
-  final double subtotal;
-  final double totalTax;
-  final double total;
 
   BillItemModel({
     required this.item,
     required this.quantity,
     required this.unitPrice,
     this.discount = 0.0,
-    required this.subtotal,
-    required this.totalTax,
-    required this.total,
   });
 
   factory BillItemModel.fromItem({
@@ -27,26 +21,12 @@ class BillItemModel {
   }) {
     final unitPrice = customPrice ?? item.pricing?.price ?? 0.0;
     final discount = customDiscount ?? 0.0;
-    final subtotal = (unitPrice * quantity) - discount;
-
-    // Calcular impuestos
-    double totalTax = 0.0;
-    if (item.itemTaxes != null) {
-      for (var tax in item.itemTaxes!) {
-        totalTax += subtotal * (tax.percentage / 100);
-      }
-    }
-
-    final total = subtotal + totalTax;
 
     return BillItemModel(
       item: item,
       quantity: quantity,
       unitPrice: unitPrice,
       discount: discount,
-      subtotal: subtotal,
-      totalTax: totalTax,
-      total: total,
     );
   }
 
@@ -56,9 +36,6 @@ class BillItemModel {
       quantity: json['quantity'] as int,
       unitPrice: (json['unitPrice'] as num).toDouble(),
       discount: (json['discount'] as num?)?.toDouble() ?? 0.0,
-      subtotal: (json['subtotal'] as num).toDouble(),
-      totalTax: (json['totalTax'] as num).toDouble(),
-      total: (json['total'] as num).toDouble(),
     );
   }
 
@@ -68,9 +45,6 @@ class BillItemModel {
       'quantity': quantity,
       'unitPrice': unitPrice,
       'discount': discount,
-      'subtotal': subtotal,
-      'totalTax': totalTax,
-      'total': total,
     };
   }
 
@@ -90,6 +64,6 @@ class BillItemModel {
 
   @override
   String toString() {
-    return 'BillItemModel{item: ${item.name}, quantity: $quantity, unitPrice: $unitPrice, discount: $discount, total: $total}';
+    return 'BillItemModel{item: ${item.name}, quantity: $quantity, unitPrice: $unitPrice, discount: $discount}';
   }
 }

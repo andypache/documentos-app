@@ -22,7 +22,7 @@ class _BillScreenState extends State<BillScreen> {
         MediaQuery.of(context).orientation == Orientation.landscape;
 
     return ChangeNotifierProvider(
-      create: (_) => BillFormProvider()..initialize(),
+      create: (_) => BillFormProvider()..initialize(context),
       child: Scaffold(
         body: Stack(
           children: [
@@ -38,6 +38,8 @@ class _BillScreenState extends State<BillScreen> {
                         child: TotalsPanelWidget(
                           subtotal: provider.subtotal,
                           customerDiscount: provider.customerDiscount,
+                          itemDiscount: provider.discountItem,
+                          discountTotal: provider.discountTotal,
                           totalTax: provider.totalTax,
                           total: provider.total,
                           isCalculating: provider.isCalculating,
@@ -65,6 +67,8 @@ class _BillScreenState extends State<BillScreen> {
                       return TotalsPanelWidget(
                         subtotal: provider.subtotal,
                         customerDiscount: provider.customerDiscount,
+                        itemDiscount: provider.discountItem,
+                        discountTotal: provider.discountTotal,
                         totalTax: provider.totalTax,
                         total: provider.total,
                         isCalculating: provider.isCalculating,
@@ -336,6 +340,7 @@ class _BillScreenBody extends StatelessWidget {
                           // Lista de productos
                           ProductListWidget(
                             billItems: provider.billItems,
+                            provider: provider,
                             onRemoveItem: (index) => provider.removeItem(index),
                             onUpdateItem: (index, updatedItem) {
                               provider.updateItem(
@@ -345,7 +350,9 @@ class _BillScreenBody extends StatelessWidget {
                                 discount: updatedItem.discount,
                               );
                             },
-                            onAddProduct: () => _showProductSearch(context),
+                            onAddProduct: provider.isCalculating
+                                ? null
+                                : () => _showProductSearch(context),
                           ),
                           SizedBox(height: size.height * 0.02),
 
@@ -480,15 +487,19 @@ class _BillScreenBody extends StatelessWidget {
   Future<void> _showProductSearch(BuildContext context) async {
     final provider = Provider.of<BillFormProvider>(context, listen: false);
 
+    // No permitir agregar productos si está calculando
+    if (provider.isCalculating) {
+      return;
+    }
+
     final selectedItem = await showDialog<ItemModel>(
       context: context,
       builder: (context) => const ProductSearchDialog(),
     );
 
     if (selectedItem != null) {
-      provider.addItem(selectedItem);
-      // El recálculo se dispara automáticamente en addItem
-      provider.calculateBill(context);
+      // Esperar a que termine el cálculo antes de permitir agregar otro
+      await provider.addItem(selectedItem);
     }
   }
 }

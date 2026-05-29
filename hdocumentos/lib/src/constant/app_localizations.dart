@@ -2234,6 +2234,24 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Error: {message}'**
   String errorGeneric(String message);
+
+  /// Etiqueta descuento de productos/items
+  ///
+  /// In es, this message translates to:
+  /// **'Descuento productos'**
+  String get labelDiscountItems;
+
+  /// Mensaje error al calcular venta
+  ///
+  /// In es, this message translates to:
+  /// **'Error inesperado al calcular venta: {error}'**
+  String errorCalculatingSale(String error);
+
+  /// Error cuando no existe company_id en sesión
+  ///
+  /// In es, this message translates to:
+  /// **'No se encontró el company_id'**
+  String get errorCompanyIdNotFound;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

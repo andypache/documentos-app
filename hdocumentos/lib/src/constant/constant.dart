@@ -43,6 +43,12 @@ String apiItemPaginationAll = '${apiItem}item-service/items/pagination/all';
 String apiItemPaginationFilter =
     '${apiItem}item-service/items/pagination/filter';
 
+//URL for sale (document-service)
+String apiSale =
+    '${Environment.protocol}://${Environment.host}${Environment.portSale}/${Environment.baseUrl}/';
+String apiSaleCreate = '${apiSale}sale-service/sale/create';
+String apiSaleCalculate = '${apiSale}sale-service/sale/calculate';
+
 //Return Column error
 Widget errorLoadContainer(error) {
   return Column(

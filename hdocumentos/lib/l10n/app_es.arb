@@ -1093,5 +1093,17 @@
   "@errorGeneric": {
     "description": "Mensaje de error genérico",
     "placeholders": { "message": { "type": "String" } }
-  }
+  },
+
+  "labelDiscountItems": "Descuento productos",
+  "@labelDiscountItems": { "description": "Etiqueta descuento de productos/items" },
+
+  "errorCalculatingSale": "Error inesperado al calcular venta: {error}",
+  "@errorCalculatingSale": {
+    "description": "Mensaje error al calcular venta",
+    "placeholders": { "error": { "type": "String" } }
+  },
+
+  "errorCompanyIdNotFound": "No se encontró el company_id",
+  "@errorCompanyIdNotFound": { "description": "Error cuando no existe company_id en sesión" }
 }

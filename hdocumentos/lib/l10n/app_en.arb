@@ -1088,9 +1088,23 @@
   "itemPriceError": "Error updating price",
   "@itemPriceError": { "description": "Error message when updating price" },
 
+
   "errorGeneric": "Error: {message}",
   "@errorGeneric": {
     "description": "Generic error message",
     "placeholders": { "message": { "type": "String" } }
-  }
+  },
+
+  "labelDiscountItems": "Products discount",
+  "@labelDiscountItems": { "description": "Label for products/items discount" },
+
+  "errorCalculatingSale": "Unexpected error calculating sale: {error}",
+  "@errorCalculatingSale": {
+    "description": "Error message when calculating sale",
+    "placeholders": { "error": { "type": "String" } }
+  },
+
+  "errorCompanyIdNotFound": "Company ID not found",
+  "@errorCompanyIdNotFound": { "description": "Error when company_id doesn't exist in session" }
 }
+

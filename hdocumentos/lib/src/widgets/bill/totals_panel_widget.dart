@@ -7,6 +7,8 @@ import 'package:hdocumentos/src/theme/app_theme.dart';
 class TotalsPanelWidget extends StatelessWidget {
   final double subtotal;
   final double customerDiscount;
+  final double itemDiscount;
+  final double discountTotal;
   final double totalTax;
   final double total;
   final bool isCalculating;
@@ -18,6 +20,8 @@ class TotalsPanelWidget extends StatelessWidget {
     Key? key,
     required this.subtotal,
     required this.customerDiscount,
+    this.itemDiscount = 0.0,
+    this.discountTotal = 0.0,
     required this.totalTax,
     required this.total,
     this.isCalculating = false,
@@ -28,6 +32,12 @@ class TotalsPanelWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('DEBUG: TotalsPanelWidget.build() llamado con:');
+    print('  - subtotal: $subtotal');
+    print('  - discountTotal: $discountTotal');
+    print('  - totalTax: $totalTax');
+    print('  - total: $total');
+
     final size = MediaQuery.of(context).size;
     final l10n = AppLocalizations.of(context);
     final isLandscape =
@@ -72,8 +82,7 @@ class TotalsPanelWidget extends StatelessWidget {
       children: [
         // Handle indicator
         Container(
-          margin:
-              EdgeInsets.only(top: isLandscape ? 8 : size.height * 0.004),
+          margin: EdgeInsets.only(top: isLandscape ? 8 : size.height * 0.004),
           width: isLandscape ? 4 : size.width * 0.08,
           height: isLandscape ? 40 : 2.5,
           decoration: BoxDecoration(
@@ -91,8 +100,8 @@ class TotalsPanelWidget extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding: EdgeInsets.all(
-                        isLandscape ? 6 : size.width * 0.015),
+                    padding:
+                        EdgeInsets.all(isLandscape ? 6 : size.width * 0.015),
                     decoration: BoxDecoration(
                       color: AppTheme.primaryButton.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
@@ -128,8 +137,7 @@ class TotalsPanelWidget extends StatelessWidget {
 
               // Container con los totales
               Container(
-                padding:
-                    EdgeInsets.all(isLandscape ? 8 : size.width * 0.02),
+                padding: EdgeInsets.all(isLandscape ? 8 : size.width * 0.02),
                 decoration: BoxDecoration(
                   color: AppTheme.secondary.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(12),
@@ -149,11 +157,23 @@ class TotalsPanelWidget extends StatelessWidget {
                       isLandscape: isLandscape,
                     ),
 
+                    // Descuento de items/productos
+                    if (itemDiscount > 0) ...[
+                      SizedBox(height: isLandscape ? 4 : size.height * 0.005),
+                      _buildTotalRow(
+                        l10n.labelDiscountItems,
+                        -itemDiscount,
+                        icon: Icons.discount,
+                        color: Colors.amber,
+                        isDiscount: true,
+                        size: size,
+                        isLandscape: isLandscape,
+                      ),
+                    ],
+
                     // Descuento del cliente
                     if (customerDiscount > 0) ...[
-                      SizedBox(
-                          height:
-                              isLandscape ? 4 : size.height * 0.005),
+                      SizedBox(height: isLandscape ? 4 : size.height * 0.005),
                       _buildTotalRow(
                         customerDiscountLabel ?? l10n.labelDiscount,
                         -customerDiscount,
@@ -165,11 +185,23 @@ class TotalsPanelWidget extends StatelessWidget {
                       ),
                     ],
 
+                    // Descuento total (suma de todos los descuentos)
+                    if (discountTotal > 0) ...[
+                      SizedBox(height: isLandscape ? 4 : size.height * 0.005),
+                      _buildTotalRow(
+                        'Total descuentos',
+                        -discountTotal,
+                        icon: Icons.local_offer_outlined,
+                        color: Colors.deepOrangeAccent,
+                        isDiscount: true,
+                        size: size,
+                        isLandscape: isLandscape,
+                      ),
+                    ],
+
                     // Impuestos
                     if (totalTax > 0) ...[
-                      SizedBox(
-                          height:
-                              isLandscape ? 4 : size.height * 0.005),
+                      SizedBox(height: isLandscape ? 4 : size.height * 0.005),
                       _buildTotalRow(
                         l10n.labelTaxes,
                         totalTax,
@@ -183,8 +215,7 @@ class TotalsPanelWidget extends StatelessWidget {
                     // Divider
                     Padding(
                       padding: EdgeInsets.symmetric(
-                          vertical:
-                              isLandscape ? 6 : size.height * 0.01),
+                          vertical: isLandscape ? 6 : size.height * 0.01),
                       child: const Divider(
                         color: Colors.white30,
                         height: 1,
@@ -201,28 +232,22 @@ class TotalsPanelWidget extends StatelessWidget {
                               padding: EdgeInsets.all(
                                   isLandscape ? 4 : size.width * 0.012),
                               decoration: BoxDecoration(
-                                color:
-                                    AppTheme.actionSave.withOpacity(0.2),
+                                color: AppTheme.actionSave.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: Icon(
                                 Icons.attach_money,
                                 color: AppTheme.actionSave,
-                                size: isLandscape
-                                    ? 16
-                                    : size.width * 0.048,
+                                size: isLandscape ? 16 : size.width * 0.048,
                               ),
                             ),
                             SizedBox(
-                                width:
-                                    isLandscape ? 6 : size.width * 0.02),
+                                width: isLandscape ? 6 : size.width * 0.02),
                             Text(
                               l10n.labelTotal,
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: isLandscape
-                                    ? 13
-                                    : size.width * 0.04,
+                                fontSize: isLandscape ? 13 : size.width * 0.04,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1,
                               ),
@@ -242,9 +267,7 @@ class TotalsPanelWidget extends StatelessWidget {
                             key: ValueKey(total),
                             style: TextStyle(
                               color: AppTheme.primaryButton,
-                              fontSize: isLandscape
-                                  ? 16
-                                  : size.width * 0.055,
+                              fontSize: isLandscape ? 16 : size.width * 0.055,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -272,13 +295,11 @@ class TotalsPanelWidget extends StatelessWidget {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: canSave
-                        ? AppTheme.actionSave
-                        : Colors.grey.shade700,
+                    backgroundColor:
+                        canSave ? AppTheme.actionSave : Colors.grey.shade700,
                     foregroundColor: Colors.white,
                     padding: EdgeInsets.symmetric(
-                        vertical:
-                            isLandscape ? 10 : size.height * 0.01),
+                        vertical: isLandscape ? 10 : size.height * 0.01),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -289,8 +310,7 @@ class TotalsPanelWidget extends StatelessWidget {
 
               // Mensaje de validación
               if (!canSave) ...[
-                SizedBox(
-                    height: isLandscape ? 4 : size.height * 0.005),
+                SizedBox(height: isLandscape ? 4 : size.height * 0.005),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -299,15 +319,13 @@ class TotalsPanelWidget extends StatelessWidget {
                       size: isLandscape ? 12 : size.width * 0.036,
                       color: Colors.white.withOpacity(0.5),
                     ),
-                    SizedBox(
-                        width: isLandscape ? 4 : size.width * 0.015),
+                    SizedBox(width: isLandscape ? 4 : size.width * 0.015),
                     Flexible(
                       child: Text(
                         l10n.billRequiredFieldsHint,
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.5),
-                          fontSize:
-                              isLandscape ? 10 : size.width * 0.028,
+                          fontSize: isLandscape ? 10 : size.width * 0.028,
                         ),
                       ),
                     ),

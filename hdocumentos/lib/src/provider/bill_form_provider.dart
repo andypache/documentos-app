@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/service/service.dart';
 import 'package:hdocumentos/src/share/preference.dart';
@@ -17,8 +18,11 @@ class BillFormProvider extends ChangeNotifier {
   double _customerDiscount = 0.0;
   double _totalTax = 0.0;
   double _total = 0.0;
+  double _discountItem = 0.0;
+  double _discountTotal = 0.0;
   CustomerDiscountInfoModel? _customerDiscountInfo;
-  final Map<int, BillCalculationItemResponseModel> _itemCalculations = {};
+  final Map<String, DetailCalculateModel> _itemCalculations = {};
+  SaleCalculateResponseModel? _lastCalculateResponse;
 
   // Estados de UI
   bool _isLoading = false;
@@ -64,7 +68,11 @@ class BillFormProvider extends ChangeNotifier {
   double get customerDiscount => _customerDiscount;
   double get totalTax => _totalTax;
   double get total => _total;
+  double get discountItem => _discountItem;
+  double get discountTotal => _discountTotal;
   CustomerDiscountInfoModel? get customerDiscountInfo => _customerDiscountInfo;
+  SaleCalculateResponseModel? get lastCalculateResponse =>
+      _lastCalculateResponse;
 
   // Getters - Estados UI
   bool get isLoading => _isLoading;
@@ -73,14 +81,16 @@ class BillFormProvider extends ChangeNotifier {
   bool get canSave => hasCustomer && hasItems && hasPaymentMethod && !isSaving;
 
   // Obtener cálculo de un item específico
-  BillCalculationItemResponseModel? getItemCalculation(int itemId) {
+  DetailCalculateModel? getItemCalculation(String itemId) {
     return _itemCalculations[itemId];
   }
 
   /// Inicializar provider - carga los métodos de pago desde
   /// [Preferences.userSession.company.paymentMethods], sin llamar
   /// a ninguna API ni acceder al storage.
-  void initialize() {
+  void initialize(BuildContext context) {
+    _calculationContext = context;
+
     final company = Preferences.userSession.company;
     if (company == null) return;
 
@@ -141,7 +151,8 @@ class BillFormProvider extends ChangeNotifier {
   }
 
   /// Agregar item a la factura
-  void addItem(ItemModel item, {int quantity = 1, double? customPrice}) {
+  Future<void> addItem(ItemModel item,
+      {int quantity = 1, double? customPrice}) async {
     // Verificar si el item ya existe
     final existingIndex = _billItems.indexWhere((bi) => bi.item.id == item.id);
 
@@ -162,12 +173,19 @@ class BillFormProvider extends ChangeNotifier {
     }
 
     notifyListeners();
-    _triggerCalculation();
+
+    print('DEBUG: Item agregado, iniciando cálculo...');
+    // Esperar a que termine el cálculo antes de continuar
+    if (_calculationContext != null) {
+      _debounceTimer?.cancel();
+      await _calculateBill(_calculationContext!);
+      print('DEBUG: Cálculo post-addItem completado');
+    }
   }
 
   /// Actualizar item (precio, descuento, cantidad)
-  void updateItem(int index,
-      {int? quantity, double? unitPrice, double? discount}) {
+  Future<void> updateItem(int index,
+      {int? quantity, double? unitPrice, double? discount}) async {
     if (index < 0 || index >= _billItems.length) return;
 
     final currentItem = _billItems[index];
@@ -178,15 +196,25 @@ class BillFormProvider extends ChangeNotifier {
     );
 
     notifyListeners();
-    _triggerCalculation();
+
+    // Esperar a que termine el cálculo antes de continuar
+    if (_calculationContext != null) {
+      _debounceTimer?.cancel();
+      await _calculateBill(_calculationContext!);
+    }
   }
 
   /// Eliminar item de la factura
-  void removeItem(int index) {
+  Future<void> removeItem(int index) async {
     if (index >= 0 && index < _billItems.length) {
       _billItems.removeAt(index);
       notifyListeners();
-      _triggerCalculation();
+
+      // Esperar a que termine el cálculo antes de continuar
+      if (_calculationContext != null) {
+        _debounceTimer?.cancel();
+        await _calculateBill(_calculationContext!);
+      }
     }
   }
 
@@ -237,61 +265,172 @@ class BillFormProvider extends ChangeNotifier {
       return;
     }
 
+    print('DEBUG: Iniciando cálculo... _isCalculating = true');
     _isCalculating = true;
     notifyListeners();
 
     try {
-      // Preparar request
-      final request = BillCalculationRequestModel(
-        customerId: _selectedCustomer?.customerId != null
-            ? int.tryParse(_selectedCustomer!.customerId!)
-            : null,
-        items: _billItems.map((billItem) {
-          return BillCalculationItemModel(
-            itemId: int.parse(billItem.item.id!),
-            quantity: billItem.quantity,
-            unitPrice: billItem.unitPrice,
-            discount: billItem.discount,
+      final companyId = Preferences.userSession.company?.companyId;
+      if (companyId == null) {
+        if (context.mounted) {
+          NotificationService.showSnackbarError(
+            AppLocalizations.of(context).errorCompanyIdNotFound,
+          );
+        }
+        _isCalculating = false;
+        notifyListeners();
+        return;
+      }
+
+      // Preparar request para la nueva API
+      final request = SaleCalculateRequestModel(
+        companyId: companyId,
+        searchCustomer: SearchCustomerModel(
+          companyId: companyId,
+          notData: _selectedCustomer != null &&
+              _selectedCustomer!.identification != null,
+          identification: _selectedCustomer!.identification ?? '',
+        ),
+        dataForSaleDetails: _billItems.map((billItem) {
+          return DataForSaleDetailModel(
+            companyId: companyId,
+            id: billItem.item.id!,
+            amount: billItem.quantity,
+            adminItemDiscount: billItem.discount,
+            inventory: billItem.item.isService != 'Y',
           );
         }).toList(),
       );
 
-      // Llamar al servicio
-      final response = await BillService.calculateBill(
+      print('DEBUG: REQUEST preparado:');
+      print('  - companyId: $companyId');
+      print(
+          '  - customer.identification: ${_selectedCustomer?.identification}');
+      print('  - items count: ${_billItems.length}');
+      for (var i = 0; i < _billItems.length; i++) {
+        final item = _billItems[i];
+        print(
+            '  - Item $i: id=${item.item.id}, qty=${item.quantity}, price=${item.unitPrice}, discount=${item.discount}');
+      }
+      print(
+          '  - dataForSaleDetails count: ${request.dataForSaleDetails.length}');
+
+      // Llamar al servicio de cálculo real
+      final response = await BillService.calculateSale(
         context: context,
         request: request,
       );
 
+      print('DEBUG: RESPONSE recibido:');
+      print('  - response es null: ${response == null}');
       if (response != null) {
-        _subtotal = response.subtotal;
-        _customerDiscount = response.customerDiscount;
-        _totalTax = response.totalTax;
-        _total = response.total;
-        _customerDiscountInfo = response.customerDiscountInfo;
+        print('  - detailCalculate count: ${response.detailCalculate.length}');
+        print(
+            '  - totalCalculate.subTotal: ${response.totalCalculate.subTotal}');
+        print('  - totalCalculate.total: ${response.totalCalculate.total}');
+      }
 
-        // Guardar cálculos por item
-        _itemCalculations.clear();
-        for (var itemCalc in response.items) {
-          _itemCalculations[itemCalc.itemId] = itemCalc;
+      print('DEBUG: Response del API recibido');
+      if (response != null) {
+        _lastCalculateResponse = response;
+
+        // Extraer totales del response
+        final totalCalc = response.totalCalculate;
+        _subtotal = totalCalc.subTotal;
+        _customerDiscount = totalCalc.discountCustomer;
+        _discountItem = totalCalc.discountItem;
+        _discountTotal = totalCalc.discountTotal;
+        _totalTax = totalCalc.totalTax;
+        _total = totalCalc.total;
+
+        print('DEBUG: Totales actualizados:');
+        print('  - Subtotal: $_subtotal');
+        print('  - Descuento cliente: $_customerDiscount');
+        print('  - Descuento items: $_discountItem');
+        print('  - Descuento total: $_discountTotal');
+        print('  - Total impuestos: $_totalTax');
+        print('  - Total: $_total');
+        print(
+            'DEBUG: _itemCalculations tiene ${_itemCalculations.length} items');
+
+        // Actualizar info de descuento del cliente
+        if (_customerDiscount > 0) {
+          _customerDiscountInfo = CustomerDiscountInfoModel(
+            percentage: (_customerDiscount / _subtotal * 100),
+            amount: _customerDiscount,
+            description: 'Descuento del cliente',
+          );
+        } else {
+          _customerDiscountInfo = null;
         }
+
+        // Guardar cálculos por item y actualizar items con datos del API
+        _itemCalculations.clear();
+        for (var detailCalc in response.detailCalculate) {
+          _itemCalculations[detailCalc.itemId] = detailCalc;
+
+          // Buscar el item correspondiente y actualizar con datos del API
+          final index =
+              _billItems.indexWhere((bi) => bi.item.id == detailCalc.itemId);
+          if (index >= 0) {
+            final currentItem = _billItems[index];
+            // Actualizar con datos del API:
+            // - quantity: usar amount del API para asegurar sincronización
+            // - unitPrice: price_sale del API
+            // - discount: mantener el descuento administrativo actual
+            _billItems[index] = BillItemModel(
+              item: currentItem.item,
+              quantity: detailCalc.amount,
+              unitPrice: detailCalc.priceSale,
+              discount: currentItem.discount,
+            );
+          }
+        }
+      } else {
+        // Si la respuesta es null, mantener los valores actuales
+        print('DEBUG: Response es null, manteniendo valores actuales');
       }
     } catch (e) {
-      // Si falla el servicio, calcular localmente como fallback
-      _calculateLocally();
+      // Si falla el servicio, mantener los valores actuales y mostrar error
+      print('DEBUG: ERROR en cálculo: $e');
+      print('DEBUG: Manteniendo valores actuales');
+      if (context.mounted) {
+        NotificationService.showSnackbarError(
+          'Error al calcular: ${e.toString()}',
+        );
+      }
     }
 
+    print('DEBUG: Cálculo completado. _isCalculating = false');
     _isCalculating = false;
+    print('DEBUG: Valores JUSTO ANTES de notifyListeners():');
+    print('  - subtotal getter: $subtotal');
+    print('  - discountTotal getter: $discountTotal');
+    print('  - totalTax getter: $totalTax');
+    print('  - total getter: $total');
+    print('DEBUG: Llamando notifyListeners()...');
     notifyListeners();
+    print('DEBUG: notifyListeners() completado');
   }
 
   /// Cálculo local como fallback si el servicio falla
   void _calculateLocally() {
     _subtotal = 0.0;
     _totalTax = 0.0;
+    _discountItem = 0.0;
+    _discountTotal = 0.0;
 
     for (var billItem in _billItems) {
-      _subtotal += billItem.subtotal;
-      _totalTax += billItem.totalTax;
+      // Cálculo básico local (sin descuentos de productos ni cliente)
+      final itemSubtotal = billItem.unitPrice * billItem.quantity;
+      _subtotal += itemSubtotal;
+
+      // Calcular impuestos localmente si hay
+      if (billItem.item.itemTaxes != null) {
+        for (var tax in billItem.item.itemTaxes!) {
+          _totalTax += itemSubtotal * (tax.percentage / 100);
+        }
+      }
     }
 
     // Aplicar descuento del cliente si existe
@@ -380,10 +519,13 @@ class BillFormProvider extends ChangeNotifier {
   void _resetCalculations() {
     _subtotal = 0.0;
     _customerDiscount = 0.0;
+    _discountItem = 0.0;
+    _discountTotal = 0.0;
     _totalTax = 0.0;
     _total = 0.0;
     _customerDiscountInfo = null;
     _itemCalculations.clear();
+    _lastCalculateResponse = null;
   }
 
   /// Limpiar formulario completo

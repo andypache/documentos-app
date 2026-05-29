@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
+import 'package:hdocumentos/src/provider/bill_form_provider.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/bill/product_edit_dialog.dart';
 
@@ -9,7 +10,8 @@ class ProductListWidget extends StatelessWidget {
   final List<BillItemModel> billItems;
   final Function(int index) onRemoveItem;
   final Function(int index, BillItemModel updatedItem) onUpdateItem;
-  final VoidCallback onAddProduct;
+  final VoidCallback? onAddProduct;
+  final BillFormProvider provider;
 
   const ProductListWidget({
     Key? key,
@@ -17,6 +19,7 @@ class ProductListWidget extends StatelessWidget {
     required this.onRemoveItem,
     required this.onUpdateItem,
     required this.onAddProduct,
+    required this.provider,
   }) : super(key: key);
 
   @override
@@ -55,12 +58,25 @@ class ProductListWidget extends StatelessWidget {
                 ),
                 Builder(builder: (context) {
                   final l10n = AppLocalizations.of(context);
+                  final isCalculating = provider.isCalculating;
                   return ElevatedButton.icon(
-                    onPressed: onAddProduct,
-                    icon: const Icon(Icons.add, size: 18),
-                    label: Text(l10n.btnAdd),
+                    onPressed: isCalculating ? null : onAddProduct,
+                    icon: isCalculating
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          )
+                        : const Icon(Icons.add, size: 18),
+                    label: Text(isCalculating ? 'Calculando...' : l10n.btnAdd),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primaryButton,
+                      backgroundColor: isCalculating
+                          ? AppTheme.primaryButton.withOpacity(0.5)
+                          : AppTheme.primaryButton,
                       foregroundColor: AppTheme.secondary,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16,
@@ -198,23 +214,81 @@ class ProductListWidget extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 2),
-                    Text(
-                      'Precio unit.: \$${billItem.unitPrice.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
-                        fontSize: 13,
-                      ),
+                    Builder(
+                      builder: (context) {
+                        // Obtener datos del API si están disponibles
+                        final itemCalc =
+                            provider.getItemCalculation(item.id ?? '');
+                        final unitPrice =
+                            itemCalc?.priceSale ?? billItem.unitPrice;
+
+                        return Text(
+                          'Precio unit.: \$${unitPrice.toStringAsFixed(2)}',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.7),
+                            fontSize: 13,
+                          ),
+                        );
+                      },
                     ),
-                    if (billItem.discount > 0) ...[
-                      const SizedBox(height: 2),
-                      Text(
-                        'Descuento: \$${billItem.discount.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          color: Colors.orangeAccent,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ],
+                    Builder(
+                      builder: (context) {
+                        final itemCalc =
+                            provider.getItemCalculation(item.id ?? '');
+
+                        // Mostrar descuentos si existen
+                        if (itemCalc != null) {
+                          final hasProductDiscount =
+                              itemCalc.discountProductValue > 0;
+                          final hasCustomerDiscount =
+                              itemCalc.discountCustomerValue > 0;
+
+                          if (hasProductDiscount || hasCustomerDiscount) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (hasProductDiscount) ...[
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    'Desc. producto: \$${itemCalc.discountProductValue.toStringAsFixed(2)}',
+                                    style: const TextStyle(
+                                      color: Colors.amberAccent,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ],
+                                if (hasCustomerDiscount) ...[
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    'Desc. cliente: \$${itemCalc.discountCustomerValue.toStringAsFixed(2)}',
+                                    style: const TextStyle(
+                                      color: Colors.orangeAccent,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            );
+                          }
+                        } else if (billItem.discount > 0) {
+                          // Fallback al descuento local si no hay datos del API
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 2),
+                              Text(
+                                'Descuento: \$${billItem.discount.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  color: Colors.orangeAccent,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                    ),
                     if (hasTaxes) ...[
                       const SizedBox(height: 4),
                       Wrap(
@@ -251,13 +325,23 @@ class ProductListWidget extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    '\$${billItem.total.toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      color: Colors.greenAccent,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Builder(
+                    builder: (context) {
+                      // Obtener el total del API si está disponible
+                      final itemCalc =
+                          provider.getItemCalculation(item.id ?? '');
+                      final total = itemCalc?.total ??
+                          (billItem.unitPrice * billItem.quantity);
+
+                      return Text(
+                        '\$${total.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                          color: Colors.greenAccent,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -265,17 +349,23 @@ class ProductListWidget extends StatelessWidget {
                     children: [
                       // Botón editar
                       InkWell(
-                        onTap: () => _editProduct(context, billItem, index),
+                        onTap: provider.isCalculating
+                            ? null
+                            : () => _editProduct(context, billItem, index),
                         borderRadius: BorderRadius.circular(6),
                         child: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: Colors.blue.withOpacity(0.2),
+                            color: provider.isCalculating
+                                ? Colors.blue.withOpacity(0.1)
+                                : Colors.blue.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(6),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.edit,
-                            color: Colors.blueAccent,
+                            color: provider.isCalculating
+                                ? Colors.blueAccent.withOpacity(0.3)
+                                : Colors.blueAccent,
                             size: 18,
                           ),
                         ),
@@ -283,17 +373,23 @@ class ProductListWidget extends StatelessWidget {
                       const SizedBox(width: 8),
                       // Botón eliminar
                       InkWell(
-                        onTap: () => _confirmRemove(context, index),
+                        onTap: provider.isCalculating
+                            ? null
+                            : () => _confirmRemove(context, index),
                         borderRadius: BorderRadius.circular(6),
                         child: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: Colors.red.withOpacity(0.2),
+                            color: provider.isCalculating
+                                ? Colors.red.withOpacity(0.1)
+                                : Colors.red.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(6),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.delete_outline,
-                            color: Colors.redAccent,
+                            color: provider.isCalculating
+                                ? Colors.redAccent.withOpacity(0.3)
+                                : Colors.redAccent,
                             size: 18,
                           ),
                         ),

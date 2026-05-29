@@ -1122,4 +1122,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String errorGeneric(String message) {
     return 'Error: $message';
   }
+
+  @override
+  String get labelDiscountItems => 'Products discount';
+
+  @override
+  String errorCalculatingSale(String error) {
+    return 'Unexpected error calculating sale: $error';
+  }
+
+  @override
+  String get errorCompanyIdNotFound => 'Company ID not found';
 }

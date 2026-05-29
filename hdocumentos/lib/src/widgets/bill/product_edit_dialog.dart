@@ -4,7 +4,9 @@ import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 
-/// Diálogo para editar cantidad, precio y descuento de un producto
+/// Diálogo para editar solo la cantidad de un producto
+/// Los campos de precio y descuento son de solo lectura
+/// Los cálculos se realizan automáticamente por el backend
 class ProductEditDialog extends StatefulWidget {
   final BillItemModel billItem;
 
@@ -16,32 +18,19 @@ class ProductEditDialog extends StatefulWidget {
 
 class _ProductEditDialogState extends State<ProductEditDialog> {
   late TextEditingController _quantityController;
-  late TextEditingController _priceController;
-  late TextEditingController _discountController;
 
   int _quantity = 1;
-  double _unitPrice = 0.0;
-  double _discount = 0.0;
 
   @override
   void initState() {
     super.initState();
     _quantity = widget.billItem.quantity;
-    _unitPrice = widget.billItem.unitPrice;
-    _discount = widget.billItem.discount;
-
     _quantityController = TextEditingController(text: _quantity.toString());
-    _priceController =
-        TextEditingController(text: _unitPrice.toStringAsFixed(2));
-    _discountController =
-        TextEditingController(text: _discount.toStringAsFixed(2));
   }
 
   @override
   void dispose() {
     _quantityController.dispose();
-    _priceController.dispose();
-    _discountController.dispose();
     super.dispose();
   }
 
@@ -52,44 +41,9 @@ class _ProductEditDialogState extends State<ProductEditDialog> {
     });
   }
 
-  void _updatePrice(String value) {
-    setState(() {
-      _unitPrice = double.tryParse(value) ?? 0.0;
-      if (_unitPrice < 0) _unitPrice = 0.0;
-    });
-  }
-
-  void _updateDiscount(String value) {
-    setState(() {
-      _discount = double.tryParse(value) ?? 0.0;
-      if (_discount < 0) _discount = 0.0;
-    });
-  }
-
-  double _calculateSubtotal() {
-    return (_unitPrice * _quantity) - _discount;
-  }
-
-  double _calculateTotalTax() {
-    final subtotal = _calculateSubtotal();
-    double totalTax = 0.0;
-    if (widget.billItem.item.itemTaxes != null) {
-      for (var tax in widget.billItem.item.itemTaxes!) {
-        totalTax += subtotal * (tax.percentage / 100);
-      }
-    }
-    return totalTax;
-  }
-
-  double _calculateTotal() {
-    return _calculateSubtotal() + _calculateTotalTax();
-  }
-
   void _save() {
     final updatedItem = widget.billItem.copyWith(
       quantity: _quantity,
-      unitPrice: _unitPrice,
-      discount: _discount,
     );
     Navigator.pop(context, updatedItem);
   }
@@ -160,7 +114,7 @@ class _ProductEditDialogState extends State<ProductEditDialog> {
                     ),
                     const SizedBox(height: 20),
 
-                    // Campo de cantidad
+                    // Campo de cantidad (SOLO EDITABLE)
                     Builder(builder: (ctx) {
                       final l10n = AppLocalizations.of(ctx);
                       return _buildTextField(
@@ -176,41 +130,34 @@ class _ProductEditDialogState extends State<ProductEditDialog> {
                     }),
                     const SizedBox(height: 16),
 
-                    // Campo de precio unitario
+                    // Campo de precio unitario (BLOQUEADO - SOLO LECTURA)
                     Builder(builder: (ctx) {
                       final l10n = AppLocalizations.of(ctx);
                       return _buildTextField(
                         label: l10n.labelUnitPrice,
-                        controller: _priceController,
+                        controller: TextEditingController(
+                          text: widget.billItem.unitPrice.toStringAsFixed(2),
+                        ),
                         icon: Icons.attach_money,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true),
-                        onChanged: _updatePrice,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'^\d+\.?\d{0,2}')),
-                        ],
+                        enabled: false,
                       );
                     }),
                     const SizedBox(height: 16),
 
-                    // Campo de descuento
+                    // Campo de descuento (BLOQUEADO - SOLO LECTURA)
                     Builder(builder: (ctx) {
                       final l10n = AppLocalizations.of(ctx);
                       return _buildTextField(
                         label: l10n.labelDiscount,
-                        controller: _discountController,
+                        controller: TextEditingController(
+                          text: widget.billItem.discount.toStringAsFixed(2),
+                        ),
                         icon: Icons.local_offer,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true),
-                        onChanged: _updateDiscount,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'^\d+\.?\d{0,2}')),
-                        ],
+                        enabled: false,
                       );
                     }),
 
+                    // Mostrar impuestos solo como información
                     if (hasTaxes) ...[
                       const SizedBox(height: 20),
                       Builder(builder: (ctx) {
@@ -248,30 +195,14 @@ class _ProductEditDialogState extends State<ProductEditDialog> {
                               ),
                               const SizedBox(height: 8),
                               ...item.itemTaxes!.map((tax) {
-                                final taxAmount = _calculateSubtotal() *
-                                    (tax.percentage / 100);
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 4),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        '${tax.name} (${tax.percentage.toStringAsFixed(0)}%)',
-                                        style: TextStyle(
-                                          color: Colors.white.withOpacity(0.8),
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                      Text(
-                                        '\$${taxAmount.toStringAsFixed(2)}',
-                                        style: const TextStyle(
-                                          color: Colors.lightBlueAccent,
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
+                                  child: Text(
+                                    '${tax.name} (${tax.percentage.toStringAsFixed(0)}%)',
+                                    style: TextStyle(
+                                      color: Colors.white.withOpacity(0.8),
+                                      fontSize: 13,
+                                    ),
                                   ),
                                 );
                               }).toList(),
@@ -280,51 +211,36 @@ class _ProductEditDialogState extends State<ProductEditDialog> {
                         );
                       }),
                     ],
-                    // Resumen de cálculos
+
+                    // Nota informativa
                     const SizedBox(height: 20),
                     Builder(builder: (ctx) {
-                      final l10n = AppLocalizations.of(ctx);
                       return Container(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: AppTheme.secondary.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.amber.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: AppTheme.primaryButton.withOpacity(0.5),
-                            width: 1.5,
+                            color: Colors.amber.withOpacity(0.3),
+                            width: 1,
                           ),
                         ),
-                        child: Column(
+                        child: Row(
                           children: [
-                            _buildSummaryRow(
-                              l10n.labelSubtotal,
-                              '\$${_calculateSubtotal().toStringAsFixed(2)}',
+                            const Icon(
+                              Icons.info_outline,
+                              color: Colors.amberAccent,
+                              size: 20,
                             ),
-                            if (_discount > 0) ...[
-                              const SizedBox(height: 8),
-                              _buildSummaryRow(
-                                l10n.labelDiscountApplied,
-                                '-\$${_discount.toStringAsFixed(2)}',
-                                color: Colors.orangeAccent,
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                'Los cálculos de precios, descuentos y totales se realizarán automáticamente por el sistema.',
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.9),
+                                  fontSize: 13,
+                                ),
                               ),
-                            ],
-                            if (hasTaxes) ...[
-                              const SizedBox(height: 8),
-                              _buildSummaryRow(
-                                l10n.labelTotalTaxes,
-                                '\$${_calculateTotalTax().toStringAsFixed(2)}',
-                                color: Colors.lightBlueAccent,
-                              ),
-                            ],
-                            const SizedBox(height: 12),
-                            const Divider(color: Colors.white30, height: 1),
-                            const SizedBox(height: 12),
-                            _buildSummaryRow(
-                              l10n.labelTotal,
-                              '\$${_calculateTotal().toStringAsFixed(2)}',
-                              isBold: true,
-                              color: AppTheme.primaryButton,
-                              fontSize: 18,
                             ),
                           ],
                         ),
@@ -388,9 +304,10 @@ class _ProductEditDialogState extends State<ProductEditDialog> {
     required String label,
     required TextEditingController controller,
     required IconData icon,
-    required TextInputType keyboardType,
-    required Function(String) onChanged,
+    TextInputType? keyboardType,
+    Function(String)? onChanged,
     List<TextInputFormatter>? inputFormatters,
+    bool enabled = true,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -406,20 +323,33 @@ class _ProductEditDialogState extends State<ProductEditDialog> {
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
-            color: AppTheme.white.withOpacity(0.1),
+            color: enabled
+                ? AppTheme.white.withOpacity(0.1)
+                : AppTheme.white.withOpacity(0.05),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: AppTheme.primaryButton.withOpacity(0.5),
+              color: enabled
+                  ? AppTheme.primaryButton.withOpacity(0.5)
+                  : Colors.white.withOpacity(0.2),
               width: 1,
             ),
           ),
           child: TextField(
             controller: controller,
+            enabled: enabled,
             keyboardType: keyboardType,
             inputFormatters: inputFormatters,
-            style: const TextStyle(color: Colors.white, fontSize: 16),
+            style: TextStyle(
+              color: enabled ? Colors.white : Colors.white.withOpacity(0.5),
+              fontSize: 16,
+            ),
             decoration: InputDecoration(
-              prefixIcon: Icon(icon, color: AppTheme.primaryButton),
+              prefixIcon: Icon(
+                icon,
+                color: enabled
+                    ? AppTheme.primaryButton
+                    : AppTheme.primaryButton.withOpacity(0.3),
+              ),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
