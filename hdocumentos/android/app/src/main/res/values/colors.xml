@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Color primary de la app: #16434D -->
+    <color name="app_primary">#16434D</color>
+    <!-- Color secondary de la app: #202333 -->
+    <color name="app_secondary">#202333</color>
+</resources>

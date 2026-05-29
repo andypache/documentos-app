@@ -82,7 +82,7 @@ class AppTheme {
   ///Overwrite theme
   static final ThemeData lightTheme = ThemeData.light().copyWith(
       //
-      scaffoldBackgroundColor: primaryButton,
+      scaffoldBackgroundColor: primary,
       //const Color.fromRGBO(150, 20, 45, 1), //Color(0xff1D2D42),
       // AppBar Theme
       appBarTheme: const AppBarTheme(color: primary, elevation: 0),
