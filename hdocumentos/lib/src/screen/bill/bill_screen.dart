@@ -318,6 +318,12 @@ class _BillScreenBody extends StatelessWidget {
           // Resto del contenido
           Expanded(
             child: SingleChildScrollView(
+              padding: EdgeInsets.only(
+                bottom:
+                    MediaQuery.of(context).orientation == Orientation.portrait
+                        ? 80 // Altura del panel de totales
+                        : 16,
+              ),
               child: Column(
                 children: [
                   SizedBox(height: size.height * 0.01),
@@ -366,12 +372,7 @@ class _BillScreenBody extends StatelessWidget {
                             isLoading: provider.isLoading,
                           ),
 
-                          // Espacio para el panel de totales (solo portrait)
-                          if (MediaQuery.of(context).orientation ==
-                              Orientation.portrait)
-                            SizedBox(height: size.height * 0.35)
-                          else
-                            const SizedBox(height: 16),
+                          const SizedBox(height: 16),
                         ],
                       );
                     },

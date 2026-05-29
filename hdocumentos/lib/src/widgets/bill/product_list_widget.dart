@@ -206,12 +206,98 @@ class ProductListWidget extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      'Cantidad: ${billItem.quantity}',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
-                        fontSize: 13,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          'Cantidad: ',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.7),
+                            fontSize: 13,
+                          ),
+                        ),
+                        // Botón decrementar
+                        InkWell(
+                          onTap:
+                              provider.isCalculating || billItem.quantity <= 1
+                                  ? null
+                                  : () => _changeQuantity(
+                                        context,
+                                        billItem,
+                                        index,
+                                        billItem.quantity - 1,
+                                      ),
+                          borderRadius: BorderRadius.circular(4),
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: provider.isCalculating ||
+                                      billItem.quantity <= 1
+                                  ? Colors.grey.withOpacity(0.2)
+                                  : AppTheme.primaryButton.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                color: provider.isCalculating ||
+                                        billItem.quantity <= 1
+                                    ? Colors.grey.withOpacity(0.3)
+                                    : AppTheme.primaryButton,
+                                width: 1,
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.remove,
+                              color: provider.isCalculating ||
+                                      billItem.quantity <= 1
+                                  ? Colors.grey.withOpacity(0.5)
+                                  : AppTheme.primaryButton,
+                              size: 14,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          '${billItem.quantity}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        // Botón incrementar
+                        InkWell(
+                          onTap: provider.isCalculating
+                              ? null
+                              : () => _changeQuantity(
+                                    context,
+                                    billItem,
+                                    index,
+                                    billItem.quantity + 1,
+                                  ),
+                          borderRadius: BorderRadius.circular(4),
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: provider.isCalculating
+                                  ? Colors.grey.withOpacity(0.2)
+                                  : AppTheme.primaryButton.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                color: provider.isCalculating
+                                    ? Colors.grey.withOpacity(0.3)
+                                    : AppTheme.primaryButton,
+                                width: 1,
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.add,
+                              color: provider.isCalculating
+                                  ? Colors.grey.withOpacity(0.5)
+                                  : AppTheme.primaryButton,
+                              size: 14,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 2),
                     Builder(
@@ -403,6 +489,25 @@ class ProductListWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// Cambia la cantidad de un producto de forma rápida
+  void _changeQuantity(
+    BuildContext context,
+    BillItemModel billItem,
+    int index,
+    int newQuantity,
+  ) {
+    if (newQuantity < 1) return; // Mínimo permitido es 1
+
+    final updatedItem = BillItemModel(
+      item: billItem.item,
+      quantity: newQuantity,
+      unitPrice: billItem.unitPrice,
+      discount: billItem.discount,
+    );
+
+    onUpdateItem(index, updatedItem);
   }
 
   Future<void> _editProduct(
