@@ -55,7 +55,7 @@ class LoginTextField extends StatelessWidget {
               size: AppDimens.iconS,
             ),
             filled: true,
-            fillColor: AppTheme.loginInputBg,
+            fillColor: AppTheme.loginInputFill,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: AppDimens.paddingM,
               vertical: AppDimens.paddingM,

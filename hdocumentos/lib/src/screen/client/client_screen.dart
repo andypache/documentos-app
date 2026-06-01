@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
-import 'package:hdocumentos/src/theme/app_dimens.dart';
 import 'package:hdocumentos/src/screen/client/widgets/widgets.dart';
 import 'package:hdocumentos/src/screen/customer/customer_wizard_screen.dart';
 import 'package:hdocumentos/src/service/notification_service.dart';
-import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
 
 /// Screen principal para gestión de clientes

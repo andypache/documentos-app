@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/provider/provider.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';

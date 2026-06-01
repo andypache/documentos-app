@@ -66,6 +66,9 @@ class NotificationService {
   /// @deprecated Usa [showSuccess] en código nuevo.
   static void showSnackbarSuccess(String message) => showSuccess(message);
 
+  /// @deprecated Usa [showWarning] en código nuevo.
+  static void showSnackbarWarning(String message) => showWarning(message);
+
   // ── Motor interno ──────────────────────────────────────────────────────────
 
   static OverlayEntry? _currentOverlay;

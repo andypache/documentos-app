@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:hdocumentos/src/theme/app_dimens.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 
 /// Widget genérico para estados vacíos (sin resultados, inicial, etc.)

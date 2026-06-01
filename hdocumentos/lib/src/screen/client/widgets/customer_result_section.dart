@@ -6,7 +6,6 @@ import 'package:hdocumentos/src/screen/client/widgets/customer_empty_state.dart'
 import 'package:hdocumentos/src/screen/client/widgets/customer_detail_sheet.dart';
 import 'package:hdocumentos/src/screen/customer/customer_wizard_screen.dart';
 import 'package:hdocumentos/src/service/notification_service.dart';
-import 'package:hdocumentos/src/theme/app_dimens.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
 import 'customer_result_widgets.dart';

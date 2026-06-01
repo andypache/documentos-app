@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hdocumentos/src/theme/app_dimens.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
 
 /// Header mostrando el conteo de items encontrados

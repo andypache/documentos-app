@@ -6,8 +6,6 @@ import 'package:hdocumentos/src/provider/app_init_provider.dart';
 import 'package:hdocumentos/src/service/company_service.dart';
 import 'package:hdocumentos/src/service/notification_service.dart';
 import 'package:hdocumentos/src/theme/app_dimens.dart';
-import 'package:hdocumentos/src/theme/app_theme.dart';
-import 'package:hdocumentos/src/widgets/widgets.dart';
 import 'config_back_button.dart';
 import 'config_step_counter.dart';
 import 'config_next_button.dart';

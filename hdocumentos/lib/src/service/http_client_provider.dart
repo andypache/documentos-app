@@ -1,7 +1,5 @@
 import 'package:hdocumentos/src/util/retry_http_client.dart';
 import 'package:hdocumentos/src/config/environment_config.dart';
-import 'package:hdocumentos/src/exception/app_exceptions.dart';
-import 'package:hdocumentos/src/exception/error_handler.dart';
 
 /// Cliente HTTP global con retry policy
 ///
