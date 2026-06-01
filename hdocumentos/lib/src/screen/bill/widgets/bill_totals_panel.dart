@@ -19,36 +19,44 @@ class BillTotalsPanel extends StatelessWidget {
     final isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
 
-    return Selector<BillCalculationProvider, BillTotalsData>(
-      selector: (_, provider) => BillTotalsData(
-        subtotal: provider.subtotal,
-        customerDiscount: provider.customerDiscount,
-        itemDiscount: provider.discountItem,
-        discountTotal: provider.discountTotal,
-        totalTax: provider.totalTax,
-        total: provider.total,
-        isCalculating: provider.isCalculating,
-        canSave: context.select((BillStateProvider p) => p.canSave),
-        customerDiscountLabel: provider.customerDiscountInfo != null
-            ? AppLocalizations.of(context).labelDiscountValue(
-                provider.customerDiscountInfo!.percentage.toStringAsFixed(0))
-            : null,
-      ),
-      builder: (context, totalsData, _) {
-        final widget = TotalsPanelWidget(
-          subtotal: totalsData.subtotal,
-          customerDiscount: totalsData.customerDiscount,
-          itemDiscount: totalsData.itemDiscount,
-          discountTotal: totalsData.discountTotal,
-          totalTax: totalsData.totalTax,
-          total: totalsData.total,
-          isCalculating: totalsData.isCalculating,
-          canSave: totalsData.canSave,
-          onSave: onSave,
-          customerDiscountLabel: totalsData.customerDiscountLabel,
-        );
+    // Selector anidado: primero BillStateProvider para canSave
+    return Selector<BillStateProvider, bool>(
+      selector: (_, stateProvider) => stateProvider.canSave,
+      builder: (context, canSave, _) {
+        // Segundo Selector: BillCalculationProvider para totales
+        return Selector<BillCalculationProvider, BillTotalsData>(
+          selector: (_, calcProvider) => BillTotalsData(
+            subtotal: calcProvider.subtotal,
+            customerDiscount: calcProvider.customerDiscount,
+            itemDiscount: calcProvider.discountItem,
+            discountTotal: calcProvider.discountTotal,
+            totalTax: calcProvider.totalTax,
+            total: calcProvider.total,
+            isCalculating: calcProvider.isCalculating,
+            canSave: canSave,
+            customerDiscountLabel: calcProvider.customerDiscountInfo != null
+                ? AppLocalizations.of(context).labelDiscountValue(calcProvider
+                    .customerDiscountInfo!.percentage
+                    .toStringAsFixed(0))
+                : null,
+          ),
+          builder: (context, totalsData, _) {
+            final widget = TotalsPanelWidget(
+              subtotal: totalsData.subtotal,
+              customerDiscount: totalsData.customerDiscount,
+              itemDiscount: totalsData.itemDiscount,
+              discountTotal: totalsData.discountTotal,
+              totalTax: totalsData.totalTax,
+              total: totalsData.total,
+              isCalculating: totalsData.isCalculating,
+              canSave: totalsData.canSave,
+              onSave: onSave,
+              customerDiscountLabel: totalsData.customerDiscountLabel,
+            );
 
-        return isLandscape ? SizedBox(width: 300, child: widget) : widget;
+            return isLandscape ? SizedBox(width: 300, child: widget) : widget;
+          },
+        );
       },
     );
   }
