@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
+import 'package:hdocumentos/src/theme/app_dimens.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
+import 'package:hdocumentos/src/share/app_logger.dart';
 
 /// Panel de totales que permanece visible en la parte inferior
 /// Muestra subtotal, descuentos, impuestos y total con animaciones
@@ -32,11 +34,10 @@ class TotalsPanelWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('DEBUG: TotalsPanelWidget.build() llamado con:');
-    print('  - subtotal: $subtotal');
-    print('  - discountTotal: $discountTotal');
-    print('  - totalTax: $totalTax');
-    print('  - total: $total');
+    AppLogger.debug(
+      'Panel rebuilding - Subtotal: \$$subtotal, Total: \$$total',
+      tag: 'TotalsPanelWidget',
+    );
 
     final size = MediaQuery.of(context).size;
     final l10n = AppLocalizations.of(context);
@@ -104,7 +105,7 @@ class TotalsPanelWidget extends StatelessWidget {
                         EdgeInsets.all(isLandscape ? 6 : size.width * 0.015),
                     decoration: BoxDecoration(
                       color: AppTheme.primaryButton.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppDimens.radiusS),
                     ),
                     child: Icon(
                       Icons.calculate,
@@ -140,7 +141,7 @@ class TotalsPanelWidget extends StatelessWidget {
                 padding: EdgeInsets.all(isLandscape ? 8 : size.width * 0.02),
                 decoration: BoxDecoration(
                   color: AppTheme.secondary.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimens.radiusM),
                   border: Border.all(
                     color: AppTheme.primaryButton.withOpacity(0.3),
                     width: 1,
@@ -301,7 +302,7 @@ class TotalsPanelWidget extends StatelessWidget {
                     padding: EdgeInsets.symmetric(
                         vertical: isLandscape ? 10 : size.height * 0.01),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppDimens.radiusM),
                     ),
                     elevation: canSave ? 4 : 0,
                   ),

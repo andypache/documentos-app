@@ -303,6 +303,7 @@ class _ProductSearchDialogState extends State<ProductSearchDialog> {
     // Lista con paginación infinita.
     // El ítem extra al final muestra el spinner de "cargando más".
     return ListView.builder(
+      key: const ValueKey('product_search_list'),
       controller: _scrollController,
       itemCount: _items.length + (_hasReachedEnd ? 0 : 1),
       itemBuilder: (context, index) {
@@ -321,7 +322,8 @@ class _ProductSearchDialogState extends State<ProductSearchDialog> {
             ),
           );
         }
-        return _buildItemCard(_items[index]);
+        final item = _items[index];
+        return _buildItemCard(item);
       },
     );
   }
@@ -331,6 +333,7 @@ class _ProductSearchDialogState extends State<ProductSearchDialog> {
     final isService = item.isService == 'Y';
 
     return Card(
+      key: ValueKey('product_card_${item.id}'),
       margin: const EdgeInsets.only(bottom: 8),
       color: AppTheme.secondary.withOpacity(0.5),
       child: InkWell(
@@ -394,6 +397,7 @@ class _ProductSearchDialogState extends State<ProductSearchDialog> {
                         runSpacing: 4,
                         children: item.itemTaxes!.map((tax) {
                           return Container(
+                            key: ValueKey('tax_${tax.id}'),
                             padding: const EdgeInsets.symmetric(
                               horizontal: 6,
                               vertical: 2,

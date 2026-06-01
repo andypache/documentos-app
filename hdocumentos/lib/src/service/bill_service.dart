@@ -3,6 +3,7 @@ import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/constant/constant.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/service/service.dart';
+import 'package:hdocumentos/src/share/app_logger.dart';
 
 /// Servicio para manejar operaciones relacionadas con facturas
 class BillService {
@@ -14,9 +15,13 @@ class BillService {
     required SaleCalculateRequestModel request,
   }) async {
     try {
-      print('DEBUG: BillService.calculateSale - Enviando request...');
-      print('DEBUG: URL: $apiSaleCalculate');
-      print('DEBUG: Body: ${request.toJson()}');
+      final stopwatch = Stopwatch()..start();
+
+      AppLogger.request(
+        method: 'POST',
+        url: apiSaleCalculate,
+        body: request.toJson(),
+      );
 
       ServiceResponseModel response = await postFetch(
         context: context,
@@ -24,12 +29,13 @@ class BillService {
         body: request.toJson(),
       );
 
-      print('DEBUG: Response recibido:');
-      print('  - statusHttp: ${response.statusHttp}');
-      print('  - body es null: ${response.body == null}');
-      if (response.body != null) {
-        print('  - body: ${response.body}');
-      }
+      stopwatch.stop();
+      AppLogger.response(
+        statusCode: response.statusHttp,
+        url: apiSaleCalculate,
+        body: response.body,
+        duration: stopwatch.elapsed,
+      );
 
       if (response.statusHttp == 201 && response.body != null) {
         // Extraer el objeto 'response' del body
@@ -37,14 +43,18 @@ class BillService {
         final responseData = bodyMap['response'] as Map<String, dynamic>?;
 
         if (responseData == null) {
-          print('DEBUG: ERROR - No se encontró el campo "response" en el body');
+          AppLogger.error(
+            'Campo "response" no encontrado en body',
+            tag: 'BillService',
+          );
           return null;
         }
 
         final result = SaleCalculateResponseModel.fromJson(responseData);
-        print('DEBUG: Modelo parseado exitosamente');
-        print('  - detailCalculate.length: ${result.detailCalculate.length}');
-        print('  - totalCalculate.total: ${result.totalCalculate.total}');
+        AppLogger.success(
+          'Cálculo exitoso: ${result.detailCalculate.length} items, total: \$${result.totalCalculate.total}',
+          tag: 'BillService',
+        );
         return result;
       } else {
         NotificationService.showSnackbarError(

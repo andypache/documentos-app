@@ -62,6 +62,7 @@ class _CardSliderState extends State<CardSlider> {
           SizedBox(height: shortest * 0.008),
           Expanded(
               child: ListView.builder(
+                  key: ValueKey('bill_slider_${widget.title}'),
                   controller: scrollController,
                   scrollDirection: Axis.horizontal,
                   itemCount: widget.bills.length,
@@ -105,6 +106,7 @@ class _BillPoster extends StatelessWidget {
     final horizontalMargin = size.width * 0.02;
 
     return Container(
+        key: ValueKey('bill_poster_${bill.id}'),
         width: cardWidth,
         height: cardHeight,
         margin: EdgeInsets.symmetric(horizontal: horizontalMargin),

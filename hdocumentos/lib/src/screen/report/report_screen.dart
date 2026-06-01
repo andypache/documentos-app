@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/theme/app_dimens.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
 
 ///Widgets for report item application
@@ -26,7 +27,7 @@ class _ReportScreenBody extends StatelessWidget {
     return const SingleChildScrollView(
         child: Column(children: [
       PageTitleWidget(title: 'Reportes'),
-      SizedBox(height: 60),
+      SizedBox(height: AppDimens.spaceXXL),
       _ReportScreenForm()
     ]));
   }
@@ -46,7 +47,7 @@ class _ReportScreenForm extends StatelessWidget {
           labelText: 'Nombre',
           hintText: 'Nombre (requerido)',
           onChanged: null),
-      SizedBox(height: 30)
+      SizedBox(height: AppDimens.spaceXL)
     ]));
   }
 }

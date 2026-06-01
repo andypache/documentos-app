@@ -3,6 +3,7 @@ import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/service/service.dart';
 import 'package:hdocumentos/src/share/preference.dart';
+import 'package:hdocumentos/src/theme/app_dimens.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/common/loading_widget.dart';
 
@@ -129,7 +130,7 @@ class _TaxSelectionDialogWidgetState extends State<TaxSelectionDialogWidget> {
     return Dialog(
       backgroundColor: AppTheme.dialogBackground,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(AppDimens.radiusL),
         side: const BorderSide(color: AppTheme.dialogBorder, width: 1),
       ),
       child: Container(
@@ -141,9 +142,9 @@ class _TaxSelectionDialogWidgetState extends State<TaxSelectionDialogWidget> {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: AppTheme.primaryButton.withOpacity(0.2),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(15),
-                  topRight: Radius.circular(15),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(AppDimens.radiusL),
+                  topRight: Radius.circular(AppDimens.radiusL),
                 ),
               ),
               child: Row(
@@ -164,7 +165,7 @@ class _TaxSelectionDialogWidgetState extends State<TaxSelectionDialogWidget> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 5),
+                          SizedBox(height: AppDimens.spaceXS),
                           Text(
                             AppLocalizations.of(ctx).selectTaxSubtitle,
                             style: const TextStyle(
@@ -228,8 +229,8 @@ class _TaxSelectionDialogWidgetState extends State<TaxSelectionDialogWidget> {
                                         decoration: BoxDecoration(
                                           color: AppTheme.notificationWarning
                                               .withOpacity(0.2),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
+                                          borderRadius: BorderRadius.circular(
+                                              AppDimens.radiusM),
                                           border: Border.all(
                                             color: AppTheme.notificationWarning,
                                             width: 1,
@@ -278,7 +279,7 @@ class _TaxSelectionDialogWidgetState extends State<TaxSelectionDialogWidget> {
                               );
                             }).toList(),
 
-                            const SizedBox(height: 10),
+                            SizedBox(height: AppDimens.spaceS),
                           ],
                         );
                       }).toList(),
@@ -314,7 +315,7 @@ class _TaxItemWidget extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppDimens.radiusS),
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Row(
@@ -327,7 +328,7 @@ class _TaxItemWidget extends StatelessWidget {
                   color: enabled
                       ? AppTheme.primaryButton.withOpacity(0.2)
                       : Colors.white.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppDimens.radiusM),
                 ),
                 child: Center(
                   child: Text(
@@ -363,7 +364,7 @@ class _TaxItemWidget extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: AppDimens.spaceXS),
                     Text(
                       tax.description ?? '',
                       style: TextStyle(

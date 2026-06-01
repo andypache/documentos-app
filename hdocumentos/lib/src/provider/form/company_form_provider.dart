@@ -8,6 +8,7 @@ import 'package:hdocumentos/src/service/service.dart';
 import 'package:hdocumentos/src/constant/constant.dart';
 import 'package:hdocumentos/src/share/preference.dart';
 import 'package:provider/provider.dart';
+import 'package:hdocumentos/src/exception/error_handler.dart';
 
 /// Provider para el wizard de configuración de compañia
 class CompanyFormProvider extends ChangeNotifier {
@@ -175,33 +176,36 @@ class CompanyFormProvider extends ChangeNotifier {
     _isSavingStep = true;
     notifyListeners();
 
-    try {
-      final body = _buildStepBody(_currentStep);
-      final response =
-          await putFetch(context: context, url: apiCompanyUpdate, body: body);
+    final body = _buildStepBody(_currentStep);
 
+    final response = await ErrorHandler.tryExecute(
+      action: () async => await putFetch(
+        context: context,
+        url: apiCompanyUpdate,
+        body: body,
+      ),
+      context: context,
+      errorMessage: 'Error al guardar el paso',
+      showNotification: false, // Manejamos notificaciones manualmente
+    );
+
+    if (!context.mounted) return;
+
+    if (response != null &&
+        (response.statusHttp == 200 || response.statusHttp == 201)) {
+      final l10nMsg = NotificationService.l10n;
+      NotificationService.showSnackbarSuccess(
+          l10nMsg?.stepSavedSuccess ?? 'Paso guardado correctamente');
+      // Sincronizar la empresa editada (logo, certificado, etc.) en el
+      // AppInitProvider y en la sesión sin llamar al API
+      await context.read<AppInitProvider>().updateCompany(company);
       if (!context.mounted) return;
-
-      if (response.statusHttp == 200 || response.statusHttp == 201) {
-        final l10nMsg = NotificationService.l10n;
-        NotificationService.showSnackbarSuccess(
-            l10nMsg?.stepSavedSuccess ?? 'Paso guardado correctamente');
-        // Sincronizar la empresa editada (logo, certificado, etc.) en el
-        // AppInitProvider y en la sesión sin llamar al API
-        await context.read<AppInitProvider>().updateCompany(company);
-        if (!context.mounted) return;
-        _isSavingStep = false;
-        notifyListeners();
-      } else {
-        NotificationService.showSnackbarError(getError(response).toString());
-        _isSavingStep = false;
-        notifyListeners();
-      }
-    } catch (e) {
-      NotificationService.showSnackbarError(e.toString());
-      _isSavingStep = false;
-      notifyListeners();
+    } else if (response != null) {
+      NotificationService.showSnackbarError(getError(response).toString());
     }
+
+    _isSavingStep = false;
+    notifyListeners();
   }
 
   /// Construye el body específico para el paso indicado

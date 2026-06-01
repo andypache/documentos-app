@@ -4,10 +4,13 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/constant.dart';
 import 'package:hdocumentos/src/service/service.dart';
+import 'package:hdocumentos/src/service/http_client_provider.dart';
 import 'package:hdocumentos/src/share/preference.dart';
+import 'package:hdocumentos/src/share/app_logger.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/provider/app_init_provider.dart';
+import 'package:hdocumentos/src/exception/app_exceptions.dart';
 import 'package:provider/provider.dart';
 
 // ─── Instancias globales ──────────────────────────────────────────────────────
@@ -177,7 +180,6 @@ Object getError(ServiceResponseModel response) {
 /// Responsabilidad: construir headers y ejecutar llamadas HTTP.
 class _HttpClient {
   static const int _errorStatus = 509;
-  static const Duration _timeout = Duration(seconds: 15);
 
   /// Construye los headers de autorización con el token almacenado.
   /// Incluye [Accept-Language] con el idioma seleccionado por el usuario.
@@ -219,11 +221,15 @@ class _HttpClient {
       final uri = _buildUri(url, params);
       final headers = await _authHeaders();
       if (extraHeaders != null) headers.addAll(extraHeaders);
-      final response = await http.get(uri, headers: headers).timeout(_timeout);
+
+      final response = await httpClient.get(uri, headers: headers);
       return getResponse(response);
+    } on NetworkException catch (e) {
+      AppLogger.error('Network error in GET $url', error: e, tag: 'HttpClient');
+      return _errorResponse();
     } on Exception catch (e) {
-      // ignore: avoid_print
-      print(e);
+      AppLogger.error('Unexpected error in GET $url',
+          error: e, tag: 'HttpClient');
       return _errorResponse();
     }
   }
@@ -235,17 +241,19 @@ class _HttpClient {
   }) async {
     try {
       final headers = await _authHeaders();
-      final response = await http
-          .post(
-            Uri.parse(url),
-            headers: headers,
-            body: jsonEncode(body),
-          )
-          .timeout(_timeout);
+      final response = await httpClient.post(
+        Uri.parse(url),
+        headers: headers,
+        body: jsonEncode(body),
+      );
       return getResponse(response);
+    } on NetworkException catch (e) {
+      AppLogger.error('Network error in POST $url',
+          error: e, tag: 'HttpClient');
+      return _errorResponse();
     } on Exception catch (e) {
-      // ignore: avoid_print
-      print(e);
+      AppLogger.error('Unexpected error in POST $url',
+          error: e, tag: 'HttpClient');
       return _errorResponse();
     }
   }
@@ -257,17 +265,18 @@ class _HttpClient {
   }) async {
     try {
       final headers = await _authHeaders();
-      final response = await http
-          .put(
-            Uri.parse(url),
-            headers: headers,
-            body: jsonEncode(body),
-          )
-          .timeout(_timeout);
+      final response = await httpClient.put(
+        Uri.parse(url),
+        headers: headers,
+        body: jsonEncode(body),
+      );
       return getResponse(response);
+    } on NetworkException catch (e) {
+      AppLogger.error('Network error in PUT $url', error: e, tag: 'HttpClient');
+      return _errorResponse();
     } on Exception catch (e) {
-      // ignore: avoid_print
-      print(e);
+      AppLogger.error('Unexpected error in PUT $url',
+          error: e, tag: 'HttpClient');
       return _errorResponse();
     }
   }
@@ -279,17 +288,19 @@ class _HttpClient {
   }) async {
     try {
       final headers = await _authHeaders();
-      final response = await http
-          .patch(
-            Uri.parse(url),
-            headers: headers,
-            body: jsonEncode(body),
-          )
-          .timeout(_timeout);
+      final response = await httpClient.patch(
+        Uri.parse(url),
+        headers: headers,
+        body: jsonEncode(body),
+      );
       return getResponse(response);
+    } on NetworkException catch (e) {
+      AppLogger.error('Network error in PATCH $url',
+          error: e, tag: 'HttpClient');
+      return _errorResponse();
     } on Exception catch (e) {
-      // ignore: avoid_print
-      print(e);
+      AppLogger.error('Unexpected error in PATCH $url',
+          error: e, tag: 'HttpClient');
       return _errorResponse();
     }
   }
@@ -300,16 +311,18 @@ class _HttpClient {
   }) async {
     try {
       final headers = await _authHeaders();
-      final response = await http
-          .delete(
-            Uri.parse(url),
-            headers: headers,
-          )
-          .timeout(_timeout);
+      final response = await httpClient.delete(
+        Uri.parse(url),
+        headers: headers,
+      );
       return getResponse(response);
+    } on NetworkException catch (e) {
+      AppLogger.error('Network error in DELETE $url',
+          error: e, tag: 'HttpClient');
+      return _errorResponse();
     } on Exception catch (e) {
-      // ignore: avoid_print
-      print(e);
+      AppLogger.error('Unexpected error in DELETE $url',
+          error: e, tag: 'HttpClient');
       return _errorResponse();
     }
   }
@@ -321,17 +334,19 @@ class _HttpClient {
     required Map<String, String> header,
   }) async {
     try {
-      final response = await http
-          .post(
-            Uri.parse(url),
-            headers: header,
-            body: body,
-          )
-          .timeout(_timeout);
+      final response = await httpClient.post(
+        Uri.parse(url),
+        headers: header,
+        body: body,
+      );
       return getResponse(response);
+    } on NetworkException catch (e) {
+      AppLogger.error('Network error in POST FORM $url',
+          error: e, tag: 'HttpClient');
+      return _errorResponse();
     } on Exception catch (e) {
-      // ignore: avoid_print
-      print(e);
+      AppLogger.error('Unexpected error in POST FORM $url',
+          error: e, tag: 'HttpClient');
       return _errorResponse();
     }
   }

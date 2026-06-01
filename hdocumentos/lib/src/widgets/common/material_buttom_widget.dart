@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/theme/app_dimens.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 
 ///Create general widget for button all application
@@ -43,7 +44,8 @@ class MaterialButtonWidget extends StatelessWidget {
             overflow: TextOverflow.ellipsis);
 
     return MaterialButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppDimens.radiusM)),
         minWidth: minWidth ?? 80,
         disabledColor: AppTheme.grey,
         elevation: 0,

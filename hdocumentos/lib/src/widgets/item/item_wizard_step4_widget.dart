@@ -4,6 +4,7 @@ import 'package:hdocumentos/src/model/config/company_sale_parameter_model.dart';
 import 'package:hdocumentos/src/model/common/sale_parameter_model.dart';
 import 'package:hdocumentos/src/model/item/item_model.dart';
 import 'package:hdocumentos/src/provider/form/item_form_provider.dart';
+import 'package:hdocumentos/src/theme/app_dimens.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/item/tax_selection_dialog_widget.dart';
 import 'package:provider/provider.dart';
@@ -30,13 +31,13 @@ class ItemWizardStep4Widget extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 16),
-          // ── Panel de información (primero) ────────────────────────
+          SizedBox(height: AppDimens.spaceL),
+          // ── Panel de información (primero) ──────────────────────────
           Container(
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
               color: AppTheme.primaryButton.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppDimens.radiusM),
               border: Border.all(color: AppTheme.primaryButton, width: 1),
             ),
             child: Row(
@@ -52,13 +53,13 @@ class ItemWizardStep4Widget extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: AppDimens.spaceL),
           if (itemForm.itemTaxList.isEmpty)
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: AppTheme.white.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppDimens.radiusM),
               ),
               child: Center(
                 child: Text(
@@ -72,6 +73,7 @@ class ItemWizardStep4Widget extends StatelessWidget {
             )
           else
             ListView.builder(
+              key: const ValueKey('item_tax_list'),
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: itemForm.itemTaxList.length,
@@ -86,6 +88,7 @@ class ItemWizardStep4Widget extends StatelessWidget {
                 final taxDescription = saleParam?.description;
 
                 return Card(
+                  key: ValueKey('tax_${saleParam?.name}_$index'),
                   color: AppTheme.white.withOpacity(0.1),
                   child: ListTile(
                     leading: Container(
@@ -93,7 +96,7 @@ class ItemWizardStep4Widget extends StatelessWidget {
                       height: 44,
                       decoration: BoxDecoration(
                         color: AppTheme.primaryButton.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(AppDimens.radiusS),
                       ),
                       child: Center(
                         child: Text(
@@ -128,7 +131,7 @@ class ItemWizardStep4Widget extends StatelessWidget {
                 );
               },
             ),
-          const SizedBox(height: 20),
+          SizedBox(height: AppDimens.spaceL),
           Center(
             child: ElevatedButton.icon(
               onPressed: () => _showAddTaxDialog(context, itemForm),

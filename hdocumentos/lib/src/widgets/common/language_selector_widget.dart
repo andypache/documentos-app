@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/provider/locale_provider.dart';
+import 'package:hdocumentos/src/theme/app_dimens.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +19,7 @@ class LanguageSelectorWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.08),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppDimens.radiusXL),
           border: Border.all(
             color: AppTheme.primaryButton.withOpacity(0.5),
             width: 1,

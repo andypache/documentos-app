@@ -4,6 +4,7 @@ import 'package:hdocumentos/src/provider/app_init_provider.dart';
 import 'package:hdocumentos/src/router/app_routes.dart';
 import 'package:hdocumentos/src/service/service.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
+import 'package:hdocumentos/src/theme/app_dimens.dart';
 import 'package:hdocumentos/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -82,20 +83,21 @@ class _ErrorOverlay extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
+        padding: const EdgeInsets.symmetric(horizontal: AppDimens.paddingXL),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.cloud_off_rounded,
-                color: AppTheme.white.withOpacity(0.7), size: 48),
-            const SizedBox(height: 12),
+                color: AppTheme.white.withOpacity(0.7), size: AppDimens.iconXL),
+            const SizedBox(height: AppDimens.spaceM),
             Text(
               message,
               textAlign: TextAlign.center,
               style: TextStyle(
-                  color: AppTheme.white.withOpacity(0.7), fontSize: 13),
+                  color: AppTheme.white.withOpacity(0.7),
+                  fontSize: AppDimens.fontSmall),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppDimens.spaceL),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -106,10 +108,10 @@ class _ErrorOverlay extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryButton,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                        borderRadius: BorderRadius.circular(AppDimens.radiusM)),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppDimens.spaceM),
                 ElevatedButton.icon(
                   onPressed: () async {
                     await context.read<AuthService>().logout();
@@ -123,7 +125,7 @@ class _ErrorOverlay extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.actionDanger,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                        borderRadius: BorderRadius.circular(AppDimens.radiusM)),
                   ),
                 ),
               ],
@@ -186,13 +188,13 @@ class _HomeScreenBodyState extends State<_HomeScreenBody> {
           child: SingleChildScrollView(
             child: Column(children: [
               CardSwiperWidget(menus: menus),
-              const SizedBox(height: 36),
+              const SizedBox(height: AppDimens.spaceXXL),
               if (initProvider.hasCompany)
                 LastSalesWidget(
                   sales: initProvider.lastSales,
                   title: l10n.homeSalesTitle,
                 ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppDimens.spaceL),
             ]),
           ),
         ),

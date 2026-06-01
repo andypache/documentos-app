@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
+import 'package:hdocumentos/src/theme/app_dimens.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/common/loading_widget.dart';
 
@@ -153,7 +154,7 @@ class _CustomerSearchDialogState extends State<CustomerSearchDialog> {
     return Dialog(
       backgroundColor: AppTheme.dialogBackground,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppDimens.radiusXL),
         side: const BorderSide(color: AppTheme.dialogBorder, width: 1),
       ),
       child: Container(
@@ -166,9 +167,9 @@ class _CustomerSearchDialogState extends State<CustomerSearchDialog> {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: AppTheme.secondary.withOpacity(0.3),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(AppDimens.radiusXL),
+                  topRight: Radius.circular(AppDimens.radiusXL),
                 ),
               ),
               child: Row(
@@ -203,7 +204,7 @@ class _CustomerSearchDialogState extends State<CustomerSearchDialog> {
                     child: Container(
                       decoration: BoxDecoration(
                         color: AppTheme.white.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppDimens.radiusM),
                         border:
                             Border.all(color: AppTheme.primaryButton, width: 1),
                       ),
@@ -250,7 +251,7 @@ class _CustomerSearchDialogState extends State<CustomerSearchDialog> {
                   Container(
                     decoration: BoxDecoration(
                       color: AppTheme.primaryButton,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(AppDimens.radiusM),
                     ),
                     child: IconButton(
                       icon: const Icon(Icons.search, color: Colors.white),
@@ -265,7 +266,7 @@ class _CustomerSearchDialogState extends State<CustomerSearchDialog> {
                   Container(
                     decoration: BoxDecoration(
                       color: AppTheme.secondaryButton,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(AppDimens.radiusM),
                     ),
                     child: IconButton(
                       icon: const Icon(Icons.list, color: Colors.white),
@@ -344,6 +345,7 @@ class _CustomerSearchDialogState extends State<CustomerSearchDialog> {
     }
 
     return ListView.builder(
+      key: const ValueKey('customer_search_list'),
       itemCount: _displayedCustomers.length,
       itemBuilder: (context, index) {
         final customer = _displayedCustomers[index];
@@ -359,6 +361,7 @@ class _CustomerSearchDialogState extends State<CustomerSearchDialog> {
         customer['discountValue'] != null && customer['discountValue'] > 0;
 
     return Card(
+      key: ValueKey('search_customer_${customer['customerId']}'),
       margin: const EdgeInsets.only(bottom: 8),
       color: AppTheme.secondary.withOpacity(0.5),
       child: InkWell(

@@ -1,0 +1,415 @@
+import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
+import 'package:hdocumentos/src/model/model.dart';
+import 'package:hdocumentos/src/provider/form/customer_form_provider.dart';
+import 'package:hdocumentos/src/service/notification_service.dart';
+import 'package:hdocumentos/src/theme/app_theme.dart';
+import 'package:hdocumentos/src/theme/app_dimens.dart';
+import 'package:hdocumentos/src/widgets/customer/customer_wizard_step1_widget.dart';
+import 'package:hdocumentos/src/widgets/customer/customer_wizard_step3_widget.dart';
+import 'package:hdocumentos/src/widgets/customer/customer_wizard_discount_widget.dart';
+import 'package:hdocumentos/src/widgets/widgets.dart';
+import 'package:provider/provider.dart';
+
+///Pantalla de wizard para crear/editar clientes
+class CustomerWizardScreen extends StatelessWidget {
+  final CustomerModel? customerToEdit;
+
+  const CustomerWizardScreen({Key? key, this.customerToEdit}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) {
+        final provider = CustomerFormProvider();
+        if (customerToEdit != null) {
+          provider.loadCustomer(customerToEdit!);
+        }
+        return provider;
+      },
+      child: _CustomerWizardBody(isEditing: customerToEdit != null),
+    );
+  }
+}
+
+///Cuerpo del wizard
+class _CustomerWizardBody extends StatelessWidget {
+  final bool isEditing;
+
+  const _CustomerWizardBody({Key? key, required this.isEditing})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final l10n = AppLocalizations.of(context);
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          const BrackgroundWidget(),
+          SafeArea(
+            child: Column(
+              children: [
+                // ── Encabezado ────────────────────────────────────────
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.05,
+                    vertical: isLandscape ? 4 : 8,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              isEditing
+                                  ? l10n.customerEditTitle
+                                  : l10n.customerCreateTitle,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: isLandscape ? 16 : size.width * 0.052,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: Icon(
+                          Icons.close_rounded,
+                          color: Colors.white.withOpacity(0.8),
+                          size: isLandscape ? 22 : size.width * 0.07,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // ── Contenido scrollable ──────────────────────────────
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: _CustomerWizardContainer(),
+                  ),
+                ),
+                // ── Barra fija de botones ─────────────────────────────
+                const _NavigationButtons(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+///Container principal del wizard
+class _CustomerWizardContainer extends StatelessWidget {
+  const _CustomerWizardContainer({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final customerForm = Provider.of<CustomerFormProvider>(context);
+    final size = MediaQuery.of(context).size;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+      child: Column(
+        children: [
+          _StepperIndicator(currentStep: customerForm.currentStep),
+          SizedBox(height: AppDimens.spaceL),
+          _WizardContent(currentStep: customerForm.currentStep),
+          SizedBox(height: AppDimens.spaceL),
+        ],
+      ),
+    );
+  }
+}
+
+///Indicador de pasos
+class _StepperIndicator extends StatelessWidget {
+  final int currentStep;
+
+  const _StepperIndicator({Key? key, required this.currentStep})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Container(
+      padding:
+          EdgeInsets.symmetric(horizontal: size.width * 0.04, vertical: 10),
+      child: Row(
+        children: [
+          _buildStep(context, 0, AppLocalizations.of(context).stepCustomerData,
+              currentStep),
+          _buildConnector(0, currentStep),
+          _buildStep(context, 1,
+              AppLocalizations.of(context).stepCustomerContact, currentStep),
+          _buildConnector(1, currentStep),
+          _buildStep(context, 2, AppLocalizations.of(context).labelDiscount,
+              currentStep),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStep(
+      BuildContext context, int stepNumber, String label, int currentStep) {
+    final isActive = stepNumber == currentStep;
+    final isCompleted = stepNumber < currentStep;
+    final size = MediaQuery.of(context).size;
+    final circleSize = (size.shortestSide * 0.1).clamp(32.0, 48.0);
+    final iconSize = (size.shortestSide * 0.05).clamp(16.0, 24.0);
+    final labelFontSize = (size.shortestSide * 0.028).clamp(10.0, 13.0);
+
+    return Expanded(
+      child: Column(
+        children: [
+          Container(
+            width: circleSize,
+            height: circleSize,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isActive || isCompleted
+                  ? AppTheme.primaryButton
+                  : Colors.white.withOpacity(0.2),
+              border: Border.all(
+                color: isActive || isCompleted
+                    ? AppTheme.primaryButton
+                    : Colors.white.withOpacity(0.5),
+                width: 2,
+              ),
+            ),
+            child: Center(
+              child: isCompleted
+                  ? Icon(Icons.check, color: Colors.white, size: iconSize)
+                  : Text(
+                      '${stepNumber + 1}',
+                      style: TextStyle(
+                        color: isActive || isCompleted
+                            ? Colors.white
+                            : Colors.white.withOpacity(0.5),
+                        fontWeight: FontWeight.bold,
+                        fontSize: iconSize * 0.8,
+                      ),
+                    ),
+            ),
+          ),
+          SizedBox(height: AppDimens.spaceXS),
+          Text(
+            label,
+            style: TextStyle(
+              color: isActive || isCompleted
+                  ? Colors.white
+                  : Colors.white.withOpacity(0.5),
+              fontSize: labelFontSize,
+              fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildConnector(int stepNumber, int currentStep) {
+    final isCompleted = stepNumber < currentStep;
+    return Expanded(
+      child: Container(
+        height: 2,
+        margin: const EdgeInsets.only(bottom: AppDimens.paddingL),
+        color: isCompleted
+            ? AppTheme.primaryButton
+            : Colors.white.withOpacity(0.2),
+      ),
+    );
+  }
+}
+
+///Contenido dinámico del wizard
+class _WizardContent extends StatelessWidget {
+  final int currentStep;
+
+  const _WizardContent({Key? key, required this.currentStep}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    switch (currentStep) {
+      case 0:
+        return const CustomerWizardStep1Widget();
+      case 1:
+        return const CustomerWizardStep3Widget();
+      case 2:
+        return const CustomerWizardDiscountWidget();
+      default:
+        return const CustomerWizardStep1Widget();
+    }
+  }
+}
+
+///Botones de navegación
+class _NavigationButtons extends StatelessWidget {
+  const _NavigationButtons({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final customerForm = Provider.of<CustomerFormProvider>(context);
+    final size = MediaQuery.of(context).size;
+    final l10n = AppLocalizations.of(context);
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final double iconSize = isLandscape ? 18.0 : size.width * 0.045;
+    final double fontSize = isLandscape ? 13.0 : size.width * 0.034;
+    final btnPadding = EdgeInsets.symmetric(
+      horizontal: isLandscape ? 16.0 : size.width * 0.05,
+      vertical: isLandscape ? 10.0 : 12.0,
+    );
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: isLandscape ? 16.0 : size.width * 0.05,
+        vertical: 10,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.2),
+        border: Border(
+          top: BorderSide(color: Colors.white.withOpacity(0.1), width: 1),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Botón Anterior / Cancelar
+          if (customerForm.currentStep > 0)
+            ElevatedButton.icon(
+              onPressed: customerForm.isLoading
+                  ? null
+                  : () => customerForm.previousStep(),
+              icon: Icon(Icons.arrow_back_rounded, size: iconSize),
+              label:
+                  Text(l10n.btnPrevious, style: TextStyle(fontSize: fontSize)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.grey,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                padding: btnPadding,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppDimens.radiusM)),
+              ),
+            )
+          else
+            ElevatedButton.icon(
+              onPressed: () => Navigator.pop(context),
+              icon: Icon(Icons.close_rounded, size: iconSize),
+              label: Text(l10n.btnCancel, style: TextStyle(fontSize: fontSize)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.actionDanger,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                padding: btnPadding,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppDimens.radiusM)),
+              ),
+            ),
+
+          // Indicador de paso
+          Text(
+            '${customerForm.currentStep + 1} de 3',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.5),
+              fontSize: isLandscape ? 12.0 : size.width * 0.032,
+            ),
+          ),
+
+          // Botón Siguiente / Guardar
+          if (customerForm.currentStep < 2)
+            ElevatedButton.icon(
+              onPressed: customerForm.isLoading
+                  ? null
+                  : () {
+                      if (!customerForm.nextStep()) {
+                        NotificationService.showError(l10n.msgRequiredFields);
+                      }
+                    },
+              icon: Icon(Icons.arrow_forward_rounded, size: iconSize),
+              label: Text(l10n.btnNext,
+                  style: TextStyle(
+                      fontSize: fontSize, fontWeight: FontWeight.bold)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primaryButton,
+                foregroundColor: AppTheme.secondary,
+                elevation: 0,
+                padding: btnPadding,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppDimens.radiusM)),
+              ),
+            )
+          else
+            ElevatedButton.icon(
+              onPressed: customerForm.isLoading
+                  ? null
+                  : () => _handleSaveCustomer(context, customerForm),
+              icon: customerForm.isLoading
+                  ? ButtonLoadingIndicator(size: iconSize)
+                  : Icon(Icons.save_rounded, size: iconSize),
+              label: Text(
+                customerForm.isLoading ? l10n.btnSaving : l10n.btnSave,
+                style:
+                    TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.actionSave,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                padding: btnPadding,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppDimens.radiusM)),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _handleSaveCustomer(
+      BuildContext context, CustomerFormProvider customerForm) async {
+    // Validar paso actual
+    if (!customerForm.isValidCurrentStep()) {
+      NotificationService.showError(
+          AppLocalizations.of(context).msgRequiredFields);
+      return;
+    }
+
+    customerForm.isLoading = true;
+
+    try {
+      final customer = customerForm.buildCustomerModel();
+
+      // TODO: Implementar guardado en el servicio
+      await Future.delayed(const Duration(seconds: 1));
+
+      customerForm.isLoading = false;
+
+      if (context.mounted) {
+        final l10n = AppLocalizations.of(context);
+        NotificationService.showSuccess(
+          customer.customerId != null
+              ? l10n.customerUpdatedSuccess
+              : l10n.customerCreatedSuccess,
+        );
+        Navigator.pop(context, customer);
+      }
+    } catch (e) {
+      customerForm.isLoading = false;
+      if (context.mounted) {
+        NotificationService.showError(
+            AppLocalizations.of(context).saveError(e.toString()));
+      }
+    }
+  }
+}

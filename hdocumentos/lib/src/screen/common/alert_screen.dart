@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
+import 'package:hdocumentos/src/theme/app_dimens.dart';
 
 ///Widgets for generate system alert
 class AlertScreen extends StatelessWidget {
@@ -20,7 +21,7 @@ class AlertScreen extends StatelessWidget {
               title: Text(l10n.alertDemoTitle),
               content: Column(mainAxisSize: MainAxisSize.min, children: [
                 Text(l10n.alertDemoContent),
-                const SizedBox(height: 10),
+                const SizedBox(height: AppDimens.spaceS),
                 const FlutterLogo(size: 100)
               ]),
               actions: [
@@ -46,44 +47,45 @@ class AlertScreen extends StatelessWidget {
           return Dialog(
             backgroundColor: AppTheme.dialogBackground,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppDimens.radiusL),
               side: const BorderSide(color: AppTheme.dialogBorder, width: 1),
             ),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+              padding: const EdgeInsets.fromLTRB(AppDimens.paddingL,
+                  AppDimens.paddingXL, AppDimens.paddingL, AppDimens.paddingL),
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 Container(
-                  padding: const EdgeInsets.all(14),
+                  padding: const EdgeInsets.all(AppDimens.paddingM),
                   decoration: BoxDecoration(
                     color: AppTheme.primaryButton.withOpacity(0.15),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(Icons.info_outline_rounded,
-                      color: AppTheme.primaryButton, size: 32),
+                      color: AppTheme.primaryButton, size: AppDimens.iconL),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppDimens.spaceL),
                 Text(
                   l10n.alertDemoTitle,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: AppTheme.textPrimary,
-                    fontSize: 17,
+                    fontSize: AppDimens.fontBodyLarge,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppDimens.spaceM),
                 Text(
                   l10n.alertDemoContent,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: AppTheme.textSecondary,
-                    fontSize: 13.5,
+                    fontSize: AppDimens.fontSmall,
                     height: 1.5,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppDimens.spaceM),
                 const FlutterLogo(size: 80),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppDimens.spaceXL),
                 Row(
                   children: [
                     Expanded(
@@ -93,13 +95,15 @@ class AlertScreen extends StatelessWidget {
                           foregroundColor: AppTheme.textSecondary,
                           side: const BorderSide(color: AppTheme.dialogBorder),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          padding: const EdgeInsets.symmetric(vertical: 13),
+                              borderRadius:
+                                  BorderRadius.circular(AppDimens.radiusM)),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: AppDimens.spaceM),
                         ),
                         child: Text(AppLocalizations.of(ctx).btnCancel),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppDimens.spaceM),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () => Navigator.pop(ctx),
@@ -108,8 +112,10 @@ class AlertScreen extends StatelessWidget {
                           foregroundColor: AppTheme.secondary,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          padding: const EdgeInsets.symmetric(vertical: 13),
+                              borderRadius:
+                                  BorderRadius.circular(AppDimens.radiusM)),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: AppDimens.spaceM),
                         ),
                         child: Text(AppLocalizations.of(ctx).btnAccept),
                       ),
@@ -134,12 +140,13 @@ class AlertScreen extends StatelessWidget {
                   foregroundColor: AppTheme.secondary,
                   elevation: 2,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                      borderRadius: BorderRadius.circular(AppDimens.radiusM)),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimens.paddingL,
+                      vertical: AppDimens.paddingM),
                 ),
                 child: Text(l10n.alertDemoButton,
-                    style: const TextStyle(fontSize: 16)),
+                    style: const TextStyle(fontSize: AppDimens.fontBodyLarge)),
                 onPressed: () => Platform.isAndroid
                     ? displayDialogAndroid(context)
                     : displayDialogIOS(context))),

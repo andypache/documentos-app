@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
+import 'package:hdocumentos/src/theme/app_dimens.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 
 /// Diálogo de confirmación para recargar catálogos y datos de la empresa.
@@ -29,7 +30,7 @@ class _ReloadConfirmDialog extends StatelessWidget {
     return Dialog(
       backgroundColor: AppTheme.dialogBackground,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppDimens.radiusL),
         side: const BorderSide(color: AppTheme.dialogBorder, width: 1),
       ),
       child: Padding(
@@ -50,7 +51,7 @@ class _ReloadConfirmDialog extends StatelessWidget {
                 size: 32,
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: AppDimens.spaceL),
 
             // ─── Título ───────────────────────────────────────────────────────
             Text(
@@ -63,7 +64,7 @@ class _ReloadConfirmDialog extends StatelessWidget {
                 letterSpacing: 0.2,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppDimens.spaceM),
 
             // ─── Cuerpo ───────────────────────────────────────────────────────
             Text(
@@ -71,11 +72,11 @@ class _ReloadConfirmDialog extends StatelessWidget {
               textAlign: TextAlign.center,
               style: const TextStyle(
                 color: AppTheme.textSecondary,
-                fontSize: 13.5,
+                fontSize: AppDimens.fontBody,
                 height: 1.5,
               ),
             ),
-            const SizedBox(height: 28),
+            SizedBox(height: AppDimens.spaceXXL),
 
             // ─── Botones ──────────────────────────────────────────────────────
             Row(
@@ -88,7 +89,7 @@ class _ReloadConfirmDialog extends StatelessWidget {
                       foregroundColor: AppTheme.textSecondary,
                       side: const BorderSide(color: AppTheme.dialogBorder),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(AppDimens.radiusM),
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 13),
                     ),
@@ -112,7 +113,7 @@ class _ReloadConfirmDialog extends StatelessWidget {
                       backgroundColor: AppTheme.primaryButton,
                       foregroundColor: AppTheme.secondary,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(AppDimens.radiusM),
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 13),
                       elevation: 0,

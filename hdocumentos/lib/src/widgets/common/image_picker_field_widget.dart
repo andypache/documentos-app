@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:hdocumentos/src/theme/app_dimens.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -34,7 +35,7 @@ class ImagePickerFieldWidget extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: AppDimens.spaceS),
           if (currentImage != null)
             Stack(
               children: [
@@ -42,11 +43,11 @@ class ImagePickerFieldWidget extends StatelessWidget {
                   height: 150,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppDimens.radiusM),
                     border: Border.all(color: AppTheme.primaryButton, width: 2),
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppDimens.radiusS),
                     child: Image.memory(
                       currentImage!,
                       fit: BoxFit.cover,
@@ -68,7 +69,7 @@ class ImagePickerFieldWidget extends StatelessWidget {
               height: 150,
               width: double.infinity,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppDimens.radiusM),
                 border: Border.all(color: AppTheme.primaryButton, width: 2),
               ),
               child: const Center(
@@ -79,7 +80,7 @@ class ImagePickerFieldWidget extends StatelessWidget {
                 ),
               ),
             ),
-          const SizedBox(height: 10),
+          SizedBox(height: AppDimens.spaceS),
           if (imageName != null)
             Text(
               imageName!,
@@ -88,7 +89,7 @@ class ImagePickerFieldWidget extends StatelessWidget {
                 fontSize: 12,
               ),
             ),
-          const SizedBox(height: 10),
+          SizedBox(height: AppDimens.spaceS),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

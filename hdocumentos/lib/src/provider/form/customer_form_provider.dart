@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hdocumentos/src/model/model.dart';
+import 'package:hdocumentos/src/share/form_validation_helper.dart';
+import 'package:hdocumentos/src/share/app_logger.dart';
 
 ///Provider for management customer form wizard
 class CustomerFormProvider extends ChangeNotifier {
@@ -46,8 +48,12 @@ class CustomerFormProvider extends ChangeNotifier {
             .toList();
         notifyListeners();
       }
-    } catch (_) {
-      // Si el storage falla, la lista queda vacía
+    } catch (e) {
+      AppLogger.warning(
+        'No se pudieron cargar tipos de identificación desde storage: $e',
+        tag: 'CustomerFormProvider',
+      );
+      // La lista queda vacía, no es crítico para el flujo
     }
   }
 
@@ -103,6 +109,99 @@ class CustomerFormProvider extends ChangeNotifier {
       default:
         return false;
     }
+  }
+
+  /// Valida y construye el modelo de cliente, lanzando ValidationException si hay errores
+  ///
+  /// Ejemplo de uso:
+  /// ```dart
+  /// try {
+  ///   final customer = provider.validateAndBuildCustomer();
+  ///   await CustomerService.saveCustomer(context, customer);
+  /// } on ValidationException catch (e) {
+  ///   ErrorHandler.handleError(e, context: context);
+  /// }
+  /// ```
+  CustomerModel validateAndBuildCustomer() {
+    // Validar formularios de todos los pasos
+    FormValidationHelper.validateForm(
+      formKey: formKeyStep1,
+      formName: 'Información de Identificación',
+    );
+    FormValidationHelper.validateForm(
+      formKey: formKeyStep2,
+      formName: 'Información de Contacto',
+    );
+    FormValidationHelper.validateForm(
+      formKey: formKeyStep3,
+      formName: 'Descuento del Cliente',
+    );
+
+    // Validar campos requeridos según tipo de cliente
+    if (isCompany()) {
+      FormValidationHelper.validateRequiredFields({
+        'Razón Social': businessName,
+        'Identificación': identification,
+      });
+    } else {
+      FormValidationHelper.validateRequiredFields({
+        'Nombre': firstName,
+        'Apellido': lastName,
+        'Identificación': identification,
+      });
+    }
+
+    // Validar email si fue proporcionado
+    if (email.isNotEmpty) {
+      FormValidationHelper.validateEmail(email);
+    }
+
+    // Validar teléfono si fue proporcionado (mínimo 7 dígitos)
+    if (phoneNumber.isNotEmpty) {
+      FormValidationHelper.validateLength(
+        value: phoneNumber.replaceAll(RegExp(r'\D'), ''), // solo dígitos
+        fieldName: 'Teléfono',
+        minLength: 7,
+        maxLength: 15,
+      );
+    }
+
+    // Construir descuento si aplica
+    CustomerDiscountModel? discount;
+    if (discountValue > 0 || startDate != null || endDate != null) {
+      // Validar rango de descuento
+      FormValidationHelper.validateRange(
+        value: discountValue,
+        fieldName: 'Descuento',
+        min: 0,
+        max: 100,
+      );
+
+      discount = CustomerDiscountModel(
+        customerDiscountId: customerDiscountId,
+        startDate: startDate,
+        endDate: endDate,
+        isVariable: isVariable ? 'Y' : 'N',
+        discountValue: discountValue,
+        status: 'A',
+      );
+    }
+
+    return CustomerModel(
+      identificationTypeId: identificationTypeId,
+      identificationType: identificationType,
+      identification: identification.isEmpty ? null : identification,
+      firstName: isCompany() ? null : (firstName.isEmpty ? null : firstName),
+      lastName: isCompany() ? null : (lastName.isEmpty ? null : lastName),
+      businessName:
+          isCompany() ? (businessName.isEmpty ? null : businessName) : null,
+      email: email.isEmpty ? null : email,
+      phoneNumber: phoneNumber.isEmpty ? null : phoneNumber,
+      address: address.isEmpty ? null : address,
+      customerDiscountId: discount?.customerDiscountId,
+      customerDiscount: discount,
+      status: status,
+    );
   }
 
   // Navegar al siguiente paso

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/service/service.dart';
+import 'package:hdocumentos/src/exception/error_handler.dart';
 
 /// Estado de la inicialización de la app
 enum AppInitStatus { idle, loading, ready, error }
@@ -68,19 +69,27 @@ class AppInitProvider extends ChangeNotifier {
     // Capturar l10n antes del primer await — soluciona el bug de idioma
     final l10n = AppLocalizations.of(context);
 
-    try {
-      await _loadCatalogs(context, l10n, forceRefresh: forceRefresh);
-      // Fallo real de API: _catalogs sigue null → pasar a error
-      if (_catalogs == null) {
-        _errorMessage = l10n.initApplicationError;
-        _setStatus(AppInitStatus.error);
-        return;
-      }
-      // ignore: use_build_context_synchronously
-      await _loadCompany(context, forceRefresh: forceRefresh);
-      _setStatus(AppInitStatus.ready);
-    } catch (e) {
-      _errorMessage = e.toString();
+    final success = await ErrorHandler.tryExecute<bool>(
+      action: () async {
+        await _loadCatalogs(context, l10n, forceRefresh: forceRefresh);
+        // Fallo real de API: _catalogs sigue null → pasar a error
+        if (_catalogs == null) {
+          _errorMessage = l10n.initApplicationError;
+          _setStatus(AppInitStatus.error);
+          return false;
+        }
+        // ignore: use_build_context_synchronously
+        await _loadCompany(context, forceRefresh: forceRefresh);
+        _setStatus(AppInitStatus.ready);
+        return true;
+      },
+      context: context,
+      errorMessage: l10n.initApplicationError,
+      showNotification: false, // Manejo manual con _errorMessage
+      defaultValue: false,
+    );
+
+    if (success == false) {
       _setStatus(AppInitStatus.error);
     }
   }

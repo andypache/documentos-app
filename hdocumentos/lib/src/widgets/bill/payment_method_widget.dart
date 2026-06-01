@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/model/model.dart';
+import 'package:hdocumentos/src/theme/app_dimens.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:hdocumentos/src/widgets/common/loading_widget.dart';
 
@@ -24,7 +25,7 @@ class PaymentMethodWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: AppTheme.secondary.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppDimens.radiusM),
         border: Border.all(
           color:
               selectedMethod != null ? AppTheme.primaryButton : Colors.white30,
@@ -43,7 +44,7 @@ class PaymentMethodWidget extends StatelessWidget {
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: AppTheme.primaryButton.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppDimens.radiusS),
                   ),
                   child: const Icon(
                     Icons.payment,
@@ -62,7 +63,7 @@ class PaymentMethodWidget extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: AppDimens.spaceL),
 
             // Dropdown o Loading
             if (isLoading)
@@ -88,7 +89,7 @@ class PaymentMethodWidget extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.red.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppDimens.radiusS),
         border: Border.all(color: Colors.red.withOpacity(0.3)),
       ),
       child: Row(
@@ -113,7 +114,7 @@ class PaymentMethodWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppDimens.radiusM),
         border: Border.all(
           color: AppTheme.primaryButton.withOpacity(0.5),
           width: 1,
@@ -156,7 +157,7 @@ class PaymentMethodWidget extends StatelessWidget {
             color: Colors.white,
             fontSize: 15,
           ),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppDimens.radiusM),
           items: paymentMethods.map((method) {
             return DropdownMenuItem<PaymentMethodModel>(
               value: method,

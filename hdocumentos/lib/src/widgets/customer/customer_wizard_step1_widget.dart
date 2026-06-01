@@ -72,8 +72,13 @@ class _CustomerWizardStep1WidgetState extends State<CustomerWizardStep1Widget> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CustomerFormProvider>(
-      builder: (context, customerForm, child) {
+    return Selector<CustomerFormProvider,
+        (IdentificationTypeModel?, List<IdentificationTypeModel>)>(
+      selector: (_, provider) =>
+          (provider.identificationType, provider.identificationTypes),
+      builder: (context, data, child) {
+        final customerForm = context.read<CustomerFormProvider>();
+        final (identificationType, identificationTypes) = data;
         return Form(
           key: customerForm.formKeyStep1,
           child: Column(
@@ -91,16 +96,15 @@ class _CustomerWizardStep1WidgetState extends State<CustomerWizardStep1Widget> {
 
               // Tipo de Identificación
               DropdownButtonFormField<IdentificationTypeModel>(
-                value: customerForm.identificationType != null &&
-                        customerForm.identificationTypes.isNotEmpty
-                    ? customerForm.identificationTypes.firstWhere(
-                        (type) =>
-                            type.identificationTypeId ==
-                            customerForm
-                                .identificationType?.identificationTypeId,
-                        orElse: () => customerForm.identificationTypes.first,
-                      )
-                    : null,
+                value:
+                    identificationType != null && identificationTypes.isNotEmpty
+                        ? identificationTypes.firstWhere(
+                            (type) =>
+                                type.identificationTypeId ==
+                                identificationType.identificationTypeId,
+                            orElse: () => identificationTypes.first,
+                          )
+                        : null,
                 dropdownColor: const Color(0xff2a2d3e),
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(

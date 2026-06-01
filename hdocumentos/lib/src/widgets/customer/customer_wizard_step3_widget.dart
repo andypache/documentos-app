@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/provider/form/customer_form_provider.dart';
+import 'package:hdocumentos/src/theme/app_dimens.dart';
 import 'package:provider/provider.dart';
 
 ///Step 3: Información de Contacto y Dirección
@@ -75,7 +76,7 @@ class _CustomerWizardStep3WidgetState extends State<CustomerWizardStep3Widget> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: AppDimens.spaceL),
 
           // Email
           TextFormField(
@@ -103,7 +104,7 @@ class _CustomerWizardStep3WidgetState extends State<CustomerWizardStep3Widget> {
             },
             autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: AppDimens.spaceL),
 
           // Teléfono
           TextFormField(
@@ -133,7 +134,7 @@ class _CustomerWizardStep3WidgetState extends State<CustomerWizardStep3Widget> {
             },
             autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: AppDimens.spaceL),
 
           // Dirección
           TextFormField(
@@ -155,14 +156,14 @@ class _CustomerWizardStep3WidgetState extends State<CustomerWizardStep3Widget> {
             onChanged: (value) => customerForm.address = value,
             autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: AppDimens.spaceL),
 
           // Información adicional
           Container(
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
               color: Colors.blue.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppDimens.radiusM),
               border: Border.all(color: Colors.blue, width: 1),
             ),
             child: const Row(

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/model/model.dart';
 import 'package:hdocumentos/src/service/item_service.dart';
+import 'package:hdocumentos/src/exception/error_handler.dart';
 
 enum _ItemListMode { all, filter }
 
@@ -75,49 +76,35 @@ class ItemListProvider extends ChangeNotifier {
   }
 
   Future<void> _fetchPage(BuildContext context) async {
-    try {
-      final List<ItemModel>? result;
+    final result = await ErrorHandler.tryExecute<List<ItemModel>?>(
+      action: () async {
+        if (_mode == _ItemListMode.filter) {
+          return await ItemService.fetchItemsPageFilter(
+            context,
+            page: _currentPage,
+            search: _searchQuery,
+          );
+        } else {
+          return await ItemService.fetchItemsPage(
+            context,
+            page: _currentPage,
+          );
+        }
+      },
+      context: context,
+      errorMessage: 'Error al cargar productos',
+      showNotification: true,
+    );
 
-      if (_mode == _ItemListMode.filter) {
-        result = await ItemService.fetchItemsPageFilter(
-          context,
-          page: _currentPage,
-          search: _searchQuery,
-        );
-      } else {
-        result = await ItemService.fetchItemsPage(
-          context,
-          page: _currentPage,
-        );
-      }
-
-      // null = servidor devolvió 400 → sin más páginas
-      if (result == null) {
-        _hasReachedEnd = true;
-        return;
-      }
-
-      _items.addAll(result);
-      _currentPage++;
-      if (result.isEmpty) _hasReachedEnd = true;
-    } catch (e, stack) {
-      debugPrint('[ItemListProvider] Error en _fetchPage: $e');
-      debugPrintStack(stackTrace: stack);
-      _errorMessage = e.toString();
-      // Mostrar SnackBar si el contexto sigue montado
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error al cargar productos: $_errorMessage'),
-            backgroundColor: Colors.red.shade700,
-            behavior: SnackBarBehavior.floating,
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-        );
-      }
+    // null = servidor devolvió 400 → sin más páginas
+    if (result == null) {
+      _hasReachedEnd = true;
+      return;
     }
+
+    _items.addAll(result);
+    _currentPage++;
+    if (result.isEmpty) _hasReachedEnd = true;
   }
 
   void _reset(_ItemListMode mode, String query) {
@@ -146,96 +133,108 @@ class ItemListProvider extends ChangeNotifier {
 
   Future<bool> updatePrice(String itemId, double newPrice, double newCost,
       BuildContext context) async {
-    try {
-      await ItemService.updateItemPrice(
-        context,
-        itemId: itemId,
-        price: newPrice,
-        cost: newCost > 0 ? newCost : null,
-      );
-
-      final index = _items.indexWhere((i) => i.id == itemId);
-      if (index != -1) {
-        final original = _items[index];
-        _items[index] = ItemModel(
-          id: original.id,
-          name: original.name,
-          description: original.description,
-          searchKey: original.searchKey,
-          isService: original.isService,
-          barCode: original.barCode,
-          qrCode: original.qrCode,
-          state: original.state,
-          createdAt: original.createdAt,
-          media: original.media,
-          stock: original.stock,
-          pricing: ItemPricingModel(
-            price: newPrice,
-            cost: newCost,
-            discount: original.pricing?.discount,
-          ),
-          itemTaxes: original.itemTaxes,
+    final success = await ErrorHandler.tryExecute<bool>(
+      action: () async {
+        await ItemService.updateItemPrice(
+          context,
+          itemId: itemId,
+          price: newPrice,
+          cost: newCost > 0 ? newCost : null,
         );
-        notifyListeners();
-      }
-      return true;
-    } catch (_) {
-      return false;
-    }
+
+        final index = _items.indexWhere((i) => i.id == itemId);
+        if (index != -1) {
+          final original = _items[index];
+          _items[index] = ItemModel(
+            id: original.id,
+            name: original.name,
+            description: original.description,
+            searchKey: original.searchKey,
+            isService: original.isService,
+            barCode: original.barCode,
+            qrCode: original.qrCode,
+            state: original.state,
+            createdAt: original.createdAt,
+            media: original.media,
+            stock: original.stock,
+            pricing: ItemPricingModel(
+              price: newPrice,
+              cost: newCost,
+              discount: original.pricing?.discount,
+            ),
+            itemTaxes: original.itemTaxes,
+          );
+          notifyListeners();
+        }
+        return true;
+      },
+      errorMessage: 'Error al actualizar precio',
+      showNotification: true,
+      defaultValue: false,
+    );
+    return success ?? false;
   }
 
   Future<bool> updateStock(String itemId, int newStock, BuildContext context,
       {String? location}) async {
-    try {
-      await ItemService.updateItemStock(
-        context,
-        itemId: itemId,
-        quantity: newStock,
-        location: location,
-      );
-
-      final index = _items.indexWhere((i) => i.id == itemId);
-      if (index != -1) {
-        final original = _items[index];
-        _items[index] = ItemModel(
-          id: original.id,
-          name: original.name,
-          description: original.description,
-          searchKey: original.searchKey,
-          isService: original.isService,
-          barCode: original.barCode,
-          qrCode: original.qrCode,
-          state: original.state,
-          createdAt: original.createdAt,
-          media: original.media,
-          stock: ItemStockModel(stock: newStock),
-          pricing: original.pricing,
-          itemTaxes: original.itemTaxes,
+    final success = await ErrorHandler.tryExecute<bool>(
+      action: () async {
+        await ItemService.updateItemStock(
+          context,
+          itemId: itemId,
+          quantity: newStock,
+          location: location,
         );
-        notifyListeners();
-      }
-      return true;
-    } catch (_) {
-      return false;
-    }
+
+        final index = _items.indexWhere((i) => i.id == itemId);
+        if (index != -1) {
+          final original = _items[index];
+          _items[index] = ItemModel(
+            id: original.id,
+            name: original.name,
+            description: original.description,
+            searchKey: original.searchKey,
+            isService: original.isService,
+            barCode: original.barCode,
+            qrCode: original.qrCode,
+            state: original.state,
+            createdAt: original.createdAt,
+            media: original.media,
+            stock: ItemStockModel(stock: newStock),
+            pricing: original.pricing,
+            itemTaxes: original.itemTaxes,
+          );
+          notifyListeners();
+        }
+        return true;
+      },
+      errorMessage: 'Error al actualizar stock',
+      showNotification: true,
+      defaultValue: false,
+    );
+    return success ?? false;
   }
 
   Future<bool> deleteItem(String itemId, BuildContext context) async {
     _isLoading = true;
     notifyListeners();
 
-    try {
-      final success = await ItemService.deleteItem(context, itemId);
-      if (success) {
-        _items.removeWhere((item) => item.id == itemId);
-      }
-      return success;
-    } catch (_) {
-      return false;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    final success = await ErrorHandler.tryExecute<bool>(
+      action: () async {
+        final result = await ItemService.deleteItem(context, itemId);
+        if (result) {
+          _items.removeWhere((item) => item.id == itemId);
+        }
+        return result;
+      },
+      errorMessage: 'Error al eliminar producto',
+      showNotification: true,
+      defaultValue: false,
+    );
+
+    _isLoading = false;
+    notifyListeners();
+    return success ?? false;
   }
 
   // ── Limpieza ───────────────────────────────────────────────────────────────

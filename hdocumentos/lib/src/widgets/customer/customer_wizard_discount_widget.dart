@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../provider/form/customer_form_provider.dart';
+import '../../theme/app_dimens.dart';
 
 ///Widget for customer wizard step 3 - Descuento del Cliente
 class CustomerWizardDiscountWidget extends StatefulWidget {
@@ -102,8 +103,10 @@ class _CustomerWizardDiscountWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CustomerFormProvider>(
-      builder: (context, customerForm, child) {
+    return Selector<CustomerFormProvider, bool>(
+      selector: (_, provider) => provider.isVariable,
+      builder: (context, isVariable, child) {
+        final customerForm = context.read<CustomerFormProvider>();
         return Form(
           key: customerForm.formKeyStep3,
           child: SingleChildScrollView(
@@ -118,20 +121,20 @@ class _CustomerWizardDiscountWidgetState
                         fontWeight: FontWeight.bold,
                       ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: AppDimens.spaceS),
                 Text(
                   'Configura el descuento aplicable al cliente (opcional)',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.grey[600],
                       ),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: AppDimens.spaceXL),
 
                 // Tipo de descuento
                 SwitchListTile(
                   title: const Text('¿Descuento variable?'),
                   subtitle: Text(
-                    customerForm.isVariable
+                    isVariable
                         ? 'El descuento puede cambiar según las condiciones'
                         : 'El descuento es fijo',
                     style: TextStyle(
@@ -139,7 +142,7 @@ class _CustomerWizardDiscountWidgetState
                       color: Colors.grey[600],
                     ),
                   ),
-                  value: customerForm.isVariable,
+                  value: isVariable,
                   onChanged: (value) {
                     setState(() {
                       customerForm.isVariable = value;
@@ -148,7 +151,7 @@ class _CustomerWizardDiscountWidgetState
                   contentPadding: EdgeInsets.zero,
                   activeColor: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: AppDimens.spaceL),
 
                 // Valor del descuento
                 TextFormField(
@@ -178,7 +181,7 @@ class _CustomerWizardDiscountWidgetState
                     customerForm.discountValue = int.tryParse(value) ?? 0;
                   },
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: AppDimens.spaceL),
 
                 // Divider
                 const Divider(height: 32),
@@ -188,7 +191,7 @@ class _CustomerWizardDiscountWidgetState
                         fontWeight: FontWeight.bold,
                       ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: AppDimens.spaceL),
 
                 // Fecha de inicio
                 TextFormField(
@@ -219,7 +222,7 @@ class _CustomerWizardDiscountWidgetState
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: AppDimens.spaceL),
 
                 // Fecha de fin
                 TextFormField(
@@ -253,14 +256,14 @@ class _CustomerWizardDiscountWidgetState
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: AppDimens.spaceL),
 
                 // Mensaje informativo
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: Colors.blue[50],
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppDimens.radiusS),
                     border: Border.all(color: Colors.blue[200]!),
                   ),
                   child: Row(

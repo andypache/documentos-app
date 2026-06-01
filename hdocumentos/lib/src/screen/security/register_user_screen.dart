@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hdocumentos/src/constant/app_localizations.dart';
+import 'package:hdocumentos/src/theme/app_dimens.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:hdocumentos/src/provider/provider.dart';
@@ -21,12 +22,12 @@ class RegisterUserScreen extends StatelessWidget {
               CardContainerWidget(
                 child: Column(
                   children: [
-                    const SizedBox(height: 10),
+                    SizedBox(height: AppDimens.spaceS),
                     Text(
                       l10n.registerTitle,
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
-                    const SizedBox(height: 30),
+                    SizedBox(height: AppDimens.spaceXL),
                     ChangeNotifierProvider(
                       create: (_) => LoginFormProvider(),
                       child: const _RegisterForm(),
@@ -34,7 +35,7 @@ class RegisterUserScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 30),
+              SizedBox(height: AppDimens.spaceXL),
               TextButton(
                 onPressed: () =>
                     Navigator.pushReplacementNamed(context, 'login'),
@@ -47,7 +48,7 @@ class RegisterUserScreen extends StatelessWidget {
                   style: const TextStyle(fontSize: 16),
                 ),
               ),
-              const SizedBox(height: 50),
+              SizedBox(height: AppDimens.spaceXXL),
             ],
           ),
         ),
@@ -80,7 +81,7 @@ class _RegisterForm extends StatelessWidget {
               return value.length < 3 ? l10n.validatorMinLength(3) : null;
             },
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: AppDimens.spaceL),
           InputFieldWidget(
             prefixIcon: Icons.lock_outline_rounded,
             labelText: l10n.registerFieldPassword,
@@ -94,7 +95,7 @@ class _RegisterForm extends StatelessWidget {
               return value.length < 4 ? l10n.validatorMinLength(4) : null;
             },
           ),
-          const SizedBox(height: 30),
+          SizedBox(height: AppDimens.spaceXL),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
@@ -112,7 +113,7 @@ class _RegisterForm extends StatelessWidget {
                 elevation: 0,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+                    borderRadius: BorderRadius.circular(AppDimens.radiusM)),
               ),
             ),
           ),
