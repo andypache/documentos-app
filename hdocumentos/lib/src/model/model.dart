@@ -21,5 +21,6 @@ export 'package:hdocumentos/src/model/bill_calculation_request_model.dart';
 export 'package:hdocumentos/src/model/bill_calculation_response_model.dart';
 export 'package:hdocumentos/src/model/sale_calculate_request_model.dart';
 export 'package:hdocumentos/src/model/sale_calculate_response_model.dart';
+export 'package:hdocumentos/src/model/sale_create_request_model.dart';
 export 'package:hdocumentos/src/model/common/catalog_model.dart';
 export 'package:hdocumentos/src/model/bill_form_data.dart';

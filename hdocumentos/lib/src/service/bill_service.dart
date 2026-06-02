@@ -142,31 +142,61 @@ class BillService {
 
   /// Guarda una factura en el servidor
   ///
+  /// Guarda una nueva venta en el sistema
+  ///
+  /// Endpoint: POST /sale-service/sale/create
   /// Envía los datos completos de la factura incluyendo cliente, items,
   /// método de pago y totales para su registro definitivo
   static Future<bool> saveBill({
     required BuildContext context,
-    required Map<String, dynamic> billData,
+    required SaleCreateRequestModel request,
   }) async {
     try {
-      ServiceResponseModel response = await postFetch(
-        context: context,
-        url: '${apiCompany}bill/save',
-        body: billData,
+      final stopwatch = Stopwatch()..start();
+
+      AppLogger.request(
+        method: 'POST',
+        url: apiSaleCreate,
+        body: request.toJson(),
       );
 
-      if (response.statusHttp == 200 && response.body != null) {
+      ServiceResponseModel response = await postFetch(
+        context: context,
+        url: apiSaleCreate,
+        body: request.toJson(),
+      );
+
+      stopwatch.stop();
+      AppLogger.response(
+        statusCode: response.statusHttp,
+        url: apiSaleCreate,
+        body: response.body,
+        duration: stopwatch.elapsed,
+      );
+
+      if (response.statusHttp == 201 || response.statusHttp == 200) {
+        AppLogger.success(
+          'Venta guardada exitosamente',
+          tag: 'BillService',
+        );
         NotificationService.showSnackbarSuccess(
           'Factura guardada exitosamente',
         );
         return true;
       } else {
-        NotificationService.showSnackbarError(
-          response.message,
+        final errorMessage = await _parseResponseError(response);
+        AppLogger.error(
+          'Error al guardar venta: $errorMessage',
+          tag: 'BillService',
         );
+        NotificationService.showSnackbarError(errorMessage);
         return false;
       }
     } catch (e) {
+      AppLogger.error(
+        'Error inesperado al guardar venta: $e',
+        tag: 'BillService',
+      );
       NotificationService.showSnackbarError(
         'Error inesperado al guardar: ${e.toString()}',
       );

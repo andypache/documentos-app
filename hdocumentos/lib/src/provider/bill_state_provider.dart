@@ -5,6 +5,8 @@ import 'package:hdocumentos/src/provider/bill_payment_provider.dart';
 import 'package:hdocumentos/src/provider/bill_calculation_provider.dart';
 import 'package:hdocumentos/src/service/service.dart';
 import 'package:hdocumentos/src/exception/error_handler.dart';
+import 'package:hdocumentos/src/model/model.dart';
+import 'package:hdocumentos/src/share/preference.dart';
 
 /// Provider para estados globales y operaciones de la factura
 /// Responsabilidades:
@@ -69,32 +71,121 @@ class BillStateProvider extends ChangeNotifier {
     notifyListeners();
 
     final customer = _customerProvider.selectedCustomer!;
-    final items = _itemsProvider.billItems;
     final paymentMethod = _paymentProvider.selectedPaymentMethod!;
     final calculation = _calculationProvider;
+    final lastCalculateResponse = calculation.lastCalculateResponse;
 
-    // Preparar datos de la factura
-    final billData = {
-      'customerId': customer.customerId,
-      'paymentMethodId': paymentMethod.id,
-      'items': items.map((item) {
-        return {
-          'itemId': item.item.id,
-          'quantity': item.quantity,
-          'unitPrice': item.unitPrice,
-          'discount': item.discount,
-        };
-      }).toList(),
-      'subtotal': calculation.subtotal,
-      'customerDiscount': calculation.customerDiscount,
-      'totalTax': calculation.totalTax,
-      'total': calculation.total,
-    };
+    // Validar que tengamos el response del cálculo
+    if (lastCalculateResponse == null) {
+      NotificationService.showSnackbarError(
+        'Debes calcular la factura antes de guardar',
+      );
+      _isSaving = false;
+      notifyListeners();
+      return false;
+    }
+
+    // Obtener datos de sesión y compañía
+    final userSession = Preferences.userSession;
+    final company = userSession.company;
+
+    if (company == null) {
+      NotificationService.showSnackbarError(
+        'No se pudo obtener información de la compañía',
+      );
+      _isSaving = false;
+      notifyListeners();
+      return false;
+    }
+
+    // Determinar si es consumidor final (no_data)
+    final isConsumerFinal = customer.customerId == '0';
+
+    // Construir datos del cliente
+    final customerData = CustomerSaleModel(
+      identificationType:
+          customer.identificationType?.identificationTypeId ?? '',
+      identification: customer.identification ?? '',
+      businessName: customer.businessName ?? '',
+      name: customer.firstName ?? '',
+      surname: '', // No está en CustomerModel actual
+      lastname: customer.lastName ?? '',
+      telephone: customer.phoneNumber ?? '',
+      location: customer.address ?? '',
+      email: customer.email ?? '',
+    );
+
+    // Construir lista de impuestos totales desde el response del cálculo
+    final totalTaxList = lastCalculateResponse.totalCalculate.subTotalTaxList
+        .map((tax) => TotalTaxListModel(
+              companySaleParameterId: tax.companySaleParameterId,
+              calculationSubtotal: tax.subTotal,
+              taxPercentage: tax.value,
+              taxValue: tax.total,
+            ))
+        .toList();
+
+    // Construir detalles de venta desde el response del cálculo
+    final saleDetails = lastCalculateResponse.detailCalculate.map((detail) {
+      // Construir lista de impuestos por item
+      final taxList = detail.taxList
+          .map((tax) => TaxListModel(
+                companySaleParameterId: '', // El API debe proporcionarlo
+                calculationSubtotal: tax.value,
+                taxPercentage: 0.0, // No está en SaleTaxDetailModel
+                taxValue: tax.valueTax,
+              ))
+          .toList();
+
+      return SaleDetailModel(
+        itemId: detail.itemId,
+        amount: detail.amount,
+        price: detail.price,
+        cost: detail.cost,
+        description: detail.description,
+        discount: detail.discount,
+        discountValue:
+            detail.discountCustomerValue + detail.discountProductValue,
+        total: detail.total,
+        totalDiscount: detail.totalDiscount,
+        inventory: detail.inventory,
+        taxList: taxList,
+      );
+    }).toList();
+
+    // Construir detalle de método de pago
+    final paymentMethodDetails = [
+      PaymentMethodDetailModel(
+        companyPaymentMethodId: paymentMethod.id.toString(),
+        value: calculation.total,
+      ),
+    ];
+
+    // Construir request completo
+    final request = SaleCreateRequestModel(
+      username: userSession.username,
+      companyId: company.companyId ?? '',
+      noData: isConsumerFinal,
+      establishmentNumber: company.establishmentCode ?? '',
+      emissionPoint: company.emissionPointCode ?? '',
+      customer: customerData,
+      subtotal: calculation.subtotal,
+      discount: calculation.customerDiscount,
+      discountItem: calculation.discountItem,
+      discountValue: calculation.discountTotal,
+      totalTax: calculation.totalTax,
+      total: calculation.total,
+      subtotalWithoutTax:
+          lastCalculateResponse.totalCalculate.subTotalWithoutTax,
+      totalTaxList: totalTaxList,
+      saleDetails: saleDetails,
+      paymentMethodDetails: paymentMethodDetails,
+    );
 
     final success = await ErrorHandler.tryExecute<bool>(
       action: () async => await BillService.saveBill(
         context: context,
-        billData: billData,
+        request: request,
       ),
       context: context,
       errorMessage: 'Error al guardar la factura',
