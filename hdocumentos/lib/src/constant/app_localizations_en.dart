@@ -1133,4 +1133,53 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorCompanyIdNotFound => 'Company ID not found';
+
+  @override
+  String get billCalculateBeforeSave => 'You must calculate the invoice before saving';
+
+  @override
+  String get billCompanyInfoNotFound => 'Could not retrieve company information';
+
+  @override
+  String get billSaveSuccess => 'Invoice saved successfully';
+
+  @override
+  String billSaveErrorUnexpected(String error) {
+    return 'Unexpected error saving: $error';
+  }
+
+  @override
+  String get billCalculateErrorGeneric => 'Error processing invoice calculation operation';
+
+  @override
+  String get billSaveErrorMessage => 'Error saving invoice';
+
+  @override
+  String get errorNoInternet => 'No Internet connection. Check your connection.';
+
+  @override
+  String get errorServerCommunication => 'Server communication error.';
+
+  @override
+  String get errorDataFormat => 'Error in received data format.';
+
+  @override
+  String get errorTimeout => 'The request has exceeded the time limit.';
+
+  @override
+  String get errorUnexpected => 'An unexpected error has occurred. Please try again.';
+
+  @override
+  String get errorTooManyRequests => 'Too many requests. Try again later.';
+
+  @override
+  String errorServerWithCode(int code) {
+    return 'Server error ($code)';
+  }
+
+  @override
+  String get errorRequest => 'Request error';
+
+  @override
+  String get btnSubmit => 'Submit';
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/exception/app_exceptions.dart';
 import 'package:hdocumentos/src/service/service.dart';
 import 'package:hdocumentos/src/share/app_logger.dart';
@@ -7,29 +8,49 @@ import 'package:hdocumentos/src/share/app_logger.dart';
 /// Handler centralizado para manejo de errores en toda la aplicación
 class ErrorHandler {
   /// Procesar excepción y convertirla a un mensaje amigable
-  static String getErrorMessage(dynamic error) {
+  static String getErrorMessage(dynamic error, {BuildContext? context}) {
     if (error is AppException) {
       return error.message;
     }
 
+    // Si no hay context, retornar mensajes en inglés por defecto
+    if (context == null) {
+      if (error is SocketException) {
+        return 'No Internet connection. Check your connection.';
+      }
+      if (error is HttpException) {
+        return 'Server communication error.';
+      }
+      if (error is FormatException) {
+        return 'Error in received data format.';
+      }
+      if (error is TimeoutException) {
+        return 'The request has exceeded the time limit.';
+      }
+      return 'An unexpected error has occurred. Please try again.';
+    }
+
+    // Usar localización cuando hay context
+    final l10n = AppLocalizations.of(context);
+
     if (error is SocketException) {
-      return 'No hay conexión a Internet. Verifica tu conexión.';
+      return l10n.errorNoInternet;
     }
 
     if (error is HttpException) {
-      return 'Error de comunicación con el servidor.';
+      return l10n.errorServerCommunication;
     }
 
     if (error is FormatException) {
-      return 'Error en el formato de datos recibidos.';
+      return l10n.errorDataFormat;
     }
 
     if (error is TimeoutException) {
-      return 'La solicitud ha excedido el tiempo de espera.';
+      return l10n.errorTimeout;
     }
 
     // Error genérico
-    return 'Ha ocurrido un error inesperado. Intenta nuevamente.';
+    return l10n.errorUnexpected;
   }
 
   /// Manejar error y mostrar notificación al usuario
@@ -58,7 +79,7 @@ class ErrorHandler {
 
     // Mostrar notificación si está habilitado
     if (showNotification) {
-      final message = customMessage ?? getErrorMessage(error);
+      final message = customMessage ?? getErrorMessage(error, context: context);
 
       // Mostrar según tipo de error
       if (error is AuthException) {
@@ -74,8 +95,20 @@ class ErrorHandler {
   }
 
   /// Convertir error HTTP en excepción específica
-  static AppException fromHttpError(int statusCode, String? message) {
-    final errorMessage = message ?? 'Error en la solicitud';
+  static AppException fromHttpError(
+    int statusCode,
+    String? message, {
+    BuildContext? context,
+  }) {
+    // Mensaje por defecto
+    String errorMessage;
+    if (message != null) {
+      errorMessage = message;
+    } else if (context != null) {
+      errorMessage = AppLocalizations.of(context).errorRequest;
+    } else {
+      errorMessage = 'Request error';
+    }
 
     switch (statusCode) {
       case 400:
@@ -89,8 +122,15 @@ class ErrorHandler {
       case 408:
         return NetworkException.timeout();
       case 429:
+        if (context != null) {
+          return ServerException(
+            message: AppLocalizations.of(context).errorTooManyRequests,
+            code: 'TOO_MANY_REQUESTS',
+            statusCode: 429,
+          );
+        }
         return const ServerException(
-          message: 'Demasiadas solicitudes. Intenta más tarde.',
+          message: 'Too many requests. Try again later.',
           code: 'TOO_MANY_REQUESTS',
           statusCode: 429,
         );
@@ -103,8 +143,15 @@ class ErrorHandler {
         return NetworkException.timeout();
       default:
         if (statusCode >= 500) {
+          String serverMsg;
+          if (context != null) {
+            serverMsg =
+                AppLocalizations.of(context).errorServerWithCode(statusCode);
+          } else {
+            serverMsg = 'Server error ($statusCode)';
+          }
           return ServerException(
-            message: 'Error del servidor ($statusCode)',
+            message: serverMsg,
             code: 'SERVER_ERROR',
             statusCode: statusCode,
           );
@@ -187,7 +234,7 @@ class ErrorHandler {
 class TimeoutException extends NetworkException {
   const TimeoutException()
       : super(
-          message: 'La solicitud ha excedido el tiempo de espera.',
+          message: 'The request has exceeded the time limit.',
           code: 'TIMEOUT',
         );
 }

@@ -179,9 +179,11 @@ class BillService {
           'Venta guardada exitosamente',
           tag: 'BillService',
         );
-        NotificationService.showSnackbarSuccess(
-          'Factura guardada exitosamente',
-        );
+        if (context.mounted) {
+          NotificationService.showSnackbarSuccess(
+            AppLocalizations.of(context).billSaveSuccess,
+          );
+        }
         return true;
       } else {
         final errorMessage = await _parseResponseError(response);
@@ -197,9 +199,11 @@ class BillService {
         'Error inesperado al guardar venta: $e',
         tag: 'BillService',
       );
-      NotificationService.showSnackbarError(
-        'Error inesperado al guardar: ${e.toString()}',
-      );
+      if (context.mounted) {
+        NotificationService.showSnackbarError(
+          AppLocalizations.of(context).billSaveErrorUnexpected(e.toString()),
+        );
+      }
       return false;
     }
   }

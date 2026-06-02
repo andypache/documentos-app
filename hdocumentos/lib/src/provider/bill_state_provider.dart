@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/provider/bill_customer_provider.dart';
 import 'package:hdocumentos/src/provider/bill_items_provider.dart';
 import 'package:hdocumentos/src/provider/bill_payment_provider.dart';
@@ -55,7 +56,7 @@ class BillStateProvider extends ChangeNotifier {
   Future<bool> saveBill(BuildContext context) async {
     if (!canSave) {
       NotificationService.showSnackbarError(
-        'Completa todos los campos requeridos',
+        AppLocalizations.of(context).billRequiredFieldsHint,
       );
       return false;
     }
@@ -78,7 +79,7 @@ class BillStateProvider extends ChangeNotifier {
     // Validar que tengamos el response del cálculo
     if (lastCalculateResponse == null) {
       NotificationService.showSnackbarError(
-        'Debes calcular la factura antes de guardar',
+        AppLocalizations.of(context).billCalculateBeforeSave,
       );
       _isSaving = false;
       notifyListeners();
@@ -91,7 +92,7 @@ class BillStateProvider extends ChangeNotifier {
 
     if (company == null) {
       NotificationService.showSnackbarError(
-        'No se pudo obtener información de la compañía',
+        AppLocalizations.of(context).billCompanyInfoNotFound,
       );
       _isSaving = false;
       notifyListeners();
@@ -188,7 +189,7 @@ class BillStateProvider extends ChangeNotifier {
         request: request,
       ),
       context: context,
-      errorMessage: 'Error al guardar la factura',
+      errorMessage: AppLocalizations.of(context).billSaveErrorMessage,
       showNotification: true,
       defaultValue: false,
     );

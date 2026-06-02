@@ -1105,6 +1105,57 @@
   },
 
   "errorCompanyIdNotFound": "Company ID not found",
-  "@errorCompanyIdNotFound": { "description": "Error when company_id doesn't exist in session" }
+  "@errorCompanyIdNotFound": { "description": "Error when company_id doesn't exist in session" },
+
+  "billCalculateBeforeSave": "You must calculate the invoice before saving",
+  "@billCalculateBeforeSave": { "description": "Error when trying to save without calculating" },
+
+  "billCompanyInfoNotFound": "Could not retrieve company information",
+  "@billCompanyInfoNotFound": { "description": "Error when company data is missing" },
+
+  "billSaveSuccess": "Invoice saved successfully",
+  "@billSaveSuccess": { "description": "Success message when saving invoice" },
+
+  "billSaveErrorUnexpected": "Unexpected error saving: {error}",
+  "@billSaveErrorUnexpected": {
+    "description": "Unexpected error saving invoice",
+    "placeholders": { "error": { "type": "String" } }
+  },
+
+  "billCalculateErrorGeneric": "Error processing invoice calculation operation",
+  "@billCalculateErrorGeneric": { "description": "Generic error calculating invoice" },
+
+  "billSaveErrorMessage": "Error saving invoice",
+  "@billSaveErrorMessage": { "description": "Error message when saving invoice for ErrorHandler" },
+
+  "errorNoInternet": "No Internet connection. Check your connection.",
+  "@errorNoInternet": { "description": "Error when no Internet connection" },
+
+  "errorServerCommunication": "Server communication error.",
+  "@errorServerCommunication": { "description": "HTTP communication error" },
+
+  "errorDataFormat": "Error in received data format.",
+  "@errorDataFormat": { "description": "Data format error" },
+
+  "errorTimeout": "The request has exceeded the time limit.",
+  "@errorTimeout": { "description": "Timeout error" },
+
+  "errorUnexpected": "An unexpected error has occurred. Please try again.",
+  "@errorUnexpected": { "description": "Generic unexpected error" },
+
+  "errorTooManyRequests": "Too many requests. Try again later.",
+  "@errorTooManyRequests": { "description": "Error 429 too many requests" },
+
+  "errorServerWithCode": "Server error ({code})",
+  "@errorServerWithCode": {
+    "description": "Server error with code",
+    "placeholders": { "code": { "type": "int" } }
+  },
+
+  "errorRequest": "Request error",
+  "@errorRequest": { "description": "Generic HTTP request error" },
+
+  "btnSubmit": "Submit",
+  "@btnSubmit": { "description": "Generic submit button" }
 }
 

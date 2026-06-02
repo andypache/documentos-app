@@ -2252,6 +2252,96 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No se encontró el company_id'**
   String get errorCompanyIdNotFound;
+
+  /// Error cuando intenta guardar sin calcular
+  ///
+  /// In es, this message translates to:
+  /// **'Debes calcular la factura antes de guardar'**
+  String get billCalculateBeforeSave;
+
+  /// Error cuando no hay datos de compañía
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo obtener información de la compañía'**
+  String get billCompanyInfoNotFound;
+
+  /// Mensaje de éxito al guardar factura
+  ///
+  /// In es, this message translates to:
+  /// **'Factura guardada exitosamente'**
+  String get billSaveSuccess;
+
+  /// Error inesperado al guardar factura
+  ///
+  /// In es, this message translates to:
+  /// **'Error inesperado al guardar: {error}'**
+  String billSaveErrorUnexpected(String error);
+
+  /// Error genérico al calcular factura
+  ///
+  /// In es, this message translates to:
+  /// **'Error al procesar la operación de cálculo de factura'**
+  String get billCalculateErrorGeneric;
+
+  /// Mensaje de error al guardar factura para ErrorHandler
+  ///
+  /// In es, this message translates to:
+  /// **'Error al guardar la factura'**
+  String get billSaveErrorMessage;
+
+  /// Error cuando no hay conexión a Internet
+  ///
+  /// In es, this message translates to:
+  /// **'No hay conexión a Internet. Verifica tu conexión.'**
+  String get errorNoInternet;
+
+  /// Error de comunicación HTTP
+  ///
+  /// In es, this message translates to:
+  /// **'Error de comunicación con el servidor.'**
+  String get errorServerCommunication;
+
+  /// Error de formato de datos
+  ///
+  /// In es, this message translates to:
+  /// **'Error en el formato de datos recibidos.'**
+  String get errorDataFormat;
+
+  /// Error de timeout
+  ///
+  /// In es, this message translates to:
+  /// **'La solicitud ha excedido el tiempo de espera.'**
+  String get errorTimeout;
+
+  /// Error genérico inesperado
+  ///
+  /// In es, this message translates to:
+  /// **'Ha ocurrido un error inesperado. Intenta nuevamente.'**
+  String get errorUnexpected;
+
+  /// Error 429 demasiadas solicitudes
+  ///
+  /// In es, this message translates to:
+  /// **'Demasiadas solicitudes. Intenta más tarde.'**
+  String get errorTooManyRequests;
+
+  /// Error del servidor con código
+  ///
+  /// In es, this message translates to:
+  /// **'Error del servidor ({code})'**
+  String errorServerWithCode(int code);
+
+  /// Error genérico en solicitud HTTP
+  ///
+  /// In es, this message translates to:
+  /// **'Error en la solicitud'**
+  String get errorRequest;
+
+  /// Botón enviar/submit genérico
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar'**
+  String get btnSubmit;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

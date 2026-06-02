@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hdocumentos/src/constant/app_localizations.dart';
 import 'package:hdocumentos/src/theme/app_dimens.dart';
 import 'package:hdocumentos/src/theme/app_theme.dart';
 
@@ -23,6 +24,9 @@ class MaterialButtonWidget extends StatelessWidget {
   //Create material button widget
   @override
   Widget build(BuildContext context) {
+    final String buttonText =
+        textButton ?? AppLocalizations.of(context).btnSubmit;
+
     final Widget label = icon != null
         ? Row(
             mainAxisSize: MainAxisSize.min,
@@ -32,14 +36,14 @@ class MaterialButtonWidget extends StatelessWidget {
               const SizedBox(width: 5),
               Flexible(
                 child: Text(
-                  textButton ?? 'Submit',
+                  buttonText,
                   style: const TextStyle(color: AppTheme.white),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
           )
-        : Text(textButton ?? 'Submit',
+        : Text(buttonText,
             style: const TextStyle(color: AppTheme.white),
             overflow: TextOverflow.ellipsis);
 

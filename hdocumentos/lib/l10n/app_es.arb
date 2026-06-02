@@ -1105,5 +1105,56 @@
   },
 
   "errorCompanyIdNotFound": "No se encontró el company_id",
-  "@errorCompanyIdNotFound": { "description": "Error cuando no existe company_id en sesión" }
+  "@errorCompanyIdNotFound": { "description": "Error cuando no existe company_id en sesión" },
+
+  "billCalculateBeforeSave": "Debes calcular la factura antes de guardar",
+  "@billCalculateBeforeSave": { "description": "Error cuando intenta guardar sin calcular" },
+
+  "billCompanyInfoNotFound": "No se pudo obtener información de la compañía",
+  "@billCompanyInfoNotFound": { "description": "Error cuando no hay datos de compañía" },
+
+  "billSaveSuccess": "Factura guardada exitosamente",
+  "@billSaveSuccess": { "description": "Mensaje de éxito al guardar factura" },
+
+  "billSaveErrorUnexpected": "Error inesperado al guardar: {error}",
+  "@billSaveErrorUnexpected": {
+    "description": "Error inesperado al guardar factura",
+    "placeholders": { "error": { "type": "String" } }
+  },
+
+  "billCalculateErrorGeneric": "Error al procesar la operación de cálculo de factura",
+  "@billCalculateErrorGeneric": { "description": "Error genérico al calcular factura" },
+
+  "billSaveErrorMessage": "Error al guardar la factura",
+  "@billSaveErrorMessage": { "description": "Mensaje de error al guardar factura para ErrorHandler" },
+
+  "errorNoInternet": "No hay conexión a Internet. Verifica tu conexión.",
+  "@errorNoInternet": { "description": "Error cuando no hay conexión a Internet" },
+
+  "errorServerCommunication": "Error de comunicación con el servidor.",
+  "@errorServerCommunication": { "description": "Error de comunicación HTTP" },
+
+  "errorDataFormat": "Error en el formato de datos recibidos.",
+  "@errorDataFormat": { "description": "Error de formato de datos" },
+
+  "errorTimeout": "La solicitud ha excedido el tiempo de espera.",
+  "@errorTimeout": { "description": "Error de timeout" },
+
+  "errorUnexpected": "Ha ocurrido un error inesperado. Intenta nuevamente.",
+  "@errorUnexpected": { "description": "Error genérico inesperado" },
+
+  "errorTooManyRequests": "Demasiadas solicitudes. Intenta más tarde.",
+  "@errorTooManyRequests": { "description": "Error 429 demasiadas solicitudes" },
+
+  "errorServerWithCode": "Error del servidor ({code})",
+  "@errorServerWithCode": {
+    "description": "Error del servidor con código",
+    "placeholders": { "code": { "type": "int" } }
+  },
+
+  "errorRequest": "Error en la solicitud",
+  "@errorRequest": { "description": "Error genérico en solicitud HTTP" },
+
+  "btnSubmit": "Enviar",
+  "@btnSubmit": { "description": "Botón enviar/submit genérico" }
 }

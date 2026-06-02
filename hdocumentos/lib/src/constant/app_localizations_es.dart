@@ -1133,4 +1133,53 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get errorCompanyIdNotFound => 'No se encontró el company_id';
+
+  @override
+  String get billCalculateBeforeSave => 'Debes calcular la factura antes de guardar';
+
+  @override
+  String get billCompanyInfoNotFound => 'No se pudo obtener información de la compañía';
+
+  @override
+  String get billSaveSuccess => 'Factura guardada exitosamente';
+
+  @override
+  String billSaveErrorUnexpected(String error) {
+    return 'Error inesperado al guardar: $error';
+  }
+
+  @override
+  String get billCalculateErrorGeneric => 'Error al procesar la operación de cálculo de factura';
+
+  @override
+  String get billSaveErrorMessage => 'Error al guardar la factura';
+
+  @override
+  String get errorNoInternet => 'No hay conexión a Internet. Verifica tu conexión.';
+
+  @override
+  String get errorServerCommunication => 'Error de comunicación con el servidor.';
+
+  @override
+  String get errorDataFormat => 'Error en el formato de datos recibidos.';
+
+  @override
+  String get errorTimeout => 'La solicitud ha excedido el tiempo de espera.';
+
+  @override
+  String get errorUnexpected => 'Ha ocurrido un error inesperado. Intenta nuevamente.';
+
+  @override
+  String get errorTooManyRequests => 'Demasiadas solicitudes. Intenta más tarde.';
+
+  @override
+  String errorServerWithCode(int code) {
+    return 'Error del servidor ($code)';
+  }
+
+  @override
+  String get errorRequest => 'Error en la solicitud';
+
+  @override
+  String get btnSubmit => 'Enviar';
 }
