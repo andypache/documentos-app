@@ -186,9 +186,8 @@ class CompanyEmissionPointModel {
   final String? documentTypeId;
   final String? establishmentCode;
   final String? emissionPointCode;
-  final int? currentSequential;
   final String? description;
-  final bool isActive;
+  final String? state; // 'ACTIVE' o 'INACTIVE'
 
   const CompanyEmissionPointModel({
     this.id,
@@ -196,10 +195,12 @@ class CompanyEmissionPointModel {
     this.documentTypeId,
     this.establishmentCode,
     this.emissionPointCode,
-    this.currentSequential,
     this.description,
-    this.isActive = true,
+    this.state = 'ACTIVE',
   });
+
+  /// Helper para verificar si está activo
+  bool get isActive => state == 'ACTIVE';
 
   factory CompanyEmissionPointModel.fromJson(Map<String, dynamic> json) =>
       CompanyEmissionPointModel(
@@ -208,13 +209,12 @@ class CompanyEmissionPointModel {
         documentTypeId: json['document_type_id'],
         establishmentCode: json['establishment_code'],
         emissionPointCode: json['emission_point_code'],
-        currentSequential: json['current_sequential'],
         description: json['description'],
-        isActive: json['is_active'] ?? true,
+        state: json['state'] ?? 'ACTIVE',
       );
 
   Map<String, dynamic> toJson() {
-    final result = <String, dynamic>{'is_active': isActive};
+    final result = <String, dynamic>{};
     if (id != null) result['id'] = id;
     if (companyId != null) result['company_id'] = companyId;
     if (documentTypeId != null) result['document_type_id'] = documentTypeId;
@@ -224,10 +224,8 @@ class CompanyEmissionPointModel {
     if (emissionPointCode != null) {
       result['emission_point_code'] = emissionPointCode;
     }
-    if (currentSequential != null) {
-      result['current_sequential'] = currentSequential;
-    }
     if (description != null) result['description'] = description;
+    if (state != null) result['state'] = state;
     return result;
   }
 
@@ -237,9 +235,8 @@ class CompanyEmissionPointModel {
     String? documentTypeId,
     String? establishmentCode,
     String? emissionPointCode,
-    int? currentSequential,
     String? description,
-    bool? isActive,
+    String? state,
   }) =>
       CompanyEmissionPointModel(
         id: id ?? this.id,
@@ -247,9 +244,8 @@ class CompanyEmissionPointModel {
         documentTypeId: documentTypeId ?? this.documentTypeId,
         establishmentCode: establishmentCode ?? this.establishmentCode,
         emissionPointCode: emissionPointCode ?? this.emissionPointCode,
-        currentSequential: currentSequential ?? this.currentSequential,
         description: description ?? this.description,
-        isActive: isActive ?? this.isActive,
+        state: state ?? this.state,
       );
 }
 
@@ -323,6 +319,45 @@ class CompanySystemParameterRefModel {
   }
 }
 
+class CompanyUserModel {
+  final String? id;
+  final String? companyId;
+  final String? userId;
+  final bool? isDefault;
+  final bool? isOwner;
+  final String? state;
+
+  const CompanyUserModel({
+    this.id,
+    this.companyId,
+    this.userId,
+    this.isDefault,
+    this.isOwner,
+    this.state,
+  });
+
+  factory CompanyUserModel.fromJson(Map<String, dynamic> json) =>
+      CompanyUserModel(
+        id: json['id'],
+        companyId: json['company_id'],
+        userId: json['user_id'],
+        isDefault: json['is_default'],
+        isOwner: json['is_owner'],
+        state: json['state'],
+      );
+
+  Map<String, dynamic> toJson() {
+    final result = <String, dynamic>{};
+    if (id != null) result['id'] = id;
+    if (companyId != null) result['company_id'] = companyId;
+    if (userId != null) result['user_id'] = userId;
+    if (isDefault != null) result['is_default'] = isDefault;
+    if (isOwner != null) result['is_owner'] = isOwner;
+    if (state != null) result['state'] = state;
+    return result;
+  }
+}
+
 // ─── Modelo principal ─────────────────────────────────────────────────────────
 
 /// Enum para el estado de la compañía
@@ -368,15 +403,15 @@ class CompanyModel {
   List<CompanyPaymentMethodModel> paymentMethods;
   List<CompanySaleParameterModel> saleParameters;
   List<CompanySystemParameterRefModel> systemParameters;
+  List<CompanyUserModel> users;
 
   // ── Campos de edición local para wizard (punto de emisión activo) ─────────
   String? documentTypeId;
   String? documentTypeName;
   String? establishmentCode;
   String? emissionPointCode;
-  int? currentSequential;
   String? description;
-  bool? isActive;
+  String? emissionPointState;
 
   // ── Grupos de impuesto habilitados (IVA, ICE, IRBPNR, ISD) ───────────────
   List<String> taxGroupCodes;
@@ -406,14 +441,14 @@ class CompanyModel {
     this.paymentMethods = const [],
     this.saleParameters = const [],
     this.systemParameters = const [],
-    // ── Campos locales wizard (punto de emisión activo) ───────────────────────
+    this.users = const [],
+    // ── Campos locales wizard (punto de emisión activo) ───────────────
     this.documentTypeId,
     this.documentTypeName,
     this.establishmentCode,
     this.emissionPointCode,
-    this.currentSequential,
     this.description,
-    this.isActive,
+    this.emissionPointState,
     // ── Grupos de impuesto ────────────────────────────────────────────────────
     this.taxGroupCodes = const [],
   });
@@ -423,8 +458,7 @@ class CompanyModel {
   /// Compañía vacía para creación (wizard nuevo)
   factory CompanyModel.empty() => CompanyModel(
         state: 'ACTIVE',
-        currentSequential: 1,
-        isActive: true,
+        emissionPointState: 'ACTIVE',
         taxGroupCodes: [],
       );
 
@@ -438,6 +472,14 @@ class CompanyModel {
           : null,
       itemAddress: session['company_item_address'],
     );
+
+    final users = session['company_users'] != null
+        ? (session['company_users'] as List<dynamic>)
+            .map((e) => CompanyUserModel.fromJson(e as Map<String, dynamic>))
+            .where((user) => user.isDefault == true)
+            .toList()
+        : <CompanyUserModel>[];
+
     return CompanyModel(
       identificationTypeId: session['company_identification_type_id'],
       identificationTypeName: session['company_identification_type_name'],
@@ -452,9 +494,9 @@ class CompanyModel {
       documentTypeName: session['document_type_name'],
       establishmentCode: session['establishment_code'],
       emissionPointCode: session['emission_point_code'],
-      currentSequential: session['current_sequential'] ?? 1,
       description: session['emission_description'],
-      isActive: session['emission_is_active'] ?? true,
+      emissionPointState: session['emission_state'] ?? 'ACTIVE',
+      users: users,
     );
   }
 
@@ -484,6 +526,10 @@ class CompanyModel {
     final sysParams = (json['system_parameters'] as List<dynamic>? ?? [])
         .map((e) =>
             CompanySystemParameterRefModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+
+    final users = (json['users'] as List<dynamic>? ?? [])
+        .map((e) => CompanyUserModel.fromJson(e as Map<String, dynamic>))
         .toList();
 
     // ── Sub-modelos anidados ─────────────────────────────────────────────────
@@ -531,14 +577,14 @@ class CompanyModel {
       paymentMethods: payMethods,
       saleParameters: saleParams,
       systemParameters: sysParams,
+      users: users,
       // Campos de edición local (primer punto activo)
       documentTypeId:
           activePoint?.documentTypeId ?? firstDocType?.documentTypeId,
       establishmentCode: activePoint?.establishmentCode,
       emissionPointCode: activePoint?.emissionPointCode,
-      currentSequential: activePoint?.currentSequential ?? 1,
       description: activePoint?.description,
-      isActive: activePoint?.isActive ?? true,
+      emissionPointState: activePoint?.state ?? 'ACTIVE',
       // Tax groups
       taxGroupCodes: (json['tax_group_codes'] as List<dynamic>? ?? [])
           .map((e) => e.toString())
@@ -595,6 +641,9 @@ class CompanyModel {
     if (systemParameters.isNotEmpty) {
       result['system_parameters'] =
           systemParameters.map((e) => e.toJson()).toList();
+    }
+    if (users.isNotEmpty) {
+      result['users'] = users.map((e) => e.toJson()).toList();
     }
 
     return result;

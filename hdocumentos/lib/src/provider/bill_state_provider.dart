@@ -35,15 +35,31 @@ class BillStateProvider extends ChangeNotifier {
   })  : _customerProvider = customerProvider,
         _itemsProvider = itemsProvider,
         _paymentProvider = paymentProvider,
-        _calculationProvider = calculationProvider;
+        _calculationProvider = calculationProvider {
+    // Escuchar cambios de los providers para actualizar canSave
+    _customerProvider.addListener(_onDependencyChanged);
+    _itemsProvider.addListener(_onDependencyChanged);
+    _paymentProvider.addListener(_onDependencyChanged);
+    _calculationProvider.addListener(_onDependencyChanged);
+  }
+
+  /// Callback cuando cambia alguna dependencia
+  void _onDependencyChanged() {
+    notifyListeners();
+  }
 
   // Getters - Estados
   bool get isLoading => _isLoading;
   bool get isSaving => _isSaving;
+
+  /// Indica si la factura puede ser guardada
+  /// Requiere cliente, items y método de pago
   bool get canSave =>
       _customerProvider.hasCustomer &&
       _itemsProvider.hasItems &&
       _paymentProvider.hasPaymentMethod &&
+      _calculationProvider.lastCalculateResponse != null &&
+      !_calculationProvider.isCalculating &&
       !_isSaving;
 
   /// Cambiar estado de loading
@@ -166,6 +182,7 @@ class BillStateProvider extends ChangeNotifier {
     final request = SaleCreateRequestModel(
       username: userSession.username,
       companyId: company.companyId ?? '',
+      companyUserId: company.users.isNotEmpty ? company.users[0].id ?? '' : '',
       noData: isConsumerFinal,
       establishmentNumber: company.establishmentCode ?? '',
       emissionPoint: company.emissionPointCode ?? '',
@@ -211,5 +228,15 @@ class BillStateProvider extends ChangeNotifier {
     _paymentProvider.clearSelection();
     _calculationProvider.clear();
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    // Remover listeners para evitar memory leaks
+    _customerProvider.removeListener(_onDependencyChanged);
+    _itemsProvider.removeListener(_onDependencyChanged);
+    _paymentProvider.removeListener(_onDependencyChanged);
+    _calculationProvider.removeListener(_onDependencyChanged);
+    super.dispose();
   }
 }

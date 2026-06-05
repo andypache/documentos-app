@@ -42,8 +42,7 @@ class _CompanyWizardStep5WidgetState extends State<CompanyWizardStep5Widget> {
       _isNewPoint = true;
       _editingIndex = -1;
       _editingPoint = CompanyEmissionPointModel(
-        isActive: !alreadyHasActive,
-        currentSequential: 1,
+        state: alreadyHasActive ? 'INACTIVE' : 'ACTIVE',
       );
     });
   }
@@ -537,9 +536,8 @@ class _EmissionPointFormState extends State<_EmissionPointForm> {
   late String? _documentTypeId;
   late String? _establishmentCode;
   late String? _emissionPointCode;
-  late int _currentSequential;
   late String? _description;
-  late bool _isActive;
+  late String _state;
 
   @override
   void initState() {
@@ -548,9 +546,8 @@ class _EmissionPointFormState extends State<_EmissionPointForm> {
     _documentTypeId = p.documentTypeId;
     _establishmentCode = p.establishmentCode;
     _emissionPointCode = p.emissionPointCode;
-    _currentSequential = p.currentSequential ?? 1;
     _description = p.description;
-    _isActive = p.isActive;
+    _state = p.state ?? 'ACTIVE';
   }
 
   /// Devuelve true si ya existe otro punto (distinto al que se edita)
@@ -587,9 +584,8 @@ class _EmissionPointFormState extends State<_EmissionPointForm> {
       documentTypeId: _documentTypeId,
       establishmentCode: _establishmentCode,
       emissionPointCode: _emissionPointCode,
-      currentSequential: _currentSequential,
       description: _description,
-      isActive: _isActive,
+      state: _state,
     ));
   }
 
@@ -691,20 +687,6 @@ class _EmissionPointFormState extends State<_EmissionPointForm> {
             ),
             SizedBox(height: size.height * 0.015),
             InputFieldWidget(
-              prefixIcon: Icons.format_list_numbered,
-              labelText: l10n.currentSequential,
-              hintText: l10n.currentSequentialHint,
-              initialValue: _currentSequential.toString(),
-              validator: FieldValidators.compose([
-                FieldValidators.required(l10n),
-                FieldValidators.numeric(l10n),
-                FieldValidators.minValue(l10n, 1),
-              ]),
-              onChanged: (v) =>
-                  _currentSequential = int.tryParse(v) ?? _currentSequential,
-            ),
-            SizedBox(height: size.height * 0.015),
-            InputFieldWidget(
               prefixIcon: Icons.notes_outlined,
               labelText: l10n.emissionDescription,
               hintText: l10n.emissionDescriptionHint,
@@ -714,21 +696,28 @@ class _EmissionPointFormState extends State<_EmissionPointForm> {
               onChanged: (v) => _description = v,
             ),
             SizedBox(height: size.height * 0.015),
-            // Switch deshabilitado (opaco) si ya hay otro punto activo y
+            // Dropdown deshabilitado (opaco) si ya hay otro punto activo y
             // este punto no es el activo (evita tener dos activos a la vez)
             Opacity(
-              opacity: (otherActive && !_isActive) ? 0.45 : 1.0,
+              opacity: (otherActive && _state == 'INACTIVE') ? 0.45 : 1.0,
               child: IgnorePointer(
-                ignoring: otherActive && !_isActive,
-                child: InputSwitchFieldWidget(
-                  label: l10n.activeEmissionPoint,
-                  value: _isActive,
-                  onChanged: (v) => setState(() => _isActive = v),
+                ignoring: otherActive && _state == 'INACTIVE',
+                child: DropdownButtonFieldWidget(
+                  prefixIcon: Icons.toggle_on_outlined,
+                  labelText: l10n.activeEmissionPoint,
+                  items: [
+                    KeyValueModel(
+                        key: 'ACTIVE', value: l10n.emissionPointActiveChip),
+                    KeyValueModel(
+                        key: 'INACTIVE', value: l10n.emissionPointInactiveChip),
+                  ],
+                  initialValue: _state,
+                  onChanged: (v) => setState(() => _state = v ?? 'ACTIVE'),
                 ),
               ),
             ),
-            // Aviso cuando el switch está deshabilitado por otro punto activo
-            if (otherActive && !_isActive)
+            // Aviso cuando el dropdown está deshabilitado por otro punto activo
+            if (otherActive && _state == 'INACTIVE')
               Padding(
                 padding: EdgeInsets.only(
                     top: size.height * 0.005, left: size.width * 0.02),

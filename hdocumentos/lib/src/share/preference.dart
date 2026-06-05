@@ -102,33 +102,17 @@ class Preferences {
     }
   }
 
-  /// Secuencial actual del punto de emisión activo
-  static int? get activeCurrentSequential {
-    final v = _preferences.getInt('activeCurrentSequential');
-    return v;
-  }
-
-  static set activeCurrentSequential(int? v) {
-    if (v == null) {
-      _preferences.remove('activeCurrentSequential');
-    } else {
-      _preferences.setInt('activeCurrentSequential', v);
-    }
-  }
-
   /// Guarda un punto de emisión completo como el activo
   static void saveActiveEmissionPoint({
     required String? id,
     required String? documentTypeId,
     required String? establishmentCode,
     required String? emissionPointCode,
-    required int? currentSequential,
   }) {
     activeEmissionPointId = id;
     activeDocumentTypeId = documentTypeId;
     activeEstablishmentCode = establishmentCode;
     activeEmissionPointCode = emissionPointCode;
-    activeCurrentSequential = currentSequential;
   }
 
   /// Elimina el punto de emisión activo guardado
@@ -137,6 +121,5 @@ class Preferences {
     _preferences.remove('activeDocumentTypeId');
     _preferences.remove('activeEstablishmentCode');
     _preferences.remove('activeEmissionPointCode');
-    _preferences.remove('activeCurrentSequential');
   }
 }

@@ -76,17 +76,21 @@ class BillCalculationProvider extends ChangeNotifier {
 
   /// Disparar cálculo automático (debounced)
   void _triggerCalculation() {
-    if (_calculationContext == null || !_itemsProvider.hasItems) {
-      if (!_itemsProvider.hasItems) {
-        _resetCalculations();
-      }
-      return;
-    }
-
     // Cancelar timer anterior si existe
     _debounceTimer?.cancel();
 
-    // Crear nuevo timer
+    // Si no hay items, resetear inmediatamente sin debounce
+    if (!_itemsProvider.hasItems) {
+      _resetCalculations();
+      return;
+    }
+
+    // Si no hay contexto, no se puede calcular
+    if (_calculationContext == null) {
+      return;
+    }
+
+    // Crear nuevo timer para calcular con debounce
     _debounceTimer = Timer(_debounceDuration, () {
       if (_calculationContext != null) {
         _calculateBill(_calculationContext!);
@@ -249,6 +253,7 @@ class BillCalculationProvider extends ChangeNotifier {
     _customerDiscountInfo = null;
     _itemCalculations.clear();
     _lastCalculateResponse = null;
+    _isCalculating = false;
     notifyListeners();
   }
 

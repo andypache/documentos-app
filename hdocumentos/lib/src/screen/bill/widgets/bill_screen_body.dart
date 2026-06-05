@@ -53,12 +53,8 @@ class BillScreenBody extends StatelessWidget {
                   SizedBox(height: size.height * 0.02),
 
                   // Lista de productos
-                  Selector<BillCalculationProvider, bool>(
-                    selector: (_, provider) => provider.isCalculating,
-                    builder: (context, isCalculating, _) {
-                      final itemsProvider = context.read<BillItemsProvider>();
-                      final calculationProvider =
-                          context.read<BillCalculationProvider>();
+                  Consumer2<BillItemsProvider, BillCalculationProvider>(
+                    builder: (context, itemsProvider, calculationProvider, _) {
                       return ProductListWidget(
                         billItems: itemsProvider.billItems,
                         provider: calculationProvider,
@@ -72,7 +68,7 @@ class BillScreenBody extends StatelessWidget {
                             discount: updatedItem.discount,
                           );
                         },
-                        onAddProduct: isCalculating
+                        onAddProduct: calculationProvider.isCalculating
                             ? null
                             : () => _showProductSearch(context),
                       );

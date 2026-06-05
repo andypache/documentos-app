@@ -25,21 +25,43 @@ class BillPaymentProvider extends ChangeNotifier {
     if (company == null) return;
 
     _paymentMethods = company.paymentMethods
-        .asMap()
-        .entries
-        .map((e) => PaymentMethodModel(
-              id: int.tryParse(e.value.paymentMethodId ?? '') ?? (e.key + 1),
-              name: e.value.name ?? '',
-            ))
-        .where((m) => m.name.isNotEmpty)
-        .toList();
+        .where((pm) => pm.name != null && pm.name!.isNotEmpty)
+        .map((pm) {
+      // Usar paymentMethodId si existe, sino generar uno único con el nombre
+      final id = pm.paymentMethodId?.isNotEmpty == true
+          ? pm.paymentMethodId!
+          : pm.name!.replaceAll(' ', '_').toLowerCase();
+
+      return PaymentMethodModel(
+        id: id,
+        name: pm.name!,
+      );
+    }).toList();
+
+    // Eliminar duplicados por ID (mantener el primero)
+    final uniqueIds = <String>{};
+    _paymentMethods = _paymentMethods.where((m) {
+      if (uniqueIds.contains(m.id)) {
+        return false;
+      }
+      uniqueIds.add(m.id);
+      return true;
+    }).toList();
 
     notifyListeners();
   }
 
   /// Seleccionar método de pago
   void selectPaymentMethod(PaymentMethodModel? method) {
-    _selectedPaymentMethod = method;
+    if (method == null) {
+      _selectedPaymentMethod = null;
+    } else {
+      // Buscar el método en la lista por ID para asegurar que sea la misma instancia
+      _selectedPaymentMethod = _paymentMethods.firstWhere(
+        (m) => m.id == method.id,
+        orElse: () => method,
+      );
+    }
     notifyListeners();
   }
 

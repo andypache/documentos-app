@@ -2,6 +2,7 @@
 class SaleCreateRequestModel {
   final String username;
   final String companyId;
+  final String companyUserId;
   final bool noData;
   final String establishmentNumber;
   final String emissionPoint;
@@ -20,6 +21,7 @@ class SaleCreateRequestModel {
   SaleCreateRequestModel({
     required this.username,
     required this.companyId,
+    required this.companyUserId,
     required this.noData,
     required this.establishmentNumber,
     required this.emissionPoint,
@@ -39,6 +41,7 @@ class SaleCreateRequestModel {
   Map<String, dynamic> toJson() => {
         'username': username,
         'company_id': companyId,
+        'company_user_id': companyUserId,
         'no_data': noData,
         'establishment_number': establishmentNumber,
         'emission_point': emissionPoint,

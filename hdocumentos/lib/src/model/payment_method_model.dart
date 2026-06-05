@@ -1,5 +1,5 @@
 class PaymentMethodModel {
-  final int id;
+  final String id;
   final String name;
   final bool isActive;
 
@@ -11,7 +11,7 @@ class PaymentMethodModel {
 
   factory PaymentMethodModel.fromJson(Map<String, dynamic> json) {
     return PaymentMethodModel(
-      id: json['id'] as int,
+      id: json['id'] as String,
       name: json['name'] as String,
       isActive: json['isActive'] as bool? ?? true,
     );

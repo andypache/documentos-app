@@ -16,34 +16,38 @@ class BillScreen extends StatefulWidget {
 class _BillScreenState extends State<BillScreen> {
   @override
   Widget build(BuildContext context) {
-    final isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
-
     return BillProvidersWrapper(
-      child: Scaffold(
-        body: Stack(
-          children: [
-            const BrackgroundWidget(),
-            if (isLandscape)
-              Row(
-                children: [
-                  const Expanded(child: BillScreenBody()),
-                  BillTotalsPanel(
-                    onSave: () => _saveBill(context),
+      child: Builder(
+        builder: (context) {
+          final isLandscape =
+              MediaQuery.of(context).orientation == Orientation.landscape;
+
+          return Scaffold(
+            body: Stack(
+              children: [
+                const BrackgroundWidget(),
+                if (isLandscape)
+                  Row(
+                    children: [
+                      const Expanded(child: BillScreenBody()),
+                      BillTotalsPanel(
+                        onSave: () => _saveBill(context),
+                      ),
+                    ],
+                  )
+                else
+                  Column(
+                    children: [
+                      const Expanded(child: BillScreenBody()),
+                      BillTotalsPanel(
+                        onSave: () => _saveBill(context),
+                      ),
+                    ],
                   ),
-                ],
-              )
-            else
-              Column(
-                children: [
-                  const Expanded(child: BillScreenBody()),
-                  BillTotalsPanel(
-                    onSave: () => _saveBill(context),
-                  ),
-                ],
-              ),
-          ],
-        ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

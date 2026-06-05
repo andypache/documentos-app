@@ -278,9 +278,8 @@ class CompanyFormProvider extends ChangeNotifier {
                     'document_type_id': p.documentTypeId,
                     'establishment_code': p.establishmentCode,
                     'emission_point_code': p.emissionPointCode,
-                    'current_sequential': p.currentSequential,
                     'description': p.description,
-                    'is_active': p.isActive,
+                    'state': p.state,
                   })
               .toList(),
         };
@@ -345,15 +344,8 @@ class CompanyFormProvider extends ChangeNotifier {
     if (point.isActive == true) {
       for (int i = 0; i < list.length; i++) {
         if (i != idx && list[i].isActive == true) {
-          list[i] = CompanyEmissionPointModel(
-            id: list[i].id,
-            companyId: list[i].companyId,
-            documentTypeId: list[i].documentTypeId,
-            establishmentCode: list[i].establishmentCode,
-            emissionPointCode: list[i].emissionPointCode,
-            currentSequential: list[i].currentSequential,
-            description: list[i].description,
-            isActive: false,
+          list[i] = list[i].copyWith(
+            state: 'INACTIVE',
           );
         }
       }
@@ -398,15 +390,8 @@ class CompanyFormProvider extends ChangeNotifier {
       final p = list[i];
       final shouldBeActive = i == idx;
       if (p.isActive != shouldBeActive) {
-        list[i] = CompanyEmissionPointModel(
-          id: p.id,
-          companyId: p.companyId,
-          documentTypeId: p.documentTypeId,
-          establishmentCode: p.establishmentCode,
-          emissionPointCode: p.emissionPointCode,
-          currentSequential: p.currentSequential,
-          description: p.description,
-          isActive: shouldBeActive,
+        list[i] = p.copyWith(
+          state: shouldBeActive ? 'ACTIVE' : 'INACTIVE',
         );
       }
     }
@@ -420,7 +405,6 @@ class CompanyFormProvider extends ChangeNotifier {
       documentTypeId: list[idx].documentTypeId,
       establishmentCode: list[idx].establishmentCode,
       emissionPointCode: list[idx].emissionPointCode,
-      currentSequential: list[idx].currentSequential,
     );
     notifyListeners();
   }
@@ -430,9 +414,8 @@ class CompanyFormProvider extends ChangeNotifier {
     company.documentTypeId = point.documentTypeId;
     company.establishmentCode = point.establishmentCode;
     company.emissionPointCode = point.emissionPointCode;
-    company.currentSequential = point.currentSequential;
     company.description = point.description;
-    company.isActive = point.isActive;
+    company.emissionPointState = point.state;
   }
 
   /// Inicializa la selección con el punto que tiene isActive == true (si hay).
